@@ -1,4 +1,4 @@
-# Flutter 2.5.3
+# Flutter 2.8.1
 
 # clean_architecture
 
@@ -43,6 +43,14 @@ Extras books:
 - [Onion architecture](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
 
 - [Hexagonal architecture](https://alfredobs97.medium.com/clean-architecture-en-flutter-ee028a6379a5#:~:text=Hexagonal%20Architecture)
+
+## How run on M1 chipset?
+
+Install pod using
+
+```
+    arch -x86_64 pod install
+```
 
 
 ## How run Unit test ?

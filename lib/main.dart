@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
+import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: UserPage(),
+      home: RoutesPage(),
     );
   }
 }

@@ -1,19 +1,23 @@
-import 'dart:io';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:pickpointer/packages/user_package/data/datasources/user_datasource.dart/http_user_datasource.dart';
-import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
+import 'package:get/get.dart';
+import 'package:pickpointer/packages/user_package/data/datasources/user_datasource.dart/firebase_user_datasource.dart';
+import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
+import 'package:pickpointer/packages/user_package/domain/usecases/get_users_usecase.dart';
 
 class UserController extends GetxController {
-  final GetUserUsecase _getUserUsecase = GetUserUsecase(
-    abstractUserRepository: HttpUserDatasource(
-      httpClient: HttpClient(),
-    ),
+  static UserController get instance => Get.put(UserController());
+
+  var futureListAbstractUserEntity = Future.value(<AbstractUserEntity>[]).obs;
+
+  final GetUsersUsecase _getUsersUsecase = GetUsersUsecase(
+    abstractUserRepository: FirebaseUserDatasource(),
   );
 
   @override
   void onReady() {
-    // _getUserUsecase.call(userId: 1)?.then((AbstractUserEntity abstractUserEntity) {
-
-    // });
+    futureListAbstractUserEntity.value = _getUsersUsecase
+        .call()!
+        .then((List<AbstractUserEntity> listAbstractUserEntity) {
+      return listAbstractUserEntity;
+    });
   }
 }

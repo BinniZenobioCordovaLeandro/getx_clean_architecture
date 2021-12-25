@@ -3,7 +3,9 @@ import 'dart:convert';
 import '../../domain/entities/abstract_user_entity.dart';
 
 class UserModel implements AbstractUserEntity {
+  @override
   final String? id;
+  @override
   final String? name;
 
   const UserModel({this.id, this.name});

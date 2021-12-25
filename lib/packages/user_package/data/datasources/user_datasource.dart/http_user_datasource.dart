@@ -43,8 +43,9 @@ class HttpUserDatasource implements AbstractUserRepository {
       return json.decode(string).map<AbstractUserEntity>((json) {
         AbstractUserEntity abstractUserEntity = UserModel.fromMap(json);
         RegExp regExp = RegExp(userName);
-        if (regExp.hasMatch('${abstractUserEntity.name}') == true)
+        if (regExp.hasMatch('${abstractUserEntity.name}') == true) {
           return AbstractUserEntity;
+        }
         return null;
       }).toList() as List<AbstractUserEntity>;
     });

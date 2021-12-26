@@ -13,16 +13,16 @@ class FirebaseRouteDatasource implements AbstractRouteRepository {
         description: 'Route 1',
         startLat: '-23.5',
         startLng: '-46.6',
-        endLat: '-23.5',
-        endLng: '-46.6',
+        endLat: '-12.1216227',
+        endLng: '-76.8518628',
       ),
       const RouteModel(
         id: '2',
         description: 'Route 2',
         startLat: '-25.5',
         startLng: '-44.6',
-        endLat: '-26.5',
-        endLng: '-47.6',
+        endLat: '-12.1216227',
+        endLng: '-76.8518628',
       ),
     ]);
   }

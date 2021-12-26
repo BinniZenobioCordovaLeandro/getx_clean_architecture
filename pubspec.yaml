@@ -27,13 +27,17 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  blur: ^3.0.0
   cached_network_image: ^3.2.0
   cupertino_icons: ^1.0.2
   equatable: ^2.0.3
   flutter:
     sdk: flutter
+  flutter_map: ^0.14.0
   flutter_svg: ^1.0.0
+  geolocator: ^8.0.1
   get: ^4.6.1
+  google_maps_webservice: ^0.0.20-nullsafety.5
   shimmer: ^2.0.0
 
 dev_dependencies:

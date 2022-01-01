@@ -24,4 +24,16 @@ class PlacesProvider {
     });
     return futureListPrediction;
   }
+
+  Future<PlacesDetailsResponse> getPlaceDetails(String placeId) {
+    Future<PlacesDetailsResponse> futurePlaceDetails = googleMapsPlaces!
+        .getDetailsByPlaceId(placeId)
+        .then((PlacesDetailsResponse placesDetailsResponse) {
+      if (placesDetailsResponse.errorMessage != null) {
+        throw Exception(placesDetailsResponse.errorMessage);
+      }
+      return placesDetailsResponse;
+    });
+    return futurePlaceDetails;
+  }
 }

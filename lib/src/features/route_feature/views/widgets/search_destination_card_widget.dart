@@ -30,9 +30,64 @@ class SearchDestinationCardWidget extends StatelessWidget {
               color: Colors.transparent,
               child: FractionallySizedBoxWidget(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16.0,
+                  ),
                   child: WrapWidget(
                     children: <Widget>[
+                      if (predictions?.isNotEmpty == true)
+                        Column(
+                          children: <Widget>[
+                            for (var i = 0; i < predictions!.length; i++)
+                              SizedBox(
+                                width: double.infinity,
+                                child: CardWidget(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: onTapPrediction != null
+                                        ? () {
+                                            onTapPrediction!(predictions![i]);
+                                          }
+                                        : null,
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: FractionallySizedBoxWidget(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 8,
+                                          ),
+                                          child: TextWidget(
+                                            '${predictions?[i].description}',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextFieldWidget(
+                          labelText: 'Destination',
+                          onChanged: onChanged,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          CardWidget(
+            color: Colors.transparent,
+            child: FractionallySizedBoxWidget(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: WrapWidget(
+                  children: <Widget>[
+                    if (predictions?.isNotEmpty == true)
                       Column(
                         children: <Widget>[
                           for (var i = 0; i < predictions!.length; i++)
@@ -64,57 +119,6 @@ class SearchDestinationCardWidget extends StatelessWidget {
                             ),
                         ],
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextFieldWidget(
-                          labelText: 'Destination',
-                          onChanged: onChanged,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          CardWidget(
-            color: Colors.transparent,
-            child: FractionallySizedBoxWidget(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: WrapWidget(
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        for (var i = 0; i < predictions!.length; i++)
-                          SizedBox(
-                            width: double.infinity,
-                            child: CardWidget(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: onTapPrediction != null
-                                    ? () {
-                                        onTapPrediction!(predictions![i]);
-                                      }
-                                    : null,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: FractionallySizedBoxWidget(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 8,
-                                      ),
-                                      child: TextWidget(
-                                        '${predictions?[i].description}',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
                     SizedBox(
                       width: double.infinity,
                       child: TextFieldWidget(

@@ -62,7 +62,6 @@ class OfferCardWidget extends StatelessWidget {
                                       .textTheme
                                       .headline6
                                       ?.copyWith(
-                                        color: Theme.of(context).primaryColor,
                                         fontWeight: FontWeight.bold,
                                       ),
                                 ),

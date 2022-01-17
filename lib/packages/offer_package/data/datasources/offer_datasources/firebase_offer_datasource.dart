@@ -52,14 +52,14 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
         maxCount: '4',
         price: '5.50',
         userId: '3',
-        userName: 'Jose Robert',
+        userName: 'Roberto Washinton',
         userAvatar:
-            'https://i.pinimg.com/474x/f3/9c/0b/f39c0bc82fc9d9dea79decf69735f519.jpg',
-        userCarPlate: 'ALF-326',
+            'https://www.congreso.gob.pe/Docs/comisiones2018/Mujer/images/foto_tania5.png',
+        userCarPlate: '5074-01',
         userCarPhoto:
-            'https://imganuncios.mitula.net/peugeot_gasolina_kamikaze_peru_peugeot_301_2016_7960126530282900928.jpg',
+            'https://www.laprensalatina.com/wp-content/uploads/2021/05/17561882w.jpg',
         userPhoneNumber: '987123456',
-        userRank: '4.87',
+        userRank: '3.5',
       ),
     ]);
   }

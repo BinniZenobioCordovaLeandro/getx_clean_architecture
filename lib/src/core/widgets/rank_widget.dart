@@ -12,7 +12,8 @@ class RankWidget extends StatefulWidget {
     this.minValue = 1.0,
     this.value = 5.0,
     this.onChanged,
-  }) : super(key: key);
+  })  : assert(maxValue > minValue && value >= minValue && value <= maxValue),
+        super(key: key);
 
   @override
   _RankWidgetState createState() => _RankWidgetState();

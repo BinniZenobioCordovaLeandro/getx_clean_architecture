@@ -19,7 +19,7 @@ class PopupMarkerCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 300,
-      height: 80,
+      height: 120,
       child: Stack(
         children: [
           BlurWidget(
@@ -36,10 +36,7 @@ class PopupMarkerCardWidget extends StatelessWidget {
                         width: double.infinity,
                         child: TextWidget(
                           '+ S/. ${abstractRouteEntity?.price}',
-                          style:
-                              Theme.of(context).textTheme.subtitle1?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                          style: Theme.of(context).textTheme.subtitle1,
                           textAlign: TextAlign.end,
                         ),
                       ),
@@ -49,7 +46,6 @@ class PopupMarkerCardWidget extends StatelessWidget {
                           'Destino: ${abstractRouteEntity?.to}',
                           style:
                               Theme.of(context).textTheme.subtitle2?.copyWith(
-                                    color: Theme.of(context).primaryColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                           textAlign: TextAlign.justify,

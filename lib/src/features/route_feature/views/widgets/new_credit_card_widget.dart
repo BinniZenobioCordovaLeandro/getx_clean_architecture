@@ -39,6 +39,16 @@ class NewCreditCardWidget extends StatelessWidget {
                         child: Flex(
                           direction: Axis.horizontal,
                           children: [
+                            Expanded(
+                              child: DropdownButtonFormFieldWidget(
+                                labelText: 'Tipo de documento',
+                                listValue: const ['DNI', 'Pasaporte', 'CE'],
+                                value: 'DNI',
+                                onChanged: (value) {
+                                  print(value);
+                                },
+                              ),
+                            ),
                             const SizedBox(width: 16),
                             Expanded(
                               child: TextFieldWidget(

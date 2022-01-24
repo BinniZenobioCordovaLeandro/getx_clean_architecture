@@ -30,14 +30,7 @@ class ListTileNewCreditCardWidget extends StatelessWidget {
         ),
         body: const SizedBox(
           width: double.infinity,
-          child: FractionallySizedBoxWidget(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 8,
-              ),
-              child: NewCreditCardWidget(),
-            ),
-          ),
+          child: NewCreditCardWidget(),
         ),
       ),
     );

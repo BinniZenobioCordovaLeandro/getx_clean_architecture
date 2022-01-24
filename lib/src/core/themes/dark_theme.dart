@@ -12,16 +12,16 @@ class DarkTheme {
       primaryColorLight: colorBrand,
       primaryColorDark: colorBrand,
       scaffoldBackgroundColor: const Color(0xFF000000),
-      backgroundColor: const Color(0xFF1C1E1D),
+      backgroundColor: const Color(0xFF000000),
       iconTheme: const IconThemeData(
         color: colorBrand,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: colorBrand,
         iconTheme: IconThemeData(color: Colors.white),
         actionsIconTheme: IconThemeData(color: Colors.white),
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Color(0xFFe0e0e0),
+          statusBarColor: Colors.transparent,
         ),
       ),
       cardTheme: const CardTheme(
@@ -199,6 +199,35 @@ class DarkTheme {
           return colorBrand; // Defer to the widget's default.
         }),
       )),
+      listTileTheme: const ListTileThemeData(
+        selectedColor: colorBrand,
+        iconColor: colorBrand,
+        tileColor: Colors.transparent,
+        selectedTileColor: Colors.transparent,
+        textColor: colorBrand,
+        enableFeedback: true,
+        style: ListTileStyle.drawer,
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          return colorBrand;
+        }),
+        overlayColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          return colorBrand;
+        }),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          return colorBrand;
+        }),
+        overlayColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          return colorBrand;
+        }),
+      ),
       textTheme: const TextTheme(
         headline1: TextStyle(
           color: Color(0xFFEEEEEE),

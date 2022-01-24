@@ -41,6 +41,7 @@ dependencies:
   get: ^4.6.1
   google_maps_webservice: ^0.0.20-nullsafety.5
   modal_bottom_sheet: ^2.0.0
+  shared_preferences: ^2.0.12
   shimmer: ^2.0.0
 
 dev_dependencies:

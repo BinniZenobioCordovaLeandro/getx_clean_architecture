@@ -214,6 +214,35 @@ class LightTheme {
           return colorBrand;
         }),
       )),
+      listTileTheme: const ListTileThemeData(
+        selectedColor: colorBrand,
+        iconColor: colorBrand,
+        tileColor: Colors.transparent,
+        selectedTileColor: Colors.transparent,
+        textColor: colorBrand,
+        enableFeedback: true,
+        style: ListTileStyle.drawer,
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          return colorBrand;
+        }),
+        overlayColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          return colorBrand;
+        }),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          return colorBrand;
+        }),
+        overlayColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          return colorBrand;
+        }),
+      ),
       textTheme: const TextTheme(
         headline1: TextStyle(
           color: Color(0xFF424242),

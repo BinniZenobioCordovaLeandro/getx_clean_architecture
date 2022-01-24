@@ -18,36 +18,37 @@ class CreditCardWidget extends StatelessWidget {
           BlurWidget(
             child: CardWidget(
               color: Colors.transparent,
-              child: FractionallySizedBoxWidget(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextFieldWidget(
-                      labelText: 'CVV',
-                      onChanged: (value) {
-                        print('$value');
-                      },
+              child: SizedBox(
+                width: double.infinity,
+                child: Column(
+                  children: const [
+                    SizedBox(
+                      height: 8,
                     ),
-                  ),
+                    TextFieldWidget(
+                      labelText: 'CVV',
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
           CardWidget(
             color: Colors.transparent,
-            child: FractionallySizedBoxWidget(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: TextFieldWidget(
+            child: SizedBox(
+              width: double.infinity,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFieldWidget(
                     labelText: 'CVV',
                     onChanged: (value) {
                       print('$value');
                     },
                   ),
-                ),
+                ],
               ),
             ),
           ),

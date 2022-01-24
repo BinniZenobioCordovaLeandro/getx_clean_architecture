@@ -40,6 +40,8 @@ class ModalBottomSheetHelper {
         backgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
         duration: const Duration(milliseconds: 500),
+        barrierColor:
+            Theme.of(context!).scaffoldBackgroundColor.withOpacity(0.3),
         builder: (BuildContext context) {
           final double maxHeight = ((MediaQuery.of(context).size.height -
                   MediaQuery.of(context).viewPadding.top -
@@ -128,7 +130,9 @@ class ModalBottomSheetHelper {
                     ),
                   Container(
                     key: const Key('children'),
-                    color: Colors.transparent,
+                    color: Theme.of(context)
+                        .scaffoldBackgroundColor
+                        .withOpacity(0.3),
                     constraints: (maxHeight > 0)
                         ? BoxConstraints(
                             maxHeight: maxHeight,
@@ -142,7 +146,9 @@ class ModalBottomSheetHelper {
                   if (childFooter != null)
                     Container(
                       key: const Key('footer'),
-                      color: Colors.transparent,
+                      color: Theme.of(context)
+                          .scaffoldBackgroundColor
+                          .withOpacity(0.3),
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: SizedBox(

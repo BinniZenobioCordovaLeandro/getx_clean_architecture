@@ -40,6 +40,7 @@ dependencies:
   geolocator: ^8.0.1
   get: ^4.6.1
   google_maps_webservice: ^0.0.20-nullsafety.5
+  modal_bottom_sheet: ^2.0.0
   shimmer: ^2.0.0
 
 dev_dependencies:

@@ -8,8 +8,8 @@ class WrapWidget extends StatelessWidget {
   const WrapWidget({
     Key? key,
     required this.children,
-    this.spacing = 16,
-    this.runSpacing = 16,
+    this.spacing = 8,
+    this.runSpacing = 8,
   }) : super(key: key);
 
   @override

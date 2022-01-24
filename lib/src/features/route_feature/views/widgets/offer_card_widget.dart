@@ -10,10 +10,12 @@ import 'package:pickpointer/src/core/widgets/text_widget.dart';
 
 class OfferCardWidget extends StatelessWidget {
   final AbstractOfferEntity? abstractOfferEntity;
+  final Function(AbstractOfferEntity? abstractOfferEntity)? onPressed;
 
   const OfferCardWidget({
     Key? key,
     this.abstractOfferEntity,
+    this.onPressed,
   }) : super(key: key);
 
   @override
@@ -87,7 +89,9 @@ class OfferCardWidget extends StatelessWidget {
           CardWidget(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                onPressed!(abstractOfferEntity);
+              },
               child: FractionallySizedBoxWidget(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -137,7 +141,9 @@ class OfferCardWidget extends StatelessWidget {
                             flex: 1,
                             child: OutlinedButtonWidget(
                               title: 'S/. ${abstractOfferEntity?.price}',
-                              onPressed: () {},
+                              onPressed: () {
+                                onPressed!(abstractOfferEntity);
+                              },
                             ),
                           ),
                         ],

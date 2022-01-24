@@ -5,7 +5,9 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/offer_package/data/models/offer_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
+import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
+import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/future_builder_shimmer_widget.dart';
@@ -13,6 +15,9 @@ import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/route_controller.dart';
+import 'package:pickpointer/src/features/route_feature/views/enums/credit_card_type.dart';
+import 'package:pickpointer/src/features/route_feature/views/widgets/list_tile_credit_card_widget.dart';
+import 'package:pickpointer/src/features/route_feature/views/widgets/list_tile_new_credit_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/offer_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/route_card_widget.dart';
@@ -39,6 +44,8 @@ class _RoutePageState extends State<RoutePage> {
   Future<List<LatLng>>? futureListLatLng;
   Future<List<AbstractOfferEntity>>? futureListAbstractOfferEntity;
 
+  CreditCardType creditCardType = CreditCardType.creditCard;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +66,7 @@ class _RoutePageState extends State<RoutePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBarWidget(
         title: 'PickPointer + S/. ${widget.abstractRouteEntity?.price}',
         showGoback: true,
@@ -240,6 +248,72 @@ class _RoutePageState extends State<RoutePage> {
                                   in snapshot.data)
                                 OfferCardWidget(
                                   abstractOfferEntity: abstractOfferEntity,
+                                  onPressed: (abstractOfferEntity) {
+                                    ModalBottomSheetHelper(
+                                      context: context,
+                                      title: 'Pagar viaje',
+                                      child: StatefulBuilder(
+                                        builder:
+                                            (BuildContext context, setState) {
+                                          return SingleChildScrollViewWidget(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8),
+                                              child: WrapWidget(
+                                                children: [
+                                                  SizedBox(
+                                                    width: double.infinity,
+                                                    child:
+                                                        FractionallySizedBoxWidget(
+                                                      child:
+                                                          ListTileCreditCardWidget(
+                                                        groupValue:
+                                                            creditCardType,
+                                                        value: CreditCardType
+                                                            .creditCard,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            creditCardType = value
+                                                                as CreditCardType;
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: double.infinity,
+                                                    child:
+                                                        FractionallySizedBoxWidget(
+                                                      child:
+                                                          ListTileNewCreditCardWidget(
+                                                        groupValue:
+                                                            creditCardType,
+                                                        value: CreditCardType
+                                                            .newCreditCard,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            creditCardType = value
+                                                                as CreditCardType;
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      childFooter: FractionallySizedBoxWidget(
+                                        child: ElevatedButtonWidget(
+                                          title: 'Pagar S/. 9.00',
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                           ],
                         );

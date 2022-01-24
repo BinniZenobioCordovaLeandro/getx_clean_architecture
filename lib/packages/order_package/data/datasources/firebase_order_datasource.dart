@@ -1,0 +1,93 @@
+import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
+import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
+import 'package:pickpointer/packages/order_package/domain/repositories/abstract_order_repository.dart';
+
+class FirebaseOrderDatasource implements AbstractOrderRepository {
+  FirebaseOrderDatasource();
+
+  @override
+  Future<List<AbstractOrderEntity>>? getOrders() {
+    return Future.value(<AbstractOrderEntity>[
+      const OrderModel(
+        id: '1',
+        orderId: '123456789',
+        price: '100',
+        total: '90',
+        status: 'Pending',
+        statusId: '1',
+        userId: '1',
+        userName: 'John Doe',
+        userPhone: '+1 123 456 7890',
+        routeId: '1',
+        routeDescription: 'Manchay a Ovalo Santa Anita',
+        routePrice: '100',
+        routeQuantity: '1',
+        routeTotal: '90',
+        driverId: '2',
+        driverName: 'edith Thomas Cord',
+        driverPhone: '+1 123 456 7890',
+        createdAt: '2020-01-01',
+        updatedAt: '2020-01-05',
+      ),
+      const OrderModel(
+        id: '2',
+        orderId: '123456789',
+        price: '100',
+        total: '90',
+        status: 'Pending',
+        statusId: '1',
+        userId: '1',
+        userName: 'John Doe',
+        userPhone: '+1 123 456 7890',
+        routeId: '1',
+        routeDescription: 'Manchay a Ovalo Santa Anita',
+        routePrice: '100',
+        routeQuantity: '1',
+        routeTotal: '90',
+        driverId: '2',
+        driverName: 'edith Thomas Cord',
+        driverPhone: '+1 123 456 7890',
+        createdAt: '2020-01-01',
+        updatedAt: '2020-01-05',
+      ),
+    ]);
+  }
+
+  Future<AbstractOrderEntity>? getOrder({
+    required String orderId,
+  }) {
+    return Future.value(OrderModel(
+      id: '1',
+      orderId: orderId,
+      price: '100',
+      total: '90',
+      status: 'Pending',
+      statusId: '1',
+      userId: '1',
+      userName: 'John Doe',
+      userPhone: '+1 123 456 7890',
+      routeId: '1',
+      routeDescription: 'Manchay a Ovalo Santa Anita',
+      routePrice: '100',
+      routeQuantity: '1',
+      routeTotal: '90',
+      driverId: '2',
+      driverName: 'edith Thomas Cord',
+      driverPhone: '+1 123 456 7890',
+      createdAt: '2020-01-01',
+      updatedAt: '2020-01-05',
+    ));
+  }
+
+  Future<void> addOrder({
+    required AbstractOrderEntity order,
+  }) {
+    return Future.value();
+  }
+
+  Future<AbstractOrderEntity> updateOrder({
+    required AbstractOrderEntity order,
+  }) {
+    return Future.value(order);
+  }
+}

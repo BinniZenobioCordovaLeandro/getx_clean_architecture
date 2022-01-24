@@ -3,10 +3,15 @@ import 'package:pickpointer/packages/order_package/domain/entities/abstract_orde
 abstract class AbstractOrderRepository {
   Future<List<AbstractOrderEntity>>? getOrders();
 
-  Future<AbstractOrderEntity>? getOrder({required String orderId,});
+  Future<AbstractOrderEntity>? getOrder({
+    required String orderId,
+  });
 
-  Future<void> addOrder({required AbstractOrderEntity order,});
+  Future<void> addOrder({
+    required AbstractOrderEntity order,
+  });
 
-  
-
+  Future<AbstractOrderEntity> updateOrder({
+    required AbstractOrderEntity order,
+  });
 }

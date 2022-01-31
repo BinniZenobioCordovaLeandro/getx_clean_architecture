@@ -36,6 +36,8 @@ class ModalBottomSheetHelper {
         enableDrag: enableDrag!,
         isDismissible: isDismissible!,
         useRootNavigator: useRootNavigator!,
+        expand: false,
+        bounce: false,
         clipBehavior: Clip.hardEdge,
         backgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
@@ -45,117 +47,120 @@ class ModalBottomSheetHelper {
         builder: (BuildContext context) {
           final double maxHeight = ((MediaQuery.of(context).size.height -
                   MediaQuery.of(context).viewPadding.top -
-                  (title != null ? 57 : 0)) -
+                  (title != null ? 60 + (childFooter != null ? 60 : 0) : 0)) -
               MediaQuery.of(context).viewInsets.bottom);
-          return SafeAreaWidget(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(25.0),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (title != null)
-                    Container(
-                      key: const Key('title'),
-                      color: Theme.of(context).appBarTheme.backgroundColor,
-                      constraints: const BoxConstraints(
-                        minHeight: 56,
-                      ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: FractionallySizedBox(
-                          widthFactor: 0.9,
-                          child: LayoutBuilder(
-                            builder: (BuildContext context,
-                                BoxConstraints constraints) {
-                              return Flex(
-                                direction: Axis.horizontal,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  if (showGoback!)
-                                    InkWell(
-                                      child: const Icon(
-                                        Icons.arrow_back_ios,
+          return Container(
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: SafeAreaWidget(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(25.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (title != null)
+                      Container(
+                        key: const Key('title'),
+                        color: Theme.of(context).appBarTheme.backgroundColor,
+                        constraints: const BoxConstraints(
+                          minHeight: 56,
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: FractionallySizedBox(
+                            widthFactor: 0.9,
+                            child: LayoutBuilder(
+                              builder: (BuildContext context,
+                                  BoxConstraints constraints) {
+                                return Flex(
+                                  direction: Axis.horizontal,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    if (showGoback!)
+                                      InkWell(
+                                        child: const Icon(
+                                          Icons.arrow_back_ios,
+                                        ),
+                                        onTap: () {
+                                          if (onTapBack != null) {
+                                            onTapBack!();
+                                          }
+                                        },
                                       ),
-                                      onTap: () {
-                                        if (onTapBack != null) {
-                                          onTapBack!();
-                                        }
-                                      },
-                                    ),
-                                  Expanded(
-                                    child: SizedBox(
-                                      width: constraints.maxWidth,
-                                      child: TextWidget(
-                                        '$title',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                      .appBarTheme
-                                                      .titleTextStyle
-                                                      ?.color ??
-                                                  Colors.white,
-                                            ),
+                                    Expanded(
+                                      child: SizedBox(
+                                        width: constraints.maxWidth,
+                                        child: TextWidget(
+                                          '$title',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              ?.copyWith(
+                                                color: Theme.of(context)
+                                                        .appBarTheme
+                                                        .titleTextStyle
+                                                        ?.color ??
+                                                    Colors.white,
+                                              ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    child: IconButton(
-                                      enableFeedback: false,
-                                      tooltip: 'Cerrar',
-                                      icon: Icon(
-                                        Icons.close_outlined,
-                                        color: Theme.of(context)
-                                                .appBarTheme
-                                                .titleTextStyle
-                                                ?.color ??
-                                            Colors.white,
+                                    SizedBox(
+                                      child: IconButton(
+                                        enableFeedback: false,
+                                        tooltip: 'Cerrar',
+                                        icon: Icon(
+                                          Icons.close_outlined,
+                                          color: Theme.of(context)
+                                                  .appBarTheme
+                                                  .titleTextStyle
+                                                  ?.color ??
+                                              Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          if (onTapClose != null) onTapClose!();
+                                        },
                                       ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        if (onTapClose != null) onTapClose!();
-                                      },
                                     ),
-                                  ),
-                                ],
-                              );
-                            },
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  Container(
-                    key: const Key('children'),
-                    color: Theme.of(context)
-                        .scaffoldBackgroundColor
-                        .withOpacity(0.3),
-                    constraints: (maxHeight > 0)
-                        ? BoxConstraints(
-                            maxHeight: maxHeight,
-                          )
-                        : const BoxConstraints(),
-                    width: double.infinity,
-                    child: Container(
-                      child: child,
-                    ),
-                  ),
-                  if (childFooter != null)
                     Container(
-                      key: const Key('footer'),
+                      key: const Key('children'),
                       color: Theme.of(context)
                           .scaffoldBackgroundColor
                           .withOpacity(0.3),
+                      constraints: (maxHeight > 0)
+                          ? BoxConstraints(
+                              maxHeight: maxHeight,
+                            )
+                          : const BoxConstraints(),
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: SizedBox(
-                        child: childFooter!,
+                      child: Container(
+                        child: child,
                       ),
-                    )
-                ],
+                    ),
+                    if (childFooter != null)
+                      Container(
+                        key: const Key('footer'),
+                        color: Theme.of(context)
+                            .scaffoldBackgroundColor
+                            .withOpacity(0.3),
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: childFooter!,
+                      )
+                  ],
+                ),
               ),
             ),
           );

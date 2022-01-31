@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/src/core/widgets/blur_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
+import 'package:pickpointer/src/core/widgets/circle_avatar_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/outline_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/rank_widget.dart';
-import 'package:pickpointer/src/core/widgets/svg_or_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 
 class OfferCardWidget extends StatelessWidget {
@@ -42,16 +42,14 @@ class OfferCardWidget extends StatelessWidget {
                       Flex(
                         direction: Axis.horizontal,
                         children: [
-                          CircleAvatar(
-                            child: SvgOrImageWidget(
-                              urlSvgOrImage:
-                                  '${abstractOfferEntity?.userAvatar}',
+                          SizedBox(
+                            child: CircleAvatarImageWidget(
+                              urlSvgOrImage: '${abstractOfferEntity?.userAvatar}',
                             ),
                           ),
-                          CircleAvatar(
-                            child: SvgOrImageWidget(
-                              urlSvgOrImage:
-                                  '${abstractOfferEntity?.userCarPhoto}',
+                          SizedBox(
+                            child: CircleAvatarImageWidget(
+                              urlSvgOrImage: '${abstractOfferEntity?.userCarPhoto}',
                             ),
                           ),
                           Expanded(
@@ -59,7 +57,7 @@ class OfferCardWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 TextWidget(
-                                  '${abstractOfferEntity?.userCarPlate}',
+                                  '***-***',
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline6
@@ -73,9 +71,12 @@ class OfferCardWidget extends StatelessWidget {
                           ),
                           Expanded(
                             flex: 1,
-                            child: OutlinedButtonWidget(
-                              title: 'S/. ${abstractOfferEntity?.price}',
-                              onPressed: () {},
+                            child: Opacity(
+                              opacity: 0,
+                              child: OutlinedButtonWidget(
+                                title: 'S/. ${abstractOfferEntity?.price}',
+                                onPressed: () {},
+                              ),
                             ),
                           ),
                         ],
@@ -107,16 +108,14 @@ class OfferCardWidget extends StatelessWidget {
                       Flex(
                         direction: Axis.horizontal,
                         children: [
-                          CircleAvatar(
-                            child: SvgOrImageWidget(
-                              urlSvgOrImage:
-                                  '${abstractOfferEntity?.userAvatar}',
+                          SizedBox(
+                            child: CircleAvatarImageWidget(
+                              urlSvgOrImage: '${abstractOfferEntity?.userAvatar}',
                             ),
                           ),
-                          CircleAvatar(
-                            child: SvgOrImageWidget(
-                              urlSvgOrImage:
-                                  '${abstractOfferEntity?.userCarPhoto}',
+                          SizedBox(
+                            child: CircleAvatarImageWidget(
+                              urlSvgOrImage: '${abstractOfferEntity?.userCarPhoto}',
                             ),
                           ),
                           Expanded(
@@ -124,7 +123,7 @@ class OfferCardWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 TextWidget(
-                                  '${abstractOfferEntity?.userCarPlate}',
+                                  '***-***',
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline6

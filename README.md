@@ -1,6 +1,7 @@
 # Screenshots PICKPOINTER APP TAXI COLLABORATION
 ![pickpointer map](./resources/pickpointer.map.png)
 ![pickpointer map](./resources/pay.modal.png)
+![pickpointer map](./resources/pay.route.png)
 
 # TECHNICALS DETAILS
 # Flutter 2.8.1

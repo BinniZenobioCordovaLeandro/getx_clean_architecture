@@ -24,7 +24,7 @@ class ListTileRadioCardWidget extends StatelessWidget {
     this.subtitle,
     this.leading,
     this.body,
-    this.isRadio=true,
+    this.isRadio = true,
   }) : super(key: key);
 
   @override
@@ -48,9 +48,8 @@ class ListTileRadioCardWidget extends StatelessWidget {
           if (title != null)
             ListTileRadioWidget(
               isRadius: isRadio,
-              shape: (groupValue == value)
-                  ? const RoundedRectangleBorder()
-                  : null,
+              shape:
+                  (groupValue == value) ? const RoundedRectangleBorder() : null,
               groupValue: groupValue,
               value: value,
               onChanged: onChanged,

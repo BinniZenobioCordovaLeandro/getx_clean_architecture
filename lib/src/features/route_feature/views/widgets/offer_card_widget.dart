@@ -44,12 +44,14 @@ class OfferCardWidget extends StatelessWidget {
                         children: [
                           SizedBox(
                             child: CircleAvatarImageWidget(
-                              urlSvgOrImage: '${abstractOfferEntity?.userAvatar}',
+                              urlSvgOrImage:
+                                  '${abstractOfferEntity?.userAvatar}',
                             ),
                           ),
                           SizedBox(
                             child: CircleAvatarImageWidget(
-                              urlSvgOrImage: '${abstractOfferEntity?.userCarPhoto}',
+                              urlSvgOrImage:
+                                  '${abstractOfferEntity?.userCarPhoto}',
                             ),
                           ),
                           Expanded(
@@ -110,12 +112,14 @@ class OfferCardWidget extends StatelessWidget {
                         children: [
                           SizedBox(
                             child: CircleAvatarImageWidget(
-                              urlSvgOrImage: '${abstractOfferEntity?.userAvatar}',
+                              urlSvgOrImage:
+                                  '${abstractOfferEntity?.userAvatar}',
                             ),
                           ),
                           SizedBox(
                             child: CircleAvatarImageWidget(
-                              urlSvgOrImage: '${abstractOfferEntity?.userCarPhoto}',
+                              urlSvgOrImage:
+                                  '${abstractOfferEntity?.userCarPhoto}',
                             ),
                           ),
                           Expanded(

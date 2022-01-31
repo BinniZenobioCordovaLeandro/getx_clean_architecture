@@ -249,70 +249,74 @@ class _RoutePageState extends State<RoutePage> {
                                 OfferCardWidget(
                                   abstractOfferEntity: abstractOfferEntity,
                                   onPressed: (abstractOfferEntity) {
-                                    ModalBottomSheetHelper(
-                                      context: context,
-                                      title: 'Pagar viaje',
-                                      child: StatefulBuilder(
-                                        builder:
-                                            (BuildContext context, setState) {
-                                          return SingleChildScrollViewWidget(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8),
-                                              child: WrapWidget(
-                                                children: [
-                                                  SizedBox(
-                                                    width: double.infinity,
-                                                    child:
-                                                        FractionallySizedBoxWidget(
+                                    if (1 == 1) {
+                                      print('red');
+                                    } else {
+                                      ModalBottomSheetHelper(
+                                        context: context,
+                                        title: 'Pagar viaje',
+                                        child: StatefulBuilder(
+                                          builder:
+                                              (BuildContext context, setState) {
+                                            return SingleChildScrollViewWidget(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 8),
+                                                child: WrapWidget(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: double.infinity,
                                                       child:
-                                                          ListTileCreditCardWidget(
-                                                        groupValue:
-                                                            creditCardType,
-                                                        value: CreditCardType
-                                                            .creditCard,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            creditCardType = value
-                                                                as CreditCardType;
-                                                          });
-                                                        },
+                                                          FractionallySizedBoxWidget(
+                                                        child:
+                                                            ListTileCreditCardWidget(
+                                                          groupValue:
+                                                              creditCardType,
+                                                          value: CreditCardType
+                                                              .creditCard,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              creditCardType = value
+                                                                  as CreditCardType;
+                                                            });
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: double.infinity,
-                                                    child:
-                                                        FractionallySizedBoxWidget(
+                                                    SizedBox(
+                                                      width: double.infinity,
                                                       child:
-                                                          ListTileNewCreditCardWidget(
-                                                        groupValue:
-                                                            creditCardType,
-                                                        value: CreditCardType
-                                                            .newCreditCard,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            creditCardType = value
-                                                                as CreditCardType;
-                                                          });
-                                                        },
+                                                          FractionallySizedBoxWidget(
+                                                        child:
+                                                            ListTileNewCreditCardWidget(
+                                                          groupValue:
+                                                              creditCardType,
+                                                          value: CreditCardType
+                                                              .newCreditCard,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              creditCardType = value
+                                                                  as CreditCardType;
+                                                            });
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      childFooter: FractionallySizedBoxWidget(
-                                        child: ElevatedButtonWidget(
-                                          title: 'Pagar S/. 9.00',
-                                          onPressed: () {},
+                                            );
+                                          },
                                         ),
-                                      ),
-                                    );
+                                        childFooter: FractionallySizedBoxWidget(
+                                          child: ElevatedButtonWidget(
+                                            title: 'Pagar S/. 9.00',
+                                            onPressed: () {},
+                                          ),
+                                        ),
+                                      );
+                                    }
                                   },
                                 ),
                           ],

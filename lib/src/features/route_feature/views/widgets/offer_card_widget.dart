@@ -9,12 +9,14 @@ import 'package:pickpointer/src/core/widgets/rank_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 
 class OfferCardWidget extends StatelessWidget {
-  final AbstractOfferEntity? abstractOfferEntity;
-  final Function(AbstractOfferEntity? abstractOfferEntity)? onPressed;
+  final AbstractOfferEntity abstractOfferEntity;
+  final Function(AbstractOfferEntity abstractOfferEntity)? onTap;
+  final Function(AbstractOfferEntity abstractOfferEntity)? onPressed;
 
   const OfferCardWidget({
     Key? key,
-    this.abstractOfferEntity,
+    required this.abstractOfferEntity,
+    this.onTap,
     this.onPressed,
   }) : super(key: key);
 
@@ -37,7 +39,7 @@ class OfferCardWidget extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: TextWidget(
-                            'Listo ${abstractOfferEntity?.count} de ${abstractOfferEntity?.maxCount} personas'),
+                            'Listo ${abstractOfferEntity.count} de ${abstractOfferEntity.maxCount} personas'),
                       ),
                       Flex(
                         direction: Axis.horizontal,
@@ -45,13 +47,13 @@ class OfferCardWidget extends StatelessWidget {
                           SizedBox(
                             child: CircleAvatarImageWidget(
                               urlSvgOrImage:
-                                  '${abstractOfferEntity?.userAvatar}',
+                                  '${abstractOfferEntity.userAvatar}',
                             ),
                           ),
                           SizedBox(
                             child: CircleAvatarImageWidget(
                               urlSvgOrImage:
-                                  '${abstractOfferEntity?.userCarPhoto}',
+                                  '${abstractOfferEntity.userCarPhoto}',
                             ),
                           ),
                           Expanded(
@@ -67,7 +69,7 @@ class OfferCardWidget extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                       ),
                                 ),
-                                TextWidget('${abstractOfferEntity?.userName}'),
+                                TextWidget('${abstractOfferEntity.userName}'),
                               ],
                             ),
                           ),
@@ -76,7 +78,7 @@ class OfferCardWidget extends StatelessWidget {
                             child: Opacity(
                               opacity: 0,
                               child: OutlinedButtonWidget(
-                                title: 'S/. ${abstractOfferEntity?.price}',
+                                title: 'S/. ${abstractOfferEntity.price}',
                                 onPressed: () {},
                               ),
                             ),
@@ -93,7 +95,7 @@ class OfferCardWidget extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
-                onPressed!(abstractOfferEntity);
+                onTap!(abstractOfferEntity);
               },
               child: FractionallySizedBoxWidget(
                 child: Padding(
@@ -105,7 +107,7 @@ class OfferCardWidget extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: TextWidget(
-                            'Listo ${abstractOfferEntity?.count} de ${abstractOfferEntity?.maxCount} personas'),
+                            'Listo ${abstractOfferEntity.count} de ${abstractOfferEntity.maxCount} personas'),
                       ),
                       Flex(
                         direction: Axis.horizontal,
@@ -113,13 +115,13 @@ class OfferCardWidget extends StatelessWidget {
                           SizedBox(
                             child: CircleAvatarImageWidget(
                               urlSvgOrImage:
-                                  '${abstractOfferEntity?.userAvatar}',
+                                  '${abstractOfferEntity.userAvatar}',
                             ),
                           ),
                           SizedBox(
                             child: CircleAvatarImageWidget(
                               urlSvgOrImage:
-                                  '${abstractOfferEntity?.userCarPhoto}',
+                                  '${abstractOfferEntity.userCarPhoto}',
                             ),
                           ),
                           Expanded(
@@ -136,14 +138,14 @@ class OfferCardWidget extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                       ),
                                 ),
-                                TextWidget('${abstractOfferEntity?.userName}'),
+                                TextWidget('${abstractOfferEntity.userName}'),
                               ],
                             ),
                           ),
                           Expanded(
                             flex: 1,
                             child: OutlinedButtonWidget(
-                              title: 'S/. ${abstractOfferEntity?.price}',
+                              title: 'S/. ${abstractOfferEntity.price}',
                               onPressed: () {
                                 onPressed!(abstractOfferEntity);
                               },
@@ -165,7 +167,7 @@ class OfferCardWidget extends StatelessWidget {
                 scale: 0.5,
                 child: RankWidget(
                   value:
-                      double.tryParse('${abstractOfferEntity?.userRank}') ?? 0,
+                      double.tryParse('${abstractOfferEntity.userRank}') ?? 0,
                 ),
               ),
             ),

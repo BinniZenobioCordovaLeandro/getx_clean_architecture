@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
@@ -98,16 +98,13 @@ class _RoutesPageState extends State<RoutesPage> {
                             return PopupMarkerCardWidget(
                               abstractRouteEntity: abstractRouteEntity,
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return RoutePage(
-                                        abstractRouteEntity:
-                                            abstractRouteEntity,
-                                      );
-                                    },
+                                Get.to(
+                                  () => RoutePage(
+                                    abstractRouteEntity: abstractRouteEntity,
                                   ),
+                                  arguments: {
+                                    'abstractRouteEntity': abstractRouteEntity,
+                                  },
                                 );
                               },
                             );

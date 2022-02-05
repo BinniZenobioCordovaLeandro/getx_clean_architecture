@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:pickpointer/src/core/env/config_env.dart';
@@ -14,6 +15,7 @@ class PolylineProvider {
   Future<List<LatLng>> getPolylineBetweenCoordinates({
     required LatLng origin,
     required LatLng destination,
+    List<LatLng>? wayPoints,
   }) {
     Future<List<LatLng>> futureListLatLng = polylinePoints
         .getRouteBetweenCoordinates(
@@ -26,6 +28,9 @@ class PolylineProvider {
         destination.latitude,
         destination.longitude,
       ),
+      wayPoints: (wayPoints != null && wayPoints.isNotEmpty) ? wayPoints.map((wayPoint) {
+        return PolylineWayPoint(location: '${wayPoint.latitude},${wayPoint.longitude}');
+      }).toList() : [],
     )
         .then((PolylineResult polylineResult) {
       if (polylineResult.errorMessage?.isNotEmpty == true) {

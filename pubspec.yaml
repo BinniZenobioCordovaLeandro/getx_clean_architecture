@@ -40,7 +40,9 @@ dependencies:
   geolocator: ^8.0.1
   get: ^4.6.1
   google_maps_webservice: ^0.0.20-nullsafety.5
+  google_sign_in: ^5.2.3
   modal_bottom_sheet: ^2.0.0
+  progress_state_button: ^1.0.4
   shared_preferences: ^2.0.12
   shimmer: ^2.0.0
 

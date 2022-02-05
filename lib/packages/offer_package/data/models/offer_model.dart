@@ -14,6 +14,16 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final String? price;
   @override
+  final String? startLat;
+  @override
+  final String? startLng;
+  @override
+  final String? endLat;
+  @override
+  final String? endLng;
+  @override
+  final String? wayPoints;
+  @override
   final String? userId;
   @override
   final String? userName;
@@ -34,6 +44,11 @@ class OfferModel implements AbstractOfferEntity {
     this.count,
     this.maxCount,
     this.price,
+    this.startLat,
+    this.startLng,
+    this.endLat,
+    this.endLng,
+    this.wayPoints,
     this.userId,
     this.userName,
     this.userAvatar,
@@ -49,6 +64,11 @@ class OfferModel implements AbstractOfferEntity {
         count: data['count'] as String?,
         maxCount: data['max_count'] as String?,
         price: data['price'] as String?,
+        startLat: data['start_lat'] as String?,
+        startLng: data['start_lng'] as String?,
+        endLat: data['end_lat'] as String?,
+        endLng: data['end_lng'] as String?,
+        wayPoints: data['way_points'] as String?,
         userId: data['user_id'] as String?,
         userName: data['user_name'] as String?,
         userAvatar: data['user_avatar'] as String?,
@@ -64,6 +84,11 @@ class OfferModel implements AbstractOfferEntity {
         'count': count,
         'max_count': maxCount,
         'price': price,
+        'start_lat': startLat,
+        'start_lng': startLng,
+        'end_lat': endLat,
+        'end_lng': endLng,
+        'way_points': wayPoints,
         'user_id': userId,
         'user_name': userName,
         'user_avatar': userAvatar,
@@ -85,6 +110,11 @@ class OfferModel implements AbstractOfferEntity {
     String? count,
     String? maxCount,
     String? price,
+    String? startLat,
+    String? startLng,
+    String? endLat,
+    String? endLng,
+    String? wayPoints,
     String? userId,
     String? userName,
     String? userAvatar,
@@ -99,6 +129,11 @@ class OfferModel implements AbstractOfferEntity {
       count: count ?? this.count,
       maxCount: maxCount ?? this.maxCount,
       price: price ?? this.price,
+      startLat: startLat ?? this.startLat,
+      startLng: startLng ?? this.startLng,
+      endLat: endLat ?? this.endLat,
+      endLng: endLng ?? this.endLng,
+      wayPoints: wayPoints ?? this.wayPoints,
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
       userAvatar: userAvatar ?? this.userAvatar,
@@ -120,6 +155,11 @@ class OfferModel implements AbstractOfferEntity {
       count,
       maxCount,
       price,
+      startLat,
+      startLng,
+      endLat,
+      endLng,
+      wayPoints,
       userId,
       userName,
       userAvatar,

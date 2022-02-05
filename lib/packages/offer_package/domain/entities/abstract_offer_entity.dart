@@ -6,6 +6,11 @@ abstract class AbstractOfferEntity extends Equatable {
   final String? count;
   final String? maxCount;
   final String? price;
+  final String? startLat;
+  final String? startLng;
+  final String? endLat;
+  final String? endLng;
+  final String? wayPoints;
   final String? userId;
   final String? userName;
   final String? userAvatar;
@@ -20,6 +25,11 @@ abstract class AbstractOfferEntity extends Equatable {
     this.count,
     this.maxCount,
     this.price,
+    this.startLat,
+    this.startLng,
+    this.endLat,
+    this.endLng,
+    this.wayPoints,
     this.userId,
     this.userName,
     this.userAvatar,

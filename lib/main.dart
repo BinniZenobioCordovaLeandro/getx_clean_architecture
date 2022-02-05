@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       theme: LightTheme().get(),
       darkTheme: DarkTheme().get(),
       home: const RoutesPage(),
+      defaultTransition: Transition.cupertino,
     );
   }
 }

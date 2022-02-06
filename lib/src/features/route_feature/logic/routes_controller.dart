@@ -15,6 +15,7 @@ import 'package:pickpointer/src/core/providers/places_provider.dart';
 class RoutesController extends GetxController {
   static RoutesController get instance => Get.put(RoutesController());
 
+  var isLoading = false.obs;
   var errorMessage = ''.obs;
   var routes = <AbstractRouteEntity>[].obs;
   var mapRoutes = {}.obs;
@@ -39,6 +40,7 @@ class RoutesController extends GetxController {
 
   @override
   void onReady() {
+    isLoading.value = true;
     geolocatorProvider?.checkPermission().then((bool boolean) {
       if (boolean) {
         geolocatorProvider?.getCurrentPosition()?.then((Position? position) {
@@ -48,7 +50,10 @@ class RoutesController extends GetxController {
               position.longitude,
             );
           }
+          isLoading.value = false;
         });
+      } else {
+        isLoading.value = false;
       }
     }, onError: (dynamic error) {
       errorMessage.value = error.toString();

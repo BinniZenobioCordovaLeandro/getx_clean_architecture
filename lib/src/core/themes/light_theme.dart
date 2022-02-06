@@ -18,8 +18,8 @@ class LightTheme {
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: colorBrand,
-        iconTheme: IconThemeData(color: Colors.black),
-        actionsIconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.white),
+        actionsIconTheme: IconThemeData(color: Colors.white),
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
         ),

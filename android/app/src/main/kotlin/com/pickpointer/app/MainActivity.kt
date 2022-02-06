@@ -1,4 +1,4 @@
-package com.example.pickpointer
+package com.pickpointer.app
 
 import io.flutter.embedding.android.FlutterActivity
 

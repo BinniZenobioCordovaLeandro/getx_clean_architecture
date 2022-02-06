@@ -10,6 +10,7 @@ import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
@@ -53,11 +54,22 @@ class _RoutePageState extends State<RoutePage> {
       appBar: AppBarWidget(
         title: 'PickPointer + S/. ${widget.abstractRouteEntity?.price}',
         showGoback: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            tooltip: 'Realizar ruta',
+            icon: Icon(
+              Icons.taxi_alert_outlined,
+              color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+            ),
+          ),
+        ],
       ),
       body: Obx(() {
         return Stack(
           children: [
             FlutterMapWidget(
+              mapController: mapController,
               bounds: LatLngBounds(
                 LatLng(
                   double.tryParse('${widget.abstractRouteEntity?.startLat}') ??
@@ -182,6 +194,13 @@ class _RoutePageState extends State<RoutePage> {
                 ),
               ],
             ),
+            if (routeController.isLoading.value)
+              const Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: LinearProgressIndicatorWidget(),
+              ),
             Positioned(
               top: 16,
               left: 0,
@@ -212,11 +231,26 @@ class _RoutePageState extends State<RoutePage> {
                             OfferCardWidget(
                               abstractOfferEntity: abstractOfferEntity,
                               onTap: (abstractOfferEntity) {
+                                mapController.fitBounds(LatLngBounds(
+                                  LatLng(
+                                      double.parse(
+                                          '${abstractOfferEntity.startLat}'),
+                                      double.parse(
+                                          '${abstractOfferEntity.startLng}')),
+                                  LatLng(
+                                      double.parse(
+                                          '${abstractOfferEntity.endLat}'),
+                                      double.parse(
+                                          '${abstractOfferEntity.endLng}')),
+                                ));
                                 routeController.showOfferPolylineMarkers(
                                     abstractOfferEntity);
                               },
                               onPressed: (abstractOfferEntity) {
-                                if (routeController.isSigned.value == true) {
+                                if (routeController.isSigned.value == false) {
+                                  routeController.verifySession();
+                                }
+                                if (routeController.isSigned.value) {
                                   ModalBottomSheetHelper(
                                     context: context,
                                     title: 'Pagar viaje',
@@ -282,7 +316,7 @@ class _RoutePageState extends State<RoutePage> {
                                   );
                                 } else {
                                   Get.to(
-                                    () => SignInUserPage(),
+                                    () => const SignInUserPage(),
                                   );
                                 }
                               },

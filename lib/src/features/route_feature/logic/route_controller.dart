@@ -13,6 +13,7 @@ class RouteController extends GetxController {
   static RouteController get instance => Get.put(RouteController());
 
   var isSigned = false.obs;
+  var isLoading = false.obs;
   var polylineListLatLng = <LatLng>[].obs;
   var listAbstractOfferEntity = <AbstractOfferEntity>[].obs;
   var listWayPoints = <LatLng>[].obs;
@@ -33,6 +34,7 @@ class RouteController extends GetxController {
     required LatLng destination,
     List<LatLng>? wayPoints,
   }) {
+    isLoading.value = true;
     Future<List<LatLng>> futureListLatLng = polylineProvider!
         .getPolylineBetweenCoordinates(
       origin: origin,
@@ -40,6 +42,7 @@ class RouteController extends GetxController {
       wayPoints: wayPoints,
     )
         .then((List<LatLng> listLatLng) {
+      isLoading.value = false;
       return listLatLng;
     });
     return futureListLatLng;
@@ -53,6 +56,13 @@ class RouteController extends GetxController {
       routeId: routeId,
     );
     return futureListAbstractOfferEntity;
+  }
+
+  verifySession() {
+    _verifySessionUsecase.call().then(
+          (abstractSessionEntity) =>
+              isSigned.value = abstractSessionEntity.isSigned!,
+        );
   }
 
   @override
@@ -74,10 +84,7 @@ class RouteController extends GetxController {
     getOffersByRoute(routeId: '${_abstractRouteEntity.id}')?.then(
       (value) => listAbstractOfferEntity.value = value,
     );
-    _verifySessionUsecase.call().then(
-          (abstractSessionEntity) =>
-              isSigned.value = abstractSessionEntity.isSigned!,
-        );
+    verifySession();
     super.onReady();
   }
 

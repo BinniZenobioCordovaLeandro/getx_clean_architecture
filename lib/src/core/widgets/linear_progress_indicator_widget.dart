@@ -27,14 +27,22 @@ class _LinearProgressIndicatorWidgetState
   }
 
   @override
+  void dispose() {
+    _animationController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animationController!,
-      builder: (BuildContext context, Widget? child) {
-        return const LinearProgressIndicator(
-          backgroundColor: Colors.transparent,
-        );
-      },
+    return SizedBox(
+      child: AnimatedBuilder(
+        animation: _animationController!,
+        builder: (BuildContext context, Widget? child) {
+          return const LinearProgressIndicator(
+            backgroundColor: Colors.transparent,
+          );
+        },
+      ),
     );
   }
 }

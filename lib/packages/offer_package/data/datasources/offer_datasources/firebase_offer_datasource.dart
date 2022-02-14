@@ -86,7 +86,7 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
         startLng: '-76.87233782753958',
         endLat: '-12.0552257792263',
         endLng: '-76.96429734159008',
-        wayPoints: '[-12.063478953141573, -76.94567353007427]',
+        wayPoints: '["-12.063478953141573, -76.94567353007427"]',
         userId: '3',
         userName: 'Jose Roberto',
         userAvatar:
@@ -107,7 +107,7 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
         startLng: '-76.87233782753958',
         endLat: '-12.0552257792263',
         endLng: '-76.96429734159008',
-        wayPoints: '[-12.079295567423781, -76.8919271250854]',
+        wayPoints: '["-12.079295567423781, -76.8919271250854"]',
         userId: '3',
         userName: 'Roberto Washinton',
         userAvatar:

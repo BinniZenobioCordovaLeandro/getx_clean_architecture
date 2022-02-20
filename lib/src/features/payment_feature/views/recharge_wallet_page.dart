@@ -29,7 +29,9 @@ class _RechargeWalletPageState extends State<RechargeWalletPage> {
       title: 'Recargar Monedero',
       footer: ElevatedButtonWidget(
         title: 'Recargar S/. 9.00',
-        onPressed: () {},
+        onPressed: (groupValue > 0) ? () {
+
+        } : null,
       ),
       children: [
         SizedBox(

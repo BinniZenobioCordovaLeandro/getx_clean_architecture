@@ -5,7 +5,6 @@ import 'package:pickpointer/src/core/widgets/list_tile_switch_widget.dart';
 
 class ListTileSwitchCardWidget extends StatelessWidget {
   final ShapeBorder? shape;
-  final dynamic groupValue;
   final dynamic value;
   final Function(dynamic value)? onChanged;
   final Widget? title;
@@ -17,7 +16,6 @@ class ListTileSwitchCardWidget extends StatelessWidget {
   const ListTileSwitchCardWidget({
     Key? key,
     this.shape,
-    this.groupValue,
     this.value,
     this.onChanged,
     this.title,
@@ -32,7 +30,7 @@ class ListTileSwitchCardWidget extends StatelessWidget {
     return CardWidget(
       color: Colors.transparent,
       shape: (isSwitch == true)
-          ? (groupValue == value)
+          ? (value)
               ? RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   side: BorderSide(
@@ -49,8 +47,7 @@ class ListTileSwitchCardWidget extends StatelessWidget {
             ListTileSwitchWidget(
               isSwitch: isSwitch,
               shape:
-                  (groupValue == value) ? const RoundedRectangleBorder() : null,
-              groupValue: groupValue,
+                  (value) ? const RoundedRectangleBorder() : null,
               value: value,
               onChanged: onChanged,
               title: title,
@@ -59,7 +56,7 @@ class ListTileSwitchCardWidget extends StatelessWidget {
             ),
           if (body != null)
             AnimatedSwitcherWidget(
-              child: (groupValue == value) ? body : Container(),
+              child: (value) ? body : Container(),
             )
         ],
       ),

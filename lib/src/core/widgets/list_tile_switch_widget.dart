@@ -6,8 +6,7 @@ class ListTileSwitchWidget extends StatelessWidget {
   final Widget? title;
   final Widget? subtitle;
   final Widget? leading;
-  final dynamic value;
-  final dynamic groupValue;
+  final bool? value;
   final ShapeBorder? shape;
   final Function(dynamic value)? onChanged;
   final bool isSwitch;
@@ -18,7 +17,6 @@ class ListTileSwitchWidget extends StatelessWidget {
     this.subtitle,
     this.leading,
     this.value,
-    this.groupValue,
     this.shape,
     this.onChanged,
     this.isSwitch = true,
@@ -34,7 +32,7 @@ class ListTileSwitchWidget extends StatelessWidget {
             : RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
                 side: BorderSide(
-                  color: (value == groupValue)
+                  color: (value == true)
                       ? Theme.of(context).primaryColor
                       : Theme.of(context).cardTheme.shadowColor!,
                   width: 2,
@@ -47,13 +45,13 @@ class ListTileSwitchWidget extends StatelessWidget {
                   title: title,
                   subtitle: subtitle,
                   leading: leading,
-                  selected: value == groupValue,
+                  selected: value == true,
                   onTap: () {
                     if (onChanged != null) onChanged!(value);
                   },
                   trailing: (isSwitch == true)
                       ? Switch(
-                          value: value,
+                          value: value == true,
                           onChanged: (dynamic value) {},
                         )
                       : null),
@@ -62,13 +60,13 @@ class ListTileSwitchWidget extends StatelessWidget {
                 title: title,
                 subtitle: subtitle,
                 leading: leading,
-                selected: value == groupValue,
+                selected: value == true,
                 onTap: () {
-                  if (onChanged != null) onChanged!(value);
+                  if (onChanged != null) onChanged!(!value!);
                 },
                 trailing: (isSwitch == true)
                     ? Switch(
-                        value: value,
+                        value: value == true,
                         onChanged: (dynamic value) {
                           if (onChanged != null) onChanged!(value);
                         },

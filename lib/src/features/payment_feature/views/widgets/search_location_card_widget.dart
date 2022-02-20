@@ -7,7 +7,6 @@ import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/list_tile_switch_card_widget.dart';
-import 'package:pickpointer/src/core/widgets/switch_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
@@ -103,7 +102,8 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
               value: boolean,
               onChanged: widget.disabled
                   ? null
-                  : (value) => {
+                  : (value) {
+                        print(value);
                         WidgetsBinding.instance!
                             .addPostFrameCallback((Duration duration) {
                           setState(() {
@@ -115,7 +115,7 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                               mapController.move(widget.initialLatLng!, 15.0);
                             }
                           });
-                        })
+                        });
                       },
             ),
           ),

@@ -34,7 +34,7 @@ class _RoutesPageState extends State<RoutesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:  AppBarWidget(
+        appBar: AppBarWidget(
           title: 'PickPointer',
           actions: [
             IconButton(
@@ -68,13 +68,10 @@ class _RoutesPageState extends State<RoutesPage> {
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
-                            builder: (BuildContext context) => IconButton(
-                              icon: Icon(
-                                Icons.location_history,
-                                color: Theme.of(context).primaryColor,
-                                size: 50.0,
-                              ),
-                              onPressed: () {},
+                            builder: (BuildContext context) => const Icon(
+                              Icons.person_pin_circle_sharp,
+                              color: Colors.blueAccent,
+                              size: 50.0,
                             ),
                           )
                         ],

@@ -252,8 +252,9 @@ class _RoutePageState extends State<RoutePage> {
                                       abstractOfferEntity: abstractOfferEntity,
                                     ),
                                     arguments: {
-                                    'abstractOfferEntity': abstractOfferEntity,
-                                  },
+                                      'abstractOfferEntity':
+                                          abstractOfferEntity,
+                                    },
                                   );
                                 } else {
                                   Get.to(

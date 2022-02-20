@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pickpointer/src/core/widgets/animated_switcher_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
-import 'package:pickpointer/src/core/widgets/list_tile_radio_widget.dart';
+import 'package:pickpointer/src/core/widgets/list_tile_switch_widget.dart';
 
-class ListTileRadioCardWidget extends StatelessWidget {
+class ListTileSwitchCardWidget extends StatelessWidget {
   final ShapeBorder? shape;
   final dynamic groupValue;
   final dynamic value;
@@ -12,9 +12,9 @@ class ListTileRadioCardWidget extends StatelessWidget {
   final Widget? subtitle;
   final Widget? leading;
   final Widget? body;
-  final bool isRadio;
+  final bool isSwitch;
 
-  const ListTileRadioCardWidget({
+  const ListTileSwitchCardWidget({
     Key? key,
     this.shape,
     this.groupValue,
@@ -24,14 +24,14 @@ class ListTileRadioCardWidget extends StatelessWidget {
     this.subtitle,
     this.leading,
     this.body,
-    this.isRadio = true,
+    this.isSwitch = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CardWidget(
       color: Colors.transparent,
-      shape: (isRadio == true)
+      shape: (isSwitch == true)
           ? (groupValue == value)
               ? RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -46,8 +46,8 @@ class ListTileRadioCardWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (title != null)
-            ListTileRadioWidget(
-              isRadius: isRadio,
+            ListTileSwitchWidget(
+              isSwitch: isSwitch,
               shape:
                   (groupValue == value) ? const RoundedRectangleBorder() : null,
               groupValue: groupValue,

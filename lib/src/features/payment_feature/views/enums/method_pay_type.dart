@@ -1,0 +1,4 @@
+enum MethodPayType {
+  wallet,
+  cash,
+}

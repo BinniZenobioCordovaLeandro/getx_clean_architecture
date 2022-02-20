@@ -6,13 +6,16 @@ import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/list_tile_switch_card_widget.dart';
 import 'package:pickpointer/src/core/widgets/switch_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class SearchLocationCardWidget extends StatefulWidget {
   final String title;
   final String labelText;
+  final Widget? leading;
   final String? helperText;
   final bool? initialValue;
   final LatLng? initialLatLng;
@@ -23,6 +26,7 @@ class SearchLocationCardWidget extends StatefulWidget {
     Key? key,
     required this.title,
     required this.labelText,
+    this.leading,
     this.helperText,
     this.initialValue = false,
     this.initialLatLng,
@@ -90,31 +94,29 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
       child: WrapWidget(
         children: [
           Center(
-            child: FractionallySizedBoxWidget(
-              child: SizedBox(
-                width: double.infinity,
-                child: SwitchWidget(
-                  title: widget.title,
-                  value: boolean,
-                  onChanged: widget.disabled
-                      ? null
-                      : (value) => {
-                            WidgetsBinding.instance!
-                                .addPostFrameCallback((Duration duration) {
-                              setState(() {
-                                boolean = value!;
-                                if (value == true) {
-                                  if (widget.onChanged != null) {
-                                    widget.onChanged!(widget.initialLatLng!);
-                                  }
-                                  mapController.move(
-                                      widget.initialLatLng!, 15.0);
-                                }
-                              });
-                            })
-                          },
-                ),
+            child: ListTileSwitchCardWidget(
+              leading: widget.leading,
+              title: TextWidget(
+                widget.title,
+                style: Theme.of(context).textTheme.bodyText1,
               ),
+              value: boolean,
+              onChanged: widget.disabled
+                  ? null
+                  : (value) => {
+                        WidgetsBinding.instance!
+                            .addPostFrameCallback((Duration duration) {
+                          setState(() {
+                            boolean = value!;
+                            if (value == true) {
+                              if (widget.onChanged != null) {
+                                widget.onChanged!(widget.initialLatLng!);
+                              }
+                              mapController.move(widget.initialLatLng!, 15.0);
+                            }
+                          });
+                        })
+                      },
             ),
           ),
           if (!boolean)

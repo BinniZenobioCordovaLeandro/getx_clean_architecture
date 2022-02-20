@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
-import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
-import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
-import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
-import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
+import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
-import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
+import 'package:pickpointer/src/features/payment_feature/views/enums/method_pay_type.dart';
+import 'package:pickpointer/src/features/payment_feature/views/recharge_wallet_page.dart';
+import 'package:pickpointer/src/features/payment_feature/views/widgets/cash_method_pay_radio_widget.dart';
 import 'package:pickpointer/src/features/payment_feature/views/widgets/search_location_card_widget.dart';
-import 'package:pickpointer/src/features/route_feature/views/enums/credit_card_type.dart';
-import 'package:pickpointer/src/features/route_feature/views/widgets/list_tile_credit_card_widget.dart';
-import 'package:pickpointer/src/features/route_feature/views/widgets/list_tile_new_credit_card_widget.dart';
+import 'package:pickpointer/src/features/payment_feature/views/widgets/wallet_method_pay_radio_widget.dart';
 
 class PaymentPage extends StatefulWidget {
   final String? abstractOfferEntityId;
@@ -31,113 +29,104 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
-  CreditCardType creditCardType = CreditCardType.creditCard;
+  MethodPayType methodPayType = MethodPayType.wallet;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarWidget(
-        title: 'Pagar viaje',
-        showGoback: true,
+    return ScaffoldScrollWidget(
+      title: 'Pagar viaje',
+      footer: ElevatedButtonWidget(
+        title: 'Pagar S/. 9.00',
+        onPressed: () {},
       ),
-      body: SafeAreaWidget(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollViewWidget(
-                child: Center(
-                  child: FractionallySizedBoxWidget(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: WrapWidget(
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            child: TextWidget(
-                              'Configuración de Ruta',
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                          ),
-                          SizedBox(
-                            child: SearchLocationCardWidget(
-                              title: 'Salgo del origen de la ruta',
-                              labelText: 'Recogeme en',
-                              helperText:
-                                  'El punto de recojo, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
-                              initialLatLng: LatLng(
-                                double.parse(
-                                    '${widget.abstractOfferEntity!.startLat}'),
-                                double.parse(
-                                    '${widget.abstractOfferEntity!.startLng}'),
-                              ),
-                              onChanged: (LatLng latLng) {
-                                print(latLng);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            child: SearchLocationCardWidget(
-                              title: 'Voy al destino de la ruta',
-                              initialValue: true,
-                              disabled: true,
-                              labelText: 'Dejame en',
-                              helperText:
-                                  'El punto de bajada, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
-                              initialLatLng: LatLng(
-                                double.parse(
-                                    '${widget.abstractOfferEntity!.endLat}'),
-                                double.parse(
-                                    '${widget.abstractOfferEntity!.endLng}'),
-                              ),
-                              onChanged: (LatLng latLng) {
-                                print(latLng);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: TextWidget(
-                              'Metodos de pago',
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                          ),
-                          ListTileCreditCardWidget(
-                            groupValue: creditCardType,
-                            value: CreditCardType.creditCard,
-                            onChanged: (value) {
-                              setState(() {
-                                creditCardType = value as CreditCardType;
-                              });
-                            },
-                          ),
-                          ListTileNewCreditCardWidget(
-                            groupValue: creditCardType,
-                            value: CreditCardType.newCreditCard,
-                            onChanged: (value) {
-                              setState(() {
-                                creditCardType = value as CreditCardType;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: FractionallySizedBoxWidget(
-                child: ElevatedButtonWidget(
-                  title: 'Pagar S/. 9.00',
-                  onPressed: () {},
-                ),
-              ),
-            )
-          ],
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: TextWidget(
+            'Configuración de Ruta',
+            style: Theme.of(context).textTheme.headline6,
+          ),
         ),
-      ),
+        SizedBox(
+          child: SearchLocationCardWidget(
+            title: 'Salgo del origen de la ruta',
+            labelText: 'Recogeme en',
+            leading: const Icon(
+              Icons.taxi_alert_outlined,
+              color: Colors.blue,
+            ),
+            helperText:
+                'El punto de recojo, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
+            initialLatLng: LatLng(
+              double.parse('${widget.abstractOfferEntity!.startLat}'),
+              double.parse('${widget.abstractOfferEntity!.startLng}'),
+            ),
+            onChanged: (LatLng latLng) {
+              print(latLng);
+            },
+          ),
+        ),
+        SizedBox(
+          child: SearchLocationCardWidget(
+            title: 'Voy al destino de la ruta',
+            labelText: 'Dejame en',
+            leading: const Icon(
+              Icons.location_pin,
+              color: Colors.red,
+            ),
+            initialValue: true,
+            disabled: true,
+            helperText:
+                'El punto de bajada, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
+            initialLatLng: LatLng(
+              double.parse('${widget.abstractOfferEntity!.endLat}'),
+              double.parse('${widget.abstractOfferEntity!.endLng}'),
+            ),
+            onChanged: (LatLng latLng) {
+              print(latLng);
+            },
+          ),
+        ),
+        const Divider(),
+        SizedBox(
+          width: double.infinity,
+          child: TextWidget(
+            'Metodos de pago',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+        ),
+        WalletMethodPayRadioWidget(
+          title: 'Monedero (Saldo S/ 6.00)',
+          groupValue: methodPayType,
+          value: MethodPayType.wallet,
+          toRecharge: true,
+          onPressed: () {
+            Get.to(
+              () => const RechargeWalletPage(
+                amount: 15.00,
+              ),
+              arguments: {
+                'amount': 15.00,
+              },
+            );
+          },
+          onChanged: (value) {
+            setState(() {
+              methodPayType = value;
+            });
+          },
+        ),
+        CashMethodPayRadioWidget(
+          title: 'Cash',
+          groupValue: methodPayType,
+          value: MethodPayType.cash,
+          onChanged: (value) {
+            setState(() {
+              methodPayType = value;
+            });
+          },
+        ),
+      ],
     );
   }
 }

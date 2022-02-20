@@ -3,6 +3,7 @@ import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/features/payment_feature/views/enums/credit_card_type.dart';
+import 'package:pickpointer/src/features/payment_feature/views/widgets/list_amount_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/list_tile_credit_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/list_tile_new_credit_card_widget.dart';
 
@@ -20,6 +21,7 @@ class RechargeWalletPage extends StatefulWidget {
 
 class _RechargeWalletPageState extends State<RechargeWalletPage> {
   CreditCardType creditCardType = CreditCardType.creditCard;
+  double groupValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,9 @@ class _RechargeWalletPageState extends State<RechargeWalletPage> {
             'Monto de recarga',
             style: Theme.of(context).textTheme.headline6,
           ),
+        ),
+        ListAmountWidget(
+          onChanged: (value) {}
         ),
         const Divider(),
         SizedBox(

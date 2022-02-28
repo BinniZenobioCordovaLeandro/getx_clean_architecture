@@ -5,11 +5,10 @@ import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offe
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
+import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
 import 'package:pickpointer/src/features/payment_feature/views/enums/method_pay_type.dart';
-import 'package:pickpointer/src/features/payment_feature/views/recharge_wallet_page.dart';
 import 'package:pickpointer/src/features/payment_feature/views/widgets/cash_method_pay_radio_widget.dart';
 import 'package:pickpointer/src/features/payment_feature/views/widgets/search_location_card_widget.dart';
-import 'package:pickpointer/src/features/payment_feature/views/widgets/wallet_method_pay_radio_widget.dart';
 
 class PaymentPage extends StatefulWidget {
   final String? abstractOfferEntityId;
@@ -34,10 +33,14 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldScrollWidget(
-      title: 'Pagar viaje',
+      title: 'Contratar viaje',
       footer: ElevatedButtonWidget(
-        title: 'Pagar S/. 9.00',
-        onPressed: () {},
+        title: 'Contratar S/. 9.00',
+        onPressed: () {
+          Get.to(
+            () => const OrderPage(),
+          );
+        },
       ),
       children: [
         SizedBox(
@@ -95,27 +98,27 @@ class _PaymentPageState extends State<PaymentPage> {
             style: Theme.of(context).textTheme.headline6,
           ),
         ),
-        WalletMethodPayRadioWidget(
-          title: 'Monedero (Saldo S/ 6.00)',
-          groupValue: methodPayType,
-          value: MethodPayType.wallet,
-          toRecharge: true,
-          onPressed: () {
-            Get.to(
-              () => const RechargeWalletPage(
-                amount: 15.00,
-              ),
-              arguments: {
-                'amount': 15.00,
-              },
-            );
-          },
-          onChanged: (value) {
-            setState(() {
-              methodPayType = value;
-            });
-          },
-        ),
+        // WalletMethodPayRadioWidget(
+        //   title: 'Monedero (Saldo S/ 6.00)',
+        //   groupValue: methodPayType,
+        //   value: MethodPayType.wallet,
+        //   toRecharge: true,
+        //   onPressed: () {
+        //     Get.to(
+        //       () => const RechargeWalletPage(
+        //         amount: 15.00,
+        //       ),
+        //       arguments: {
+        //         'amount': 15.00,
+        //       },
+        //     );
+        //   },
+        //   onChanged: (value) {
+        //     setState(() {
+        //       methodPayType = value;
+        //     });
+        //   },
+        // ),
         CashMethodPayRadioWidget(
           title: 'Cash',
           groupValue: methodPayType,

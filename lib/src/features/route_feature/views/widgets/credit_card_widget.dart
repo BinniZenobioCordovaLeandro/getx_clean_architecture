@@ -15,40 +15,44 @@ class CreditCardWidget extends StatelessWidget {
       width: double.infinity,
       child: Stack(
         children: [
-          BlurWidget(
+          const BlurWidget(
             child: CardWidget(
               color: Colors.transparent,
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  children: const [
-                    SizedBox(
-                      height: 8,
-                    ),
-                    TextFieldWidget(
-                      labelText: 'CVV',
-                    ),
-                  ],
+              child: FractionallySizedBoxWidget(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: WrapWidget(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextFieldWidget(
+                          labelText: 'CVV',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
           CardWidget(
             color: Colors.transparent,
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  TextFieldWidget(
-                    labelText: 'CVV',
-                    onChanged: (value) {
-                      print('$value');
-                    },
-                  ),
-                ],
+            child: FractionallySizedBoxWidget(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: WrapWidget(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextFieldWidget(
+                        labelText: 'CVV',
+                        onChanged: (value) {
+                          print('$value');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

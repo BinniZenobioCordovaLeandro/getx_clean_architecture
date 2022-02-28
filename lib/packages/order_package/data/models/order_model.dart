@@ -24,6 +24,10 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? userPhone;
   @override
+  final String? userPickPointLat;
+  @override
+  final String? userPickPointLng;
+  @override
   final String? routeId;
   @override
   final String? routeDescription;
@@ -33,6 +37,14 @@ class OrderModel implements AbstractOrderEntity {
   final String? routeQuantity;
   @override
   final String? routeTotal;
+  @override
+  final String? routeStartLat;
+  @override
+  final String? routeStartLng;
+  @override
+  final String? routeEndLat;
+  @override
+  final String? routeEndLng;
   @override
   final String? driverId;
   @override
@@ -57,11 +69,17 @@ class OrderModel implements AbstractOrderEntity {
     this.userName,
     this.userEmail,
     this.userPhone,
+    this.userPickPointLat,
+    this.userPickPointLng,
     this.routeId,
     this.routeDescription,
     this.routePrice,
     this.routeQuantity,
     this.routeTotal,
+    this.routeStartLat,
+    this.routeStartLng,
+    this.routeEndLat,
+    this.routeEndLng,
     this.driverId,
     this.driverName,
     this.driverEmail,
@@ -80,11 +98,17 @@ class OrderModel implements AbstractOrderEntity {
         userName: data['user_name'] as String?,
         userEmail: data['user_email'] as String?,
         userPhone: data['user_phone'] as String?,
+        userPickPointLat: data['user_pick_point_lat'] as String?,
+        userPickPointLng: data['user_pick_point_lng'] as String?,
         routeId: data['route_id'] as String?,
         routeDescription: data['route_description'] as String?,
         routePrice: data['route_price'] as String?,
         routeQuantity: data['route_quantity'] as String?,
         routeTotal: data['route_total'] as String?,
+        routeStartLat: data['route_start_lat'] as String?,
+        routeStartLng: data['route_start_lng'] as String?,
+        routeEndLat: data['route_end_lat'] as String?,
+        routeEndLng: data['route_end_lng'] as String?,
         driverId: data['driver_id'] as String?,
         driverName: data['driver_name'] as String?,
         driverEmail: data['driver_email'] as String?,
@@ -103,11 +127,17 @@ class OrderModel implements AbstractOrderEntity {
         'user_name': userName,
         'user_email': userEmail,
         'user_phone': userPhone,
+        'user_pick_point_lat': userPickPointLat,
+        'user_pick_point_lng': userPickPointLng,
         'route_id': routeId,
         'route_description': routeDescription,
         'route_price': routePrice,
         'route_quantity': routeQuantity,
         'route_total': routeTotal,
+        'route_start_lat': routeStartLat,
+        'route_start_lng': routeStartLng,
+        'route_end_lat': routeEndLat,
+        'route_end_lng': routeEndLng,
         'driver_id': driverId,
         'driver_name': driverName,
         'driver_email': driverEmail,
@@ -138,11 +168,17 @@ class OrderModel implements AbstractOrderEntity {
     String? userName,
     String? userEmail,
     String? userPhone,
+    String? userPickPointLat,
+    String? userPickPointLng,
     String? routeId,
     String? routeDescription,
     String? routePrice,
     String? routeQuantity,
     String? routeTotal,
+    String? routeStartLat,
+    String? routeStartLng,
+    String? routeEndLat,
+    String? routeEndLng,
     String? driverId,
     String? driverName,
     String? driverEmail,
@@ -160,11 +196,16 @@ class OrderModel implements AbstractOrderEntity {
       userName: userName ?? this.userName,
       userEmail: userEmail ?? this.userEmail,
       userPhone: userPhone ?? this.userPhone,
+      userPickPointLat: userPickPointLat ?? this.userPickPointLat,
       routeId: routeId ?? this.routeId,
       routeDescription: routeDescription ?? this.routeDescription,
       routePrice: routePrice ?? this.routePrice,
       routeQuantity: routeQuantity ?? this.routeQuantity,
       routeTotal: routeTotal ?? this.routeTotal,
+      routeStartLat: routeStartLat ?? this.routeStartLat,
+      routeStartLng: routeStartLng ?? this.routeStartLng,
+      routeEndLat: routeEndLat ?? this.routeEndLat,
+      routeEndLng: routeEndLng ?? this.routeEndLng,
       driverId: driverId ?? this.driverId,
       driverName: driverName ?? this.driverName,
       driverEmail: driverEmail ?? this.driverEmail,
@@ -189,11 +230,17 @@ class OrderModel implements AbstractOrderEntity {
       userName,
       userEmail,
       userPhone,
+      userPickPointLat,
+      userPickPointLng,
       routeId,
       routeDescription,
       routePrice,
       routeQuantity,
       routeTotal,
+      routeStartLat,
+      routeStartLng,
+      routeEndLat,
+      routeEndLng,
       driverId,
       driverName,
       driverEmail,

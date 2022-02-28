@@ -11,11 +11,17 @@ abstract class AbstractOrderEntity extends Equatable {
   final String? userName;
   final String? userEmail;
   final String? userPhone;
+  final String? userPickPointLat;
+  final String? userPickPointLng;
   final String? routeId;
   final String? routeDescription;
   final String? routePrice;
   final String? routeQuantity;
   final String? routeTotal;
+  final String? routeStartLat;
+  final String? routeStartLng;
+  final String? routeEndLat;
+  final String? routeEndLng;
   final String? driverId;
   final String? driverName;
   final String? driverEmail;
@@ -30,6 +36,8 @@ abstract class AbstractOrderEntity extends Equatable {
     this.userName,
     this.userEmail,
     this.userPhone,
+    this.userPickPointLat,
+    this.userPickPointLng,
     this.price,
     this.total,
     this.status,
@@ -39,6 +47,10 @@ abstract class AbstractOrderEntity extends Equatable {
     this.routePrice,
     this.routeQuantity,
     this.routeTotal,
+    this.routeStartLat,
+    this.routeStartLng,
+    this.routeEndLat,
+    this.routeEndLng,
     this.driverId,
     this.driverName,
     this.driverEmail,

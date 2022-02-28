@@ -27,9 +27,7 @@ class RoutePage extends StatefulWidget {
     Key? key,
     this.abstractRouteEntity,
     this.abstractRouteEntityId,
-  })  : assert(
-          abstractRouteEntity != null || abstractRouteEntityId != null,
-        ),
+  })  : assert(abstractRouteEntity != null || abstractRouteEntityId != null),
         super(key: key);
 
   @override

@@ -4,6 +4,7 @@ import 'package:pickpointer/packages/order_package/data/datasources/firebase_ord
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/usecases/get_order_usecase.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
+import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
 
 class OrderController extends GetxController {
@@ -17,6 +18,8 @@ class OrderController extends GetxController {
 
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
 
+  NotificationProvider? notificationProvider =
+      NotificationProvider.getInstance();
   GetOrderUsecase getOrderUsecase = GetOrderUsecase(
     abstractOrderRepository: FirebaseOrderDatasource(),
   );
@@ -43,6 +46,14 @@ class OrderController extends GetxController {
     return futureListLatLng;
   }
 
+  Future<bool>? sendNotification() {
+    Future<bool>? futureBool = notificationProvider?.sendNotification(
+      title: 'title',
+      body: 'body',
+    ).then((value) => value);
+    return futureBool;
+  }
+
   @override
   void onReady() {
     // AbstractOrderEntity _abstractOrderEntity =
@@ -59,12 +70,13 @@ class OrderController extends GetxController {
         double.parse('${abstractOrderEntity.userPickPointLng}'),
       );
       latLngBounds.value = [origin, destination];
-      getPolylineBetweenCoordinates(
-        origin: origin,
-        destination: destination,
-      ).then(
-        (value) => polylineListLatLng.value = value,
-      );
+      polylineListLatLng.value = [origin, destination];
+      // getPolylineBetweenCoordinates( // TODO: HIGHT COST
+      //   origin: origin,
+      //   destination: destination,
+      // ).then(
+      //   (value) => polylineListLatLng.value = value,
+      // );
     });
   }
 }

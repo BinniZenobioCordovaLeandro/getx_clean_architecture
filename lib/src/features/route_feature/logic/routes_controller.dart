@@ -10,6 +10,7 @@ import 'package:pickpointer/packages/route_package/domain/usecases/get_routes_us
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
+import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/places_provider.dart';
 
 class RoutesController extends GetxController {
@@ -34,6 +35,7 @@ class RoutesController extends GetxController {
     abstractRouteRepository: FirebaseRouteDatasource(),
   );
 
+  final NotificationProvider? notificationProvider = NotificationProvider.getInstance();
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
   final PlacesProvider? placesProvider = PlacesProvider.getInstance();
@@ -41,6 +43,7 @@ class RoutesController extends GetxController {
   @override
   void onReady() {
     isLoading.value = true;
+    notificationProvider?.checkPermission();
     geolocatorProvider?.checkPermission().then((bool boolean) {
       if (boolean) {
         geolocatorProvider?.getCurrentPosition()?.then((Position? position) {

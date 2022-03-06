@@ -1,9 +1,11 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
+import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/features/order_feature/logic/order_controller.dart';
@@ -71,6 +73,16 @@ class _OrderPageState extends State<OrderPage> {
                 right: 0,
                 child: LinearProgressIndicatorWidget(),
               ),
+            Positioned(
+              top: 16,
+              left: 0,
+              right: 0,
+              child: ElevatedButtonWidget(
+                  title: 'send me a notification',
+                  onPressed: () {
+                    orderController.sendNotification();
+                  }),
+            ),
           ],
         );
       }),

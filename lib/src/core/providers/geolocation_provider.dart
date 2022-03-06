@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 
 class GeolocatorProvider {
   static GeolocatorProvider? _instance;
@@ -46,5 +47,24 @@ class GeolocatorProvider {
     }, onError: (dynamic error) {
       throw Exception(error.toString());
     });
+  }
+
+  double distanceBetween(
+      startLatitude, startLongitude, endLatitude, endLongitude) {
+    return Geolocator.distanceBetween(
+        startLatitude, startLongitude, endLatitude, endLongitude);
+  }
+
+  double getDistanceBetweenPoints({
+    required LatLng origin,
+    required LatLng destination,
+  }) {
+    double distanceInMeters = Geolocator.distanceBetween(
+      origin.latitude,
+      origin.longitude,
+      destination.latitude,
+      destination.longitude,
+    );
+    return distanceInMeters;
   }
 }

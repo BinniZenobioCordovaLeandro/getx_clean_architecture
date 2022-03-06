@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/order_package/data/datasources/firebase_order_datasource.dart';
@@ -13,13 +14,18 @@ class OrderController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var polylineListLatLng = <LatLng>[].obs;
-  var position = LatLng(-12.0, -76.0).obs;
+  var listWayPoints = <LatLng>[].obs;
+  var polylineTaxiListLatLng = <LatLng>[].obs;
+  var distanceTaxi = 0.0.obs;
+  var positionTaxi = LatLng(-12.0, -76.0).obs;
+  var pickPoint = LatLng(-12.0, -76.0).obs;
   var latLngBounds = <LatLng>[].obs;
 
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
 
   NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
+
   GetOrderUsecase getOrderUsecase = GetOrderUsecase(
     abstractOrderRepository: FirebaseOrderDatasource(),
   );
@@ -47,36 +53,68 @@ class OrderController extends GetxController {
   }
 
   Future<bool>? sendNotification() {
-    Future<bool>? futureBool = notificationProvider?.sendNotification(
-      title: 'title',
-      body: 'body',
-    ).then((value) => value);
+    Future<bool>? futureBool = notificationProvider
+        ?.sendNotification(
+          title: 'title',
+          body: 'body',
+        )
+        .then((value) => value);
     return futureBool;
   }
 
   @override
   void onReady() {
-    // AbstractOrderEntity _abstractOrderEntity =
-    //     Get.arguments['abstractOrderEntity'];
-    getOrderUsecase
-        .call(orderId: '1')
-        ?.then((AbstractOrderEntity abstractOrderEntity) {
-      LatLng origin = LatLng(
+    AbstractOrderEntity abstractOrderEntity =
+        Get.arguments['abstractOrderEntity'];
+    LatLng origin = LatLng(
+      double.parse('${abstractOrderEntity.routeStartLat}'),
+      double.parse('${abstractOrderEntity.routeStartLng}'),
+    );
+    LatLng destination = LatLng(
+      double.parse('${abstractOrderEntity.userPickPointLat}'),
+      double.parse('${abstractOrderEntity.userPickPointLng}'),
+    );
+    pickPoint.value = LatLng(
+      double.parse('${abstractOrderEntity.userPickPointLat}'),
+      double.parse('${abstractOrderEntity.userPickPointLng}'),
+    );
+    positionTaxi.value = origin;
+    latLngBounds.value = [origin, destination];
+    polylineTaxiListLatLng.value = [origin, destination];
+    distanceTaxi.value = geolocatorProvider!.getDistanceBetweenPoints(
+      origin: origin,
+      destination: destination,
+    );
+    showOfferPolylineMarkers(abstractOrderEntity);
+  }
+
+  showOfferPolylineMarkers(AbstractOrderEntity abstractOrderEntity) {
+    List<LatLng> listLatLng = [];
+    String? wayPoints = abstractOrderEntity.routeWayPoints;
+    if (wayPoints != null && wayPoints.length > 10) {
+      List list = jsonDecode(wayPoints);
+      listLatLng = list.map((string) {
+        var split = string.split(',');
+        LatLng latLng = LatLng(
+          double.parse(split[0].trim()),
+          double.parse(split[1].trim()),
+        );
+        return latLng;
+      }).toList();
+    }
+    listWayPoints.value = listLatLng;
+    getPolylineBetweenCoordinates(
+      origin: LatLng(
         double.parse('${abstractOrderEntity.routeStartLat}'),
         double.parse('${abstractOrderEntity.routeStartLng}'),
-      );
-      LatLng destination = LatLng(
-        double.parse('${abstractOrderEntity.userPickPointLat}'),
-        double.parse('${abstractOrderEntity.userPickPointLng}'),
-      );
-      latLngBounds.value = [origin, destination];
-      polylineListLatLng.value = [origin, destination];
-      // getPolylineBetweenCoordinates( // TODO: HIGHT COST
-      //   origin: origin,
-      //   destination: destination,
-      // ).then(
-      //   (value) => polylineListLatLng.value = value,
-      // );
-    });
+      ),
+      destination: LatLng(
+        double.parse('${abstractOrderEntity.routeEndLat}'),
+        double.parse('${abstractOrderEntity.routeEndLng}'),
+      ),
+      wayPoints: listLatLng,
+    ).then(
+      (value) => polylineListLatLng.value = value,
+    );
   }
 }

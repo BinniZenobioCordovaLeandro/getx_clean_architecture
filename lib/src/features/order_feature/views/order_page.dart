@@ -1,14 +1,20 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
-import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
+import 'package:pickpointer/src/core/widgets/drawer_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
+import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
+import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/features/order_feature/logic/order_controller.dart';
+import 'package:pickpointer/src/features/order_feature/views/widgets/call_card_widget.dart';
+import 'package:pickpointer/src/features/order_feature/views/widgets/messages_box_widget.dart';
+import 'package:pickpointer/src/features/order_feature/views/widgets/order_card_widget.dart';
+import 'package:pickpointer/src/features/order_feature/views/widgets/popup_marker_taxi_widget.dart';
 
 class OrderPage extends StatefulWidget {
   final String? abstractOrderEntityId;
@@ -25,15 +31,38 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final OrderController orderController = OrderController.instance;
   final MapController mapController = MapController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: const AppBarWidget(
-        title: 'Order 12383722',
+      key: _scaffoldKey,
+      resizeToAvoidBottomInset: true,
+      endDrawer: const DrawerWidget(
+        title: 'Messages',
+        child: MessagesBoxWidget(),
+      ),
+      endDrawerEnableOpenDragGesture: true,
+      appBar: AppBarWidget(
+        title: 'Order ${widget.abstractOrderEntity?.id}',
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.ios_share_rounded,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState!.openEndDrawer();
+            },
+            icon: const Icon(
+              Icons.message_rounded,
+            ),
+          ),
+        ],
       ),
       body: Obx(() {
         return Stack(
@@ -54,13 +83,94 @@ class _OrderPageState extends State<OrderPage> {
                       polylines: [
                         Polyline(
                           points: <LatLng>[
-                            ...orderController.polylineListLatLng.value,
+                            ...orderController.polylineTaxiListLatLng.value,
                           ],
                           strokeWidth: 5,
                           color: Colors.blue,
                           isDotted: true,
                         ),
                       ],
+                    ),
+                  ),
+                  PolylineLayerWidget(
+                  options: PolylineLayerOptions(
+                    // ignore: invalid_use_of_protected_member
+                    polylines: [
+                      Polyline(
+                        points: <LatLng>[
+                          ...orderController.polylineListLatLng.value,
+                        ],
+                        strokeWidth: 5,
+                        color: Colors.black,
+                        isDotted: true,
+                        gradientColors: <Color>[
+                          Colors.blue,
+                          Colors.red,
+                          Colors.red,
+                          Colors.red,
+                          Colors.red,
+                          Colors.red,
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                  MarkerLayerWidget(
+                    options: MarkerLayerOptions(
+                      markers: [
+                        for (var wayPoint
+                            in orderController.listWayPoints.value)
+                          Marker(
+                            width: 20,
+                            height: 20,
+                            anchorPos: AnchorPos.align(
+                              AnchorAlign.top,
+                            ),
+                            point: wayPoint,
+                            builder: (BuildContext context) => Icon(
+                              Icons.person_pin,
+                              color: Theme.of(context).primaryColor,
+                              size: 20,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  PopupMarkerLayerWidget(
+                    options: PopupMarkerLayerOptions(
+                      markers: [
+                        Marker(
+                          width: 50,
+                          height: 50,
+                          anchorPos: AnchorPos.align(
+                            AnchorAlign.center,
+                          ),
+                          point: orderController.positionTaxi.value,
+                          builder: (BuildContext context) => Icon(
+                            Icons.local_taxi_rounded,
+                            color: Theme.of(context).primaryColor,
+                            size: 50,
+                          ),
+                        ),
+                        Marker(
+                          width: 50,
+                          height: 50,
+                          anchorPos: AnchorPos.align(
+                            AnchorAlign.top,
+                          ),
+                          point: orderController.pickPoint.value,
+                          builder: (BuildContext context) => const Icon(
+                            Icons.person_pin_circle_sharp,
+                            color: Colors.blue,
+                            size: 50,
+                          ),
+                        ),
+                      ],
+                      popupBuilder: (BuildContext context, Marker marker) {
+                        return PopupMarkerTaxiWidget(
+                          meters: orderController.distanceTaxi.value,
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -77,11 +187,23 @@ class _OrderPageState extends State<OrderPage> {
               top: 16,
               left: 0,
               right: 0,
-              child: ElevatedButtonWidget(
-                  title: 'send me a notification',
-                  onPressed: () {
-                    orderController.sendNotification();
-                  }),
+              child: SafeAreaWidget(
+                child: FractionallySizedBoxWidget(
+                  child: OrderCardWidget(
+                    abstractOrderEntity: widget.abstractOrderEntity,
+                  ),
+                ),
+              ),
+            ),
+            const Positioned(
+              bottom: 16,
+              left: 0,
+              right: 0,
+              child: SafeAreaWidget(
+                child: FractionallySizedBoxWidget(
+                  child: CallCardWidget(),
+                ),
+              ),
             ),
           ],
         );

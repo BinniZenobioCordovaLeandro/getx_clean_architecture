@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
+import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
+import 'package:pickpointer/src/features/payment_feature/logic/payment_controller.dart';
 import 'package:pickpointer/src/features/payment_feature/views/enums/method_pay_type.dart';
 import 'package:pickpointer/src/features/payment_feature/views/widgets/cash_method_pay_radio_widget.dart';
 import 'package:pickpointer/src/features/payment_feature/views/widgets/search_location_card_widget.dart';
@@ -28,6 +30,8 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  final PaymentController paymentController = PaymentController.instance;
+
   MethodPayType methodPayType = MethodPayType.wallet;
 
   @override
@@ -37,9 +41,18 @@ class _PaymentPageState extends State<PaymentPage> {
       footer: ElevatedButtonWidget(
         title: 'Contratar S/. 9.00',
         onPressed: () {
-          Get.to(
-            () => const OrderPage(),
-          );
+          paymentController
+              .createOrder()
+              .then((AbstractOrderEntity abstractOrderEntity) => {
+                    Get.to(
+                      () => OrderPage(
+                        abstractOrderEntity: abstractOrderEntity,
+                      ),
+                      arguments: {
+                        'abstractOrderEntity': abstractOrderEntity,
+                      },
+                    )
+                  });
         },
       ),
       children: [

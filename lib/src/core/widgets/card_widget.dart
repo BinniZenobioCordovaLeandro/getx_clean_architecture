@@ -8,7 +8,6 @@ class CardWidget extends StatelessWidget {
   final Color? color;
   final EdgeInsetsGeometry? margin;
   final bool? borderOnForeground;
-  final bool? withBorder;
   final double? width;
 
   const CardWidget({
@@ -20,7 +19,7 @@ class CardWidget extends StatelessWidget {
     this.color,
     this.margin = EdgeInsets.zero,
     this.borderOnForeground = true,
-    this.withBorder = false,
+
     this.width = double.infinity,
   }) : super(key: key);
 

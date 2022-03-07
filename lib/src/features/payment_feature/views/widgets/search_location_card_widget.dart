@@ -89,11 +89,20 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
   Widget build(BuildContext context) {
     return CardWidget(
       color: Theme.of(context).backgroundColor,
-      withBorder: true,
+      shape: (!boolean)
+          ? RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              side: BorderSide(
+                color: Theme.of(context).primaryColor,
+                width: 2,
+              ),
+            )
+          : const RoundedRectangleBorder(),
       child: WrapWidget(
         children: [
           Center(
             child: ListTileSwitchCardWidget(
+              showBorder: false,
               leading: widget.leading,
               title: TextWidget(
                 widget.title,
@@ -103,20 +112,20 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
               onChanged: widget.disabled
                   ? null
                   : (value) {
-                        print(value);
-                        WidgetsBinding.instance!
-                            .addPostFrameCallback((Duration duration) {
-                          setState(() {
-                            boolean = value!;
-                            if (value == true) {
-                              if (widget.onChanged != null) {
-                                widget.onChanged!(widget.initialLatLng!);
-                              }
-                              mapController.move(widget.initialLatLng!, 15.0);
+                      print(value);
+                      WidgetsBinding.instance!
+                          .addPostFrameCallback((Duration duration) {
+                        setState(() {
+                          boolean = value!;
+                          if (value == true) {
+                            if (widget.onChanged != null) {
+                              widget.onChanged!(widget.initialLatLng!);
                             }
-                          });
+                            mapController.move(widget.initialLatLng!, 15.0);
+                          }
                         });
-                      },
+                      });
+                    },
             ),
           ),
           if (!boolean)

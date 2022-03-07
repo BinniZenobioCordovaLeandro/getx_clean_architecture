@@ -12,6 +12,7 @@ class ListTileSwitchCardWidget extends StatelessWidget {
   final Widget? leading;
   final Widget? body;
   final bool isSwitch;
+  final bool? showBorder;
 
   const ListTileSwitchCardWidget({
     Key? key,
@@ -23,31 +24,33 @@ class ListTileSwitchCardWidget extends StatelessWidget {
     this.leading,
     this.body,
     this.isSwitch = true,
+    this.showBorder = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CardWidget(
       color: Colors.transparent,
-      shape: (isSwitch == true)
-          ? (value)
-              ? RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  side: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                )
-              : const RoundedRectangleBorder()
-          : null,
+      shape: showBorder != true
+          ? null
+          : (isSwitch == true)
+              ? (value)
+                  ? RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      ),
+                    )
+                  : const RoundedRectangleBorder()
+              : null,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (title != null)
             ListTileSwitchWidget(
               isSwitch: isSwitch,
-              shape:
-                  (value) ? const RoundedRectangleBorder() : null,
+              shape: (value) ? const RoundedRectangleBorder() : null,
               value: value,
               onChanged: onChanged,
               title: title,

@@ -12,6 +12,7 @@ import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.da
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
 import 'package:pickpointer/src/features/payment_feature/views/payment_page.dart';
 import 'package:pickpointer/src/features/route_feature/logic/route_controller.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/offer_card_widget.dart';
@@ -50,7 +51,25 @@ class _RoutePageState extends State<RoutePage> {
         showGoback: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              if (routeController.isSigned.value == false) {
+                routeController.verifySession();
+              }
+              if (routeController.isSigned.value) {
+                Get.to(
+                  () => OfferPage(
+                    abstractRouteEntity: widget.abstractRouteEntity!,
+                  ),
+                  arguments: {
+                    'abstractRouteEntity': widget.abstractRouteEntity,
+                  },
+                );
+              } else {
+                Get.to(
+                  () => const SignInUserPage(),
+                );
+              }
+            },
             tooltip: 'Realizar ruta',
             icon: Icon(
               Icons.taxi_alert_outlined,

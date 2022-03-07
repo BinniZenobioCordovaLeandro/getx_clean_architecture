@@ -61,10 +61,10 @@ class OfferCardWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 TextWidget(
-                                  '***-***',
+                                  'Hyundai Negro',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline6
+                                      .bodyText1
                                       ?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -129,10 +129,10 @@ class OfferCardWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 TextWidget(
-                                  '***-***',
+                                  'Hyundai Negro',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline6
+                                      .bodyText1
                                       ?.copyWith(
                                         color: Theme.of(context).primaryColor,
                                         fontWeight: FontWeight.bold,

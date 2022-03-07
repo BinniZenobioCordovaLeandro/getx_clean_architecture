@@ -9,7 +9,7 @@ class TextFieldWidget extends StatelessWidget {
   final String? helperText;
   final String? hintText;
   final bool? enabled;
-  final TextInputType? textInputType;
+  final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final TextAlignVertical? textAlignVertical;
   final Function(String string)? onChanged;
@@ -39,7 +39,7 @@ class TextFieldWidget extends StatelessWidget {
     this.helperText,
     this.hintText,
     this.enabled = true,
-    this.textInputType,
+    this.keyboardType,
     this.onChanged,
     this.onFieldSubmitted,
     this.initialValue,
@@ -73,7 +73,7 @@ class TextFieldWidget extends StatelessWidget {
         if (onChanged != null) onChanged!(value);
       },
       onFieldSubmitted: onFieldSubmitted,
-      keyboardType: textInputType,
+      keyboardType: keyboardType,
       textInputAction: textInputAction,
       textAlignVertical: textAlignVertical,
       decoration: InputDecoration(

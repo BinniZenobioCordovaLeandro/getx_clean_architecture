@@ -37,10 +37,11 @@ class CallCardWidget extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              'Binni Zenobio Cordova Leandro',
+                              'Roberto Gomez Bolaños De La Cruz',
                               maxLines: 2,
                               style: Theme.of(context).textTheme.bodyText2,
                               textAlign: TextAlign.right,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           VerticalDivider(
@@ -109,10 +110,11 @@ class CallCardWidget extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            'Binni Zenobio Cordova Leandro',
+                            'Roberto Gomez Bolaños De La Cruz',
                             maxLines: 2,
                             style: Theme.of(context).textTheme.bodyText2,
                             textAlign: TextAlign.right,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         VerticalDivider(

@@ -39,7 +39,7 @@ class _RoutesPageState extends State<RoutesPage> {
           actions: [
             IconButton(
               onPressed: () {},
-              tooltip: 'Create route',
+              tooltip: 'Crear nueva ruta',
               icon: Icon(
                 Icons.add_location_alt_rounded,
                 color: Theme.of(context).appBarTheme.actionsIconTheme?.color,

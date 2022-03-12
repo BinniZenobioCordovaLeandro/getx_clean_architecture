@@ -29,6 +29,7 @@ class TextFieldWidget extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final List<TextInputFormatter>? inputFormatters;
   final bool autofocus;
+  final FormFieldValidator<String>? validator;
 
   const TextFieldWidget({
     Key? key,
@@ -59,6 +60,7 @@ class TextFieldWidget extends StatelessWidget {
     this.autofocus = false,
     this.textInputAction,
     this.textAlignVertical = TextAlignVertical.center,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -76,6 +78,7 @@ class TextFieldWidget extends StatelessWidget {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       textAlignVertical: textAlignVertical,
+      validator: validator,
       decoration: InputDecoration(
         labelText: labelText.toString(),
         errorText: errorText,

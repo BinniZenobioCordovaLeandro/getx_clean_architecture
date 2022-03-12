@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
+import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
@@ -56,13 +57,23 @@ class _RoutePageState extends State<RoutePage> {
                 routeController.verifySession();
               }
               if (routeController.isSigned.value) {
-                Get.to(
-                  () => OfferPage(
+                // Get.to(
+                //   () => OfferPage(
+                //     abstractRouteEntity: widget.abstractRouteEntity!,
+                //   ),
+                //   arguments: {
+                //     'abstractRouteEntity': widget.abstractRouteEntity,
+                //   },
+                // );
+                ModalBottomSheetHelper(
+                  context: context,
+                  title: 'Realizar ruta',
+                  child: OfferPage(
                     abstractRouteEntity: widget.abstractRouteEntity!,
                   ),
-                  arguments: {
-                    'abstractRouteEntity': widget.abstractRouteEntity,
-                  },
+                  complete: () {
+                    print('complete');
+                  }
                 );
               } else {
                 Get.to(

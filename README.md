@@ -1,3 +1,10 @@
+# Screenshots PICKPOINTER APP TAXI COLLABORATION
+![pickpointer map](./resources/pickpointer.map.png)
+![pickpointer pay](./resources/pay.modal.png)
+![pickpointer payment](./resources/pay.route.png)
+![pickpointer order](./resources/order.page.png)
+
+# TECHNICALS DETAILS
 # Flutter 2.8.1
 
 # clean_architecture
@@ -6,7 +13,7 @@ A new Flutter project, with clean architecture, using GetX
 
 ## Getting Started
 
-This project is my template (18-12-2021) to start new projects, @BinniZenobioCordovaLeandro.
+This project is my template (18-12-2021) to start new projects.
 
 ![image info](./resources/clean_architecture.png)
 

@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1006184739013",
+    "project_id": "pickpointer",
+    "storage_bucket": "pickpointer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006184739013:android:d9a5a0cfd302fef56a80ac",
+        "android_client_info": {
+          "package_name": "com.pickpointer.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006184739013-279qjiq5fgig8h1bublh3fif1t71621p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pickpointer.app",
+            "certificate_hash": "5500162d307d9c7e3f7fd262b957104c1450d7b6"
+          }
+        },
+        {
+          "client_id": "1006184739013-9kmlps709tc85h8ccik1mjds1v7lol88.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pickpointer.app",
+            "certificate_hash": "0f3ee38121dec24e803a8b190a914e76033f38c4"
+          }
+        },
+        {
+          "client_id": "1006184739013-1g4g90b49nes517a3ncvlauuergdpvf0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPkfZl3cd4qrLNhtp8PD0JeZAVw12m28o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006184739013-1g4g90b49nes517a3ncvlauuergdpvf0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1006184739013-f9fru1hpjl9j8v5ei94tho8a1d7hmb01.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pickpointer.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

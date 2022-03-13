@@ -11,6 +11,13 @@ class FirebaseUserDatasource implements AbstractUserRepository {
       const UserModel(
         id: '1',
         name: 'John Doe',
+        avatar: 'https://www.niemanlab.org/images/Greg-Emerson-edit-2.jpg',
+        carPlate: 'K069-CWD',
+        carPhoto:
+            'https://www.motorshow.me/uploadImages/GalleryPics/295000/B295521-2021-Peugeot-2008-GT--5-.jpg',
+        phoneNumber: '987654321',
+        rank: '4',
+        role: '0',
       ),
       const UserModel(
         id: '2',

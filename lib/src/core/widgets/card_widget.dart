@@ -8,7 +8,6 @@ class CardWidget extends StatelessWidget {
   final Color? color;
   final EdgeInsetsGeometry? margin;
   final bool? borderOnForeground;
-  final bool? withBorder;
   final double? width;
 
   const CardWidget({
@@ -20,22 +19,12 @@ class CardWidget extends StatelessWidget {
     this.color,
     this.margin = EdgeInsets.zero,
     this.borderOnForeground = true,
-    this.withBorder = false,
+
     this.width = double.infinity,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ShapeBorder? shapeBorder;
-    if (shape == null) {
-      shapeBorder = RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        side: BorderSide(
-          color: Theme.of(context).cardTheme.shadowColor!,
-          width: withBorder == true ? 2 : 0,
-        ),
-      );
-    }
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -43,7 +32,7 @@ class CardWidget extends StatelessWidget {
       ),
       child: Card(
         elevation: elevation,
-        shape: shape ?? shapeBorder,
+        shape: shape,
         color: color ?? Theme.of(context).cardTheme.color,
         margin: margin,
         borderOnForeground: true,

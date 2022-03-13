@@ -49,6 +49,19 @@ class GeolocatorProvider {
     });
   }
 
+  Stream<Position> streamPosition() {
+    if (!isLocationServiceEnabled) {
+      throw Exception('Location service is not enabled');
+    }
+    return Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 0,
+        timeLimit: Duration(seconds: 10),
+      ),
+    );
+  }
+
   double distanceBetween(
       startLatitude, startLongitude, endLatitude, endLongitude) {
     return Geolocator.distanceBetween(

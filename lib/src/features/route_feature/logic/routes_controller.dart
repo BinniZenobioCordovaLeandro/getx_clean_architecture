@@ -16,6 +16,8 @@ import 'package:pickpointer/src/core/providers/places_provider.dart';
 class RoutesController extends GetxController {
   static RoutesController get instance => Get.put(RoutesController());
 
+  final MapController mapController = MapController();
+
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var routes = <AbstractRouteEntity>[].obs;
@@ -35,10 +37,17 @@ class RoutesController extends GetxController {
     abstractRouteRepository: FirebaseRouteDatasource(),
   );
 
-  final NotificationProvider? notificationProvider = NotificationProvider.getInstance();
+  final NotificationProvider? notificationProvider =
+      NotificationProvider.getInstance();
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
   final PlacesProvider? placesProvider = PlacesProvider.getInstance();
+
+  moveToMyLocation() {
+    WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
+      mapController.move(position.value, 15.0);
+    });
+  }
 
   @override
   void onReady() {
@@ -48,11 +57,23 @@ class RoutesController extends GetxController {
       if (boolean) {
         geolocatorProvider?.getCurrentPosition()?.then((Position? position) {
           if (position != null) {
-            this.position.value = LatLng(
+            final LatLng latLng = LatLng(
               position.latitude,
               position.longitude,
             );
+            this.position.value = latLng;
+            WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
+              mapController.move(latLng, 15.0);
+            });
           }
+          geolocatorProvider?.streamPosition().listen((Position? position) {
+            if (position != null) {
+              this.position.value = LatLng(
+                position.latitude,
+                position.longitude,
+              );
+            }
+          });
           isLoading.value = false;
         });
       } else {

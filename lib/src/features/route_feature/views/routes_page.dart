@@ -28,7 +28,6 @@ class RoutesPage extends StatefulWidget {
 
 class _RoutesPageState extends State<RoutesPage> {
   final RoutesController routesController = RoutesController.instance;
-  final MapController mapController = MapController();
   final Debouncer debouncer = Debouncer();
 
   @override
@@ -48,14 +47,11 @@ class _RoutesPageState extends State<RoutesPage> {
           ],
         ),
         body: Obx(() {
-          WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-            mapController.move(routesController.position.value, 15.0);
-          });
           return Stack(
             children: [
               SizedBox(
                 child: FlutterMapWidget(
-                  mapController: mapController,
+                  mapController: routesController.mapController,
                   center: routesController.position.value,
                   children: [
                     MarkerLayerWidget(
@@ -133,6 +129,18 @@ class _RoutesPageState extends State<RoutesPage> {
                   right: 0,
                   child: LinearProgressIndicatorWidget(),
                 ),
+              if (!routesController.isLoading.value)
+                Positioned(
+                  top: 0.0,
+                  right: 0.0,
+                  child: IconButton(
+                    onPressed: () => routesController.moveToMyLocation(),
+                    tooltip: 'Ir a mi ubicación',
+                    icon: const Icon(
+                      Icons.my_location,
+                    ),
+                  ),
+                ),
               if (routesController.errorMessage.value.length >= 3)
                 Positioned(
                   top: 16,
@@ -159,8 +167,9 @@ class _RoutesPageState extends State<RoutesPage> {
                       onTapPrediction: (Prediction prediction) {
                         routesController
                             .getPlaceDetail('${prediction.placeId}')
-                            ?.then((LatLng latLng) =>
-                                mapController.move(latLng, 15.0));
+                            ?.then((LatLng latLng) => routesController
+                                .mapController
+                                .move(latLng, 15.0));
                         routesController.cleanPredictions();
                       },
                       onChanged: (String string) {

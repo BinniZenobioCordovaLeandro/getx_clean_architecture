@@ -3,15 +3,11 @@ on:
     branches:
       - main
       - master
-  push:
-    branches:
-      - main
-      - master
       - develop
-name: "Build & Release"
+name: "Test & Build"
 jobs:
   build:
-    name: Build & Release
+    name: Test & Build
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
@@ -22,9 +18,13 @@ jobs:
         with:
           flutter-version: "2.8.1"
       - run: flutter pub get
-      - run: flutter test
-      - run: flutter build apk --debug --split-per-abi
-      - run: |
+      - name: Flutter Test
+        run: flutter test
+
+      - name: Build Flutter Android
+        run: flutter build apk --debug --split-per-abi
+      - name: Build Flutter iOS
+        run: |
           flutter build ios --no-codesign
           cd build/ios/iphoneos
           mkdir Payload
@@ -32,11 +32,8 @@ jobs:
           ln -s ../Runner.app
           cd ..
           zip -r app.ipa Payload
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/app/outputs/apk/debug/*,build/ios/iphoneos/app.ipa"
-          tag: v1.0.${{ github.run_number }}
-          token: ${{ secrets.TOKEN_PICKPOINTER }}
-# push to master, main, develop
-# pull request on main master
+      - name: Build Flutter Web
+        run: |
+          flutter build web --release
+          cd build/web
+          zip -r web-app.zip .

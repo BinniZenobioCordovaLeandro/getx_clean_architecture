@@ -13,6 +13,7 @@ import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart'
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
+import 'package:pickpointer/src/features/route_feature/views/new_route.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_marker_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/search_destination_card_widget.dart';
@@ -37,7 +38,12 @@ class _RoutesPageState extends State<RoutesPage> {
           title: 'PickPointer',
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(
+                  () => const NewRoute(),
+                  arguments: {},
+                );
+              },
               tooltip: 'Crear nueva ruta',
               icon: Icon(
                 Icons.add_location_alt_rounded,

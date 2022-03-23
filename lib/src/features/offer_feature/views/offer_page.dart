@@ -77,7 +77,7 @@ class _OfferPageState extends State<OfferPage> {
                         double minPrice = double.tryParse(
                                 '${widget.abstractRouteEntity.price}') ??
                             5.00;
-                        double maxPrice = minPrice + (minPrice * 0.30);
+                        double maxPrice = minPrice * 2;
                         if (price < minPrice) {
                           return 'El precio no puede ser menor a ${minPrice.toStringAsFixed(2)}';
                         }

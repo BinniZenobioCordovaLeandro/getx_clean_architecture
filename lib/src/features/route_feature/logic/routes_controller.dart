@@ -18,6 +18,7 @@ class RoutesController extends GetxController {
 
   final MapController mapController = MapController();
 
+  var isSigned = false.obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var routes = <AbstractRouteEntity>[].obs;
@@ -49,9 +50,19 @@ class RoutesController extends GetxController {
     });
   }
 
+  Future<bool> verifySession() {
+    Future<bool> futureBool =
+        _verifySessionUsecase.call().then((abstractSessionEntity) {
+      isSigned.value = abstractSessionEntity.isSigned!;
+      return isSigned.value;
+    });
+    return futureBool;
+  }
+
   @override
   void onReady() {
     isLoading.value = true;
+
     notificationProvider?.checkPermission();
     geolocatorProvider?.checkPermission().then((bool boolean) {
       if (boolean) {
@@ -82,8 +93,6 @@ class RoutesController extends GetxController {
     }, onError: (dynamic error) {
       errorMessage.value = error.toString();
     });
-
-    futureAbstractSessionEntity.value = _verifySessionUsecase.call();
 
     futureListAbstractRouteEntity.value = _getRoutesUsecase
         .call()!
@@ -165,6 +174,9 @@ class RoutesController extends GetxController {
 
       return listAbstractRouteEntity;
     });
+
+    verifySession();
+    super.onReady();
   }
 
   getPredictions(String string) {

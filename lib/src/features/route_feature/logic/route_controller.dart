@@ -58,11 +58,13 @@ class RouteController extends GetxController {
     return futureListAbstractOfferEntity;
   }
 
-  verifySession() {
-    _verifySessionUsecase.call().then(
-          (abstractSessionEntity) =>
-              isSigned.value = abstractSessionEntity.isSigned!,
-        );
+  Future<bool> verifySession() {
+    Future<bool> futureBool =
+        _verifySessionUsecase.call().then((abstractSessionEntity) {
+      isSigned.value = abstractSessionEntity.isSigned!;
+      return isSigned.value;
+    });
+    return futureBool;
   }
 
   @override

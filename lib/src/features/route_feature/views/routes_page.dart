@@ -17,6 +17,7 @@ import 'package:pickpointer/src/features/route_feature/views/new_route.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_marker_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/search_destination_card_widget.dart';
+import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
 
 class RoutesPage extends StatefulWidget {
   const RoutesPage({
@@ -38,13 +39,22 @@ class _RoutesPageState extends State<RoutesPage> {
           title: 'PickPointer',
           actions: [
             IconButton(
-              onPressed: () {
-                Get.to(
-                  () => const NewRoute(),
-                  arguments: {},
-                );
+              onPressed: () async {
+                if (routesController.isSigned.value == false) {
+                  await routesController.verifySession();
+                }
+                if (routesController.isSigned.value == true) {
+                  Get.to(
+                    () => const NewRoute(),
+                    arguments: {},
+                  );
+                } else {
+                  Get.to(
+                    () => const SignInUserPage(),
+                  );
+                }
               },
-              tooltip: 'Crear nueva ruta',
+              tooltip: 'Solicitar nueva ruta',
               icon: Icon(
                 Icons.add_location_alt_rounded,
                 color: Theme.of(context).appBarTheme.actionsIconTheme?.color,

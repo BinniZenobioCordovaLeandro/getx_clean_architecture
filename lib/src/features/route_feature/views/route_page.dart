@@ -52,9 +52,9 @@ class _RoutePageState extends State<RoutePage> {
         showGoback: true,
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               if (routeController.isSigned.value == false) {
-                routeController.verifySession();
+                await routeController.verifySession();
               }
               if (routeController.isSigned.value) {
                 // Get.to(
@@ -66,15 +66,14 @@ class _RoutePageState extends State<RoutePage> {
                 //   },
                 // );
                 ModalBottomSheetHelper(
-                  context: context,
-                  title: 'Realizar ruta',
-                  child: OfferPage(
-                    abstractRouteEntity: widget.abstractRouteEntity!,
-                  ),
-                  complete: () {
-                    print('complete');
-                  }
-                );
+                    context: context,
+                    title: 'Realizar ruta',
+                    child: OfferPage(
+                      abstractRouteEntity: widget.abstractRouteEntity!,
+                    ),
+                    complete: () {
+                      print('complete');
+                    });
               } else {
                 Get.to(
                   () => const SignInUserPage(),
@@ -270,9 +269,9 @@ class _RoutePageState extends State<RoutePage> {
                                 routeController.showOfferPolylineMarkers(
                                     abstractOfferEntity);
                               },
-                              onPressed: (abstractOfferEntity) {
+                              onPressed: (abstractOfferEntity) async {
                                 if (routeController.isSigned.value == false) {
-                                  routeController.verifySession();
+                                  await routeController.verifySession();
                                 }
                                 if (routeController.isSigned.value) {
                                   Get.to(

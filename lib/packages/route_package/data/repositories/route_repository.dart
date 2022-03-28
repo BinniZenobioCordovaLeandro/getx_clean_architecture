@@ -40,4 +40,13 @@ class RouteRepository implements AbstractRouteRepository {
       abstractRouteEntity: abstractRouteEntity,
     );
   }
+
+  @override
+  Future<AbstractRouteEntity>? addRequestRoute({
+    required AbstractRouteEntity abstractRouteEntity,
+  }) {
+    return _abstractRouteRepository!.addRequestRoute(
+      abstractRouteEntity: abstractRouteEntity,
+    );
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:pickpointer/packages/route_package/data/models/route_model.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/repositories/abstract_route_repository.dart';
@@ -49,13 +51,25 @@ class FirebaseRouteDatasource implements AbstractRouteRepository {
   Future<AbstractRouteEntity>? setRoute({
     required AbstractRouteEntity abstractRouteEntity,
   }) {
-    return null;
+    return Future.value(abstractRouteEntity);
   }
 
   @override
   Future<AbstractRouteEntity>? addRoute({
     required AbstractRouteEntity abstractRouteEntity,
   }) {
-    return null;
+    return Future.value(abstractRouteEntity);
+  }
+
+  @override
+  Future<AbstractRouteEntity>? addRequestRoute({
+    required AbstractRouteEntity abstractRouteEntity,
+  }) {
+    return Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        return abstractRouteEntity;
+      },
+    );
   }
 }

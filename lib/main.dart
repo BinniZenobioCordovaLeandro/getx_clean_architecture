@@ -7,13 +7,11 @@ import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-final NotificationProvider? notificationProvider = NotificationProvider.getInstance();
+final NotificationProvider? notificationProvider =
+    NotificationProvider.getInstance();
 
 Future<void> main() async {
   notificationProvider?.initialize();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   runApp(const MyApp());
 }
 
@@ -24,12 +22,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      themeMode: ThemeMode.system,
-      theme: LightTheme().get(),
-      darkTheme: DarkTheme().get(),
-      home: const RoutesPage(),
-      defaultTransition: Transition.cupertino,
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return GetMaterialApp(
+          themeMode: ThemeMode.system,
+          theme: LightTheme().get(),
+          darkTheme: DarkTheme().get(),
+          home: const RoutesPage(),
+          defaultTransition: Transition.cupertino,
+        );
+      },
     );
   }
 }

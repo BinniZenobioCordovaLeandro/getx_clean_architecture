@@ -10,10 +10,11 @@ class SharedPreferencesFirebaseSessionDatasources
   final String _key = "session";
   final Uuid _uuid = const Uuid();
 
-  SharedPreferencesFirebaseSessionDatasources();
+  CollectionReference? sessions;
 
-  CollectionReference sessions =
-      FirebaseFirestore.instance.collection('c_sessions');
+  SharedPreferencesFirebaseSessionDatasources(){
+    sessions = FirebaseFirestore.instance.collection('c_sessions');
+  }
 
   @override
   Future<AbstractSessionEntity> verifySession() {
@@ -49,7 +50,7 @@ class SharedPreferencesFirebaseSessionDatasources
       String? json = sharedPreferences.getString(_key);
       if (json != null) {
         final SessionModel sessionModel = SessionModel.fromJson(json);
-        sessions.doc(sessionModel.idSessions).get().then((snapshot) {
+        sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
           final SessionModel sessionModel =
               SessionModel.fromJson(snapshot.data().toString());
         });
@@ -69,7 +70,7 @@ class SharedPreferencesFirebaseSessionDatasources
         SharedPreferences.getInstance().then((sharedPreferences) {
       SessionModel sessionModel = abstractSessionEntity as SessionModel;
       sharedPreferences.setString(_key, sessionModel.toJson());
-      sessions.doc(sessionModel.idSessions).set(sessionModel.toMap());
+      sessions!.doc(sessionModel.idSessions).set(sessionModel.toMap());
       return abstractSessionEntity;
     });
     return futureAbstractSessionEntity;
@@ -95,7 +96,7 @@ class SharedPreferencesFirebaseSessionDatasources
         SharedPreferences.getInstance().then((sharedPreferences) {
       SessionModel sessionModel = abstractSessionEntity as SessionModel;
       sharedPreferences.setString(_key, sessionModel.toJson());
-      sessions.doc(sessionModel.idSessions).update(sessionModel.toMap());
+      sessions!.doc(sessionModel.idSessions).update(sessionModel.toMap());
       return abstractSessionEntity;
     });
     return futureAbstractSessionEntity;

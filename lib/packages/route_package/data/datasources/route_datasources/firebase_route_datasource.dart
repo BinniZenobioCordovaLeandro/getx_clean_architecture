@@ -5,10 +5,10 @@ import 'package:pickpointer/packages/route_package/domain/entities/abstract_rout
 import 'package:pickpointer/packages/route_package/domain/repositories/abstract_route_repository.dart';
 
 class FirebaseRouteDatasource implements AbstractRouteRepository {
-  FirebaseRouteDatasource();
-
-  CollectionReference routes =
-      FirebaseFirestore.instance.collection('c_routes');
+  CollectionReference? routes;
+  FirebaseRouteDatasource() {
+    routes = FirebaseFirestore.instance.collection('c_routes');
+  }
 
   @override
   Future<List<AbstractRouteEntity>>? getRoutes() {
@@ -70,7 +70,7 @@ class FirebaseRouteDatasource implements AbstractRouteRepository {
     required String userId,
   }) {
     RouteModel routeModel = abstractRouteEntity as RouteModel;
-    Future<AbstractRouteEntity> futureAbstractRouteEntity = routes.add({
+    Future<AbstractRouteEntity> futureAbstractRouteEntity = routes!.add({
       ...routeModel.toMap(),
       'user_id': userId,
     }).then((value) {

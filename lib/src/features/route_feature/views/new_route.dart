@@ -63,7 +63,7 @@ class _NewRouteState extends State<NewRoute> {
             ),
             const Divider(),
             TextFieldWidget(
-              labelText: 'Precio',
+              labelText: 'Precio por asiento',
               helperText: 'Ej. 4.00',
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,

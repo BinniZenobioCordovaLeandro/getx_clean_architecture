@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/google_sign_in_provider.dart';
 
 class SignInController extends GetxController {
@@ -15,8 +16,12 @@ class SignInController extends GetxController {
   var isSigned = false.obs;
   var googleIsLoading = false.obs;
 
+  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
+  );
+
   final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
-    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
   Future<bool> signIn(number) async {
@@ -25,17 +30,21 @@ class SignInController extends GetxController {
       GoogleSignInAccount? googleSignInAccount =
           await _googleSignInProvider?.handleSignIn();
       if (googleSignInAccount != null) {
-        AbstractSessionEntity abstractSessionEntity = SessionModel(
-          isSigned: true,
-          idUsers: googleSignInAccount.id,
-          name: googleSignInAccount.displayName,
-          email: googleSignInAccount.email,
-          avatar: googleSignInAccount.photoUrl,
-        );
-        _updateSessionUsecase.call(
-            abstractSessionEntity: abstractSessionEntity);
-        googleIsLoading.value = false;
-        isSigned.value = true;
+        _verifySessionUsecase
+            .call()
+            .then((AbstractSessionEntity abstractSessionEntity) {
+          SessionModel sessionModel = abstractSessionEntity as SessionModel;
+          SessionModel newSessionModel = sessionModel.copyWith(
+            isSigned: true,
+            idUsers: googleSignInAccount.id,
+            name: googleSignInAccount.displayName,
+            email: googleSignInAccount.email,
+            avatar: googleSignInAccount.photoUrl,
+          );
+          _updateSessionUsecase.call(abstractSessionEntity: newSessionModel);
+          googleIsLoading.value = false;
+          isSigned.value = true;
+        });
         return true;
       } else {
         googleIsLoading.value = false;

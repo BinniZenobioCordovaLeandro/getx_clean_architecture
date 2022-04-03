@@ -11,6 +11,10 @@ final NotificationProvider? notificationProvider =
     NotificationProvider.getInstance();
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   notificationProvider?.initialize();
   runApp(const MyApp());
 }
@@ -22,19 +26,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return GetMaterialApp(
-          themeMode: ThemeMode.system,
-          theme: LightTheme().get(),
-          darkTheme: DarkTheme().get(),
-          home: const RoutesPage(),
-          defaultTransition: Transition.cupertino,
-        );
-      },
+    return GetMaterialApp(
+      themeMode: ThemeMode.system,
+      theme: LightTheme().get(),
+      darkTheme: DarkTheme().get(),
+      home: const RoutesPage(),
+      defaultTransition: Transition.cupertino,
     );
   }
 }

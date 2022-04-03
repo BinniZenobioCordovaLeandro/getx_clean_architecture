@@ -56,7 +56,7 @@ class MessagesBoxWidget extends StatelessWidget {
               ),
             ),
             TextFieldWidget(
-              labelText: 'labelText',
+              labelText: 'Mensaje',
               suffixIcon: IconButton(
                 onPressed: () {},
                 icon: const Icon(

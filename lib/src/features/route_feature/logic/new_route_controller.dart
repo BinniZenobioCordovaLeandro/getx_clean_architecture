@@ -5,7 +5,11 @@ import 'package:pickpointer/packages/route_package/data/datasources/route_dataso
 import 'package:pickpointer/packages/route_package/data/models/route_model.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/usecases/add_request_usecase.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class NewRouteController extends GetxController {
   static NewRouteController get instance => Get.put(NewRouteController());
@@ -22,15 +26,21 @@ class NewRouteController extends GetxController {
   var title = ''.obs;
   var description = ''.obs;
 
-  AddRequestRouteUsecase addRequestRouteUsecase = AddRequestRouteUsecase(
+  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
+    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+  );
+
+  final AddRequestRouteUsecase _addRequestRouteUsecase = AddRequestRouteUsecase(
     abstractRouteRepository: FirebaseRouteDatasource(),
   );
 
-  Future<bool>? addRequestRoute(AbstractRouteEntity abstractRouteEntity) {
+  Future<bool>? addRequestRoute(
+      AbstractRouteEntity abstractRouteEntity, String userId) {
     isLoading.value = true;
-    Future<bool>? futureBool = addRequestRouteUsecase
+    Future<bool>? futureBool = _addRequestRouteUsecase
         .call(
       abstractRouteEntity: abstractRouteEntity,
+      userId: userId,
     )
         ?.then((abstractRouteEntity) {
       isLoading.value = false;
@@ -53,6 +63,7 @@ class NewRouteController extends GetxController {
     bool isValidForm = formKey.currentState!.validate();
     if (isValidForm) {
       AbstractRouteEntity abstractRouteEntity = RouteModel(
+        id: const Uuid().v1(),
         startLat: startPosition.value.latitude.toString(),
         startLng: startPosition.value.longitude.toString(),
         endLat: endPosition.value.latitude.toString(),
@@ -61,10 +72,16 @@ class NewRouteController extends GetxController {
         title: title.value,
         description: description.value,
       );
-      addRequestRoute(abstractRouteEntity)?.then((bool boolean) {
-        if (boolean) {
-          sendNotification();
-          Get.back();
+      _verifySessionUsecase.call().then((AbstractSessionEntity abstractSessionEntity) {
+        if (abstractSessionEntity.isSigned!) {
+          addRequestRoute(abstractRouteEntity, abstractSessionEntity.idUsers!)
+              ?.then((bool boolean) {
+            if (boolean) {
+              sendNotification();
+              formKey.currentState!.reset();
+              Get.back();
+            }
+          });
         }
       });
     }

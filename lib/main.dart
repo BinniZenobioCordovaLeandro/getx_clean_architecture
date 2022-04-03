@@ -4,11 +4,16 @@ import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/themes/dark_theme.dart';
 import 'package:pickpointer/src/core/themes/light_theme.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 final NotificationProvider? notificationProvider = NotificationProvider.getInstance();
 
-void main() {
+Future<void> main() async {
   notificationProvider?.initialize();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

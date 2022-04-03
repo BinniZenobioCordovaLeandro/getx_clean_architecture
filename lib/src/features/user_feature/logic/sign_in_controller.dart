@@ -25,12 +25,13 @@ class SignInController extends GetxController {
       GoogleSignInAccount? googleSignInAccount =
           await _googleSignInProvider?.handleSignIn();
       if (googleSignInAccount != null) {
-        AbstractSessionEntity abstractSessionEntity =
-            SessionModel(isSigned: true, idUsers: googleSignInAccount.id
-                // name: googleSignInAccount.displayName,
-                // email: googleSignInAccount.email,
-                // photoUrl: googleSignInAccount.photoUrl,
-                );
+        AbstractSessionEntity abstractSessionEntity = SessionModel(
+          isSigned: true,
+          idUsers: googleSignInAccount.id,
+          name: googleSignInAccount.displayName,
+          email: googleSignInAccount.email,
+          avatar: googleSignInAccount.photoUrl,
+        );
         _updateSessionUsecase.call(
             abstractSessionEntity: abstractSessionEntity);
         googleIsLoading.value = false;

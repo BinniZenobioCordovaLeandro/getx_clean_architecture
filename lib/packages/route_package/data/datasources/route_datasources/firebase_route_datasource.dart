@@ -1,11 +1,14 @@
 import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pickpointer/packages/route_package/data/models/route_model.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/repositories/abstract_route_repository.dart';
 
 class FirebaseRouteDatasource implements AbstractRouteRepository {
   FirebaseRouteDatasource();
+
+  CollectionReference routes =
+      FirebaseFirestore.instance.collection('c_routes');
 
   @override
   Future<List<AbstractRouteEntity>>? getRoutes() {
@@ -64,12 +67,15 @@ class FirebaseRouteDatasource implements AbstractRouteRepository {
   @override
   Future<AbstractRouteEntity>? addRequestRoute({
     required AbstractRouteEntity abstractRouteEntity,
+    required String userId,
   }) {
-    return Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        return abstractRouteEntity;
-      },
-    );
+    RouteModel routeModel = abstractRouteEntity as RouteModel;
+    Future<AbstractRouteEntity> futureAbstractRouteEntity = routes.add({
+      ...routeModel.toMap(),
+      userId: userId,
+    }).then((value) {
+      return Future.value(abstractRouteEntity);
+    });
+    return futureAbstractRouteEntity;
   }
 }

@@ -11,8 +11,10 @@ class AddRequestRouteUsecase {
 
   Future<AbstractRouteEntity>? call({
     required AbstractRouteEntity abstractRouteEntity,
+    required String userId,
   }) =>
       _abstractRouteRepository.addRequestRoute(
         abstractRouteEntity: abstractRouteEntity,
+        userId: userId,
       );
 }

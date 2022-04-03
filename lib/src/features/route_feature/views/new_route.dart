@@ -26,15 +26,6 @@ class _NewRouteState extends State<NewRoute> {
         key: newRouteController.formKey,
         child: ScaffoldScrollWidget(
           title: 'Solicitar nueva ruta',
-          footer: ProgressStateButtonWidget(
-            state: newRouteController.isLoading.value
-                ? ButtonState.loading
-                : ButtonState.success,
-            success: 'Enviar solicitud',
-            onPressed: () {
-              newRouteController.onSubmit();
-            },
-          ),
           children: [
             SearchLocationCardWidget(
               disabled: true,
@@ -106,7 +97,8 @@ class _NewRouteState extends State<NewRoute> {
             ),
             TextFieldWidget(
               labelText: 'Descripción',
-              helperText: 'Ej. Desde Plaza de Armas de Lima hasta Colegio Monterrico de Arequipa',
+              helperText:
+                  'Ej. Desde Plaza de Armas de Lima hasta Colegio Monterrico de Arequipa',
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Especifique la descripción de la ruta';
@@ -117,6 +109,16 @@ class _NewRouteState extends State<NewRoute> {
                 newRouteController.description.value = string;
               },
             ),
+            const Divider(),
+            ProgressStateButtonWidget(
+              state: newRouteController.isLoading.value
+                  ? ButtonState.loading
+                  : ButtonState.success,
+              success: 'Enviar solicitud',
+              onPressed: () {
+                newRouteController.onSubmit();
+              },
+            )
           ],
         ),
       );

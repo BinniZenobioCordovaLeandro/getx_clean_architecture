@@ -10,7 +10,7 @@ import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
 import 'package:pickpointer/src/features/payment_feature/logic/payment_controller.dart';
 import 'package:pickpointer/src/features/payment_feature/views/enums/method_pay_type.dart';
 import 'package:pickpointer/src/features/payment_feature/views/widgets/cash_method_pay_radio_widget.dart';
-import 'package:pickpointer/src/features/payment_feature/views/widgets/search_location_card_widget.dart';
+import 'package:pickpointer/src/core/widgets/search_location_card_widget.dart';
 
 class PaymentPage extends StatefulWidget {
   final String? abstractOfferEntityId;

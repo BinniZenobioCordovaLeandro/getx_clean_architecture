@@ -13,9 +13,11 @@ import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart'
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
+import 'package:pickpointer/src/features/route_feature/views/new_route.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_marker_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/search_destination_card_widget.dart';
+import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
 
 class RoutesPage extends StatefulWidget {
   const RoutesPage({
@@ -37,8 +39,22 @@ class _RoutesPageState extends State<RoutesPage> {
           title: 'PickPointer',
           actions: [
             IconButton(
-              onPressed: () {},
-              tooltip: 'Crear nueva ruta',
+              onPressed: () async {
+                if (routesController.isSigned.value == false) {
+                  await routesController.verifySession();
+                }
+                if (routesController.isSigned.value == true) {
+                  Get.to(
+                    () => const NewRoute(),
+                    arguments: {},
+                  );
+                } else {
+                  Get.to(
+                    () => const SignInUserPage(),
+                  );
+                }
+              },
+              tooltip: 'Solicitar nueva ruta',
               icon: Icon(
                 Icons.add_location_alt_rounded,
                 color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
@@ -58,16 +74,16 @@ class _RoutesPageState extends State<RoutesPage> {
                       options: MarkerLayerOptions(
                         markers: [
                           Marker(
-                            width: 20,
-                            height: 20,
+                            width: 20.0,
+                            height: 20.0,
                             point: routesController.position.value,
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
-                            builder: (BuildContext context) => const Icon(
+                            builder: (BuildContext context) => Icon(
                               Icons.person_pin_circle_sharp,
-                              color: Colors.blueAccent,
-                              size: 50.0,
+                              color: Theme.of(context).primaryColor,
+                              size: 20.0,
                             ),
                           )
                         ],

@@ -14,4 +14,9 @@ abstract class AbstractRouteRepository {
   Future<AbstractRouteEntity>? addRoute({
     required AbstractRouteEntity abstractRouteEntity,
   });
+
+  Future<AbstractRouteEntity>? addRequestRoute({
+    required AbstractRouteEntity abstractRouteEntity,
+    required String userId,
+  });
 }

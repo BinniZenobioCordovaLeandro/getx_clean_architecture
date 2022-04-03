@@ -7,7 +7,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/route_package/data/datasources/route_datasources/firebase_route_datasource.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/usecases/get_routes_usecase.dart';
-import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
@@ -18,6 +18,7 @@ class RoutesController extends GetxController {
 
   final MapController mapController = MapController();
 
+  var isSigned = false.obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var routes = <AbstractRouteEntity>[].obs;
@@ -30,7 +31,7 @@ class RoutesController extends GetxController {
   var predictions = <Prediction>[].obs;
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
-    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
   final GetRoutesUsecase _getRoutesUsecase = GetRoutesUsecase(
@@ -49,9 +50,19 @@ class RoutesController extends GetxController {
     });
   }
 
+  Future<bool> verifySession() {
+    Future<bool> futureBool =
+        _verifySessionUsecase.call().then((abstractSessionEntity) {
+      isSigned.value = abstractSessionEntity.isSigned!;
+      return isSigned.value;
+    });
+    return futureBool;
+  }
+
   @override
   void onReady() {
     isLoading.value = true;
+
     notificationProvider?.checkPermission();
     geolocatorProvider?.checkPermission().then((bool boolean) {
       if (boolean) {
@@ -82,8 +93,6 @@ class RoutesController extends GetxController {
     }, onError: (dynamic error) {
       errorMessage.value = error.toString();
     });
-
-    futureAbstractSessionEntity.value = _verifySessionUsecase.call();
 
     futureListAbstractRouteEntity.value = _getRoutesUsecase
         .call()!
@@ -165,6 +174,9 @@ class RoutesController extends GetxController {
 
       return listAbstractRouteEntity;
     });
+
+    verifySession();
+    super.onReady();
   }
 
   getPredictions(String string) {

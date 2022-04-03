@@ -13,6 +13,7 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputAction? textInputAction;
   final TextAlignVertical? textAlignVertical;
   final Function(String string)? onChanged;
+  final Function()? onTap;
   final Function(String string)? onFieldSubmitted;
   final String? initialValue;
   final Widget? suffix;
@@ -42,6 +43,7 @@ class TextFieldWidget extends StatelessWidget {
     this.enabled = true,
     this.keyboardType,
     this.onChanged,
+    this.onTap,
     this.onFieldSubmitted,
     this.initialValue,
     this.suffix,
@@ -74,11 +76,13 @@ class TextFieldWidget extends StatelessWidget {
       onChanged: (String value) {
         if (onChanged != null) onChanged!(value);
       },
+      onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       textAlignVertical: textAlignVertical,
       validator: validator,
+      maxLines: null,
       decoration: InputDecoration(
         labelText: labelText.toString(),
         errorText: errorText,

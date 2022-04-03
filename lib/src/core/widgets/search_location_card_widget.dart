@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
+import 'package:pickpointer/src/core/providers/places_provider.dart';
+import 'package:pickpointer/src/core/util/debounder_util.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
@@ -20,6 +23,7 @@ class SearchLocationCardWidget extends StatefulWidget {
   final LatLng? initialLatLng;
   final bool disabled;
   final Function(LatLng)? onChanged;
+  final Icon iconMarker;
 
   const SearchLocationCardWidget({
     Key? key,
@@ -31,6 +35,10 @@ class SearchLocationCardWidget extends StatefulWidget {
     this.initialLatLng,
     this.disabled = false,
     this.onChanged,
+    this.iconMarker = const Icon(
+      Icons.location_history,
+      size: 50.0,
+    ),
   }) : super(key: key);
 
   @override
@@ -43,9 +51,58 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
 
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
+  final PlacesProvider? placesProvider = PlacesProvider.getInstance();
+  final Debouncer debouncer = Debouncer();
+  final TextEditingController textEditingController = TextEditingController();
+
   bool boolean = false;
   LatLng latLng = LatLng(0, 0);
   LatLng myLatLng = LatLng(0, 0);
+
+  String? errorPlaces;
+  List<Prediction> listPrediction = [];
+
+  getPredictions(String string) {
+    placesProvider?.getPredictions(string).then(
+      (List<Prediction> responseListPrediction) {
+        errorPlaces = '';
+        if (responseListPrediction.length > 3) {
+          setState(() {
+            listPrediction = responseListPrediction.sublist(0, 3);
+          });
+        } else {
+          setState(() {
+            listPrediction = responseListPrediction.sublist(0, 3);
+          });
+        }
+      },
+      onError: (dynamic error) {
+        setState(() {
+          errorPlaces = error.toString();
+        });
+      },
+    );
+  }
+
+  Future<LatLng>? getPlaceDetail(String placeId) {
+    Future<LatLng>? futureLatLng =
+        placesProvider?.getPlaceDetails(placeId).then(
+      (PlacesDetailsResponse placeDetailsResponse) {
+        errorPlaces = '';
+        LatLng latLng = LatLng(
+          placeDetailsResponse.result.geometry!.location.lat,
+          placeDetailsResponse.result.geometry!.location.lng,
+        );
+        return latLng;
+      },
+      onError: (dynamic error) {
+        setState(() {
+          errorPlaces = error.toString();
+        });
+      },
+    );
+    return futureLatLng;
+  }
 
   moveToMyLocation() {
     getMyLocation()?.then((LatLng? latLng) {
@@ -112,7 +169,6 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
               onChanged: widget.disabled
                   ? null
                   : (value) {
-                      print(value);
                       WidgetsBinding.instance!
                           .addPostFrameCallback((Duration duration) {
                         setState(() {
@@ -134,11 +190,56 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                 child: SizedBox(
                   width: double.infinity,
                   child: TextFieldWidget(
+                    controller: textEditingController,
                     labelText: widget.labelText,
                     helperText: widget.helperText,
+                    onTap: () {
+                      textEditingController.text = '';
+                    },
+                    onChanged: (String? value) {
+                      if (value != null && value.length >= 3) {
+                        debouncer.run(() {
+                          getPredictions(value);
+                        });
+                      }
+                    },
                   ),
                 ),
               ),
+            ),
+          if (listPrediction.isNotEmpty == true)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var i = 0; i < listPrediction.length; i++)
+                  ListTile(
+                    leading: widget.leading,
+                    title: TextWidget(
+                      '${listPrediction[i].description}',
+                    ),
+                    dense: true,
+                    onTap: () {
+                      getPlaceDetail('${listPrediction[i].placeId}')?.then(
+                        (LatLng? latLng) {
+                          if (latLng != null) {
+                            WidgetsBinding.instance!
+                                .addPostFrameCallback((Duration duration) {
+                              mapController.move(latLng, 15.0);
+                              setState(() {
+                                listPrediction = [];
+                                if (widget.onChanged != null) {
+                                  widget.onChanged!(latLng);
+                                }
+                                textEditingController.text =
+                                    '${listPrediction[i].description}';
+                              });
+                            });
+                          }
+                        },
+                      );
+                    },
+                  ),
+              ],
             ),
           AspectRatio(
             aspectRatio: 3 / 1,
@@ -156,6 +257,8 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                         if (widget.onChanged != null) {
                           widget.onChanged!(_latLng);
                         }
+                        textEditingController.text =
+                            '${latLng.latitude.toStringAsFixed(6)}, ${latLng.longitude.toStringAsFixed(6)}';
                       });
                     })
                   },
@@ -164,18 +267,18 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                       options: MarkerLayerOptions(
                         markers: [
                           Marker(
-                            width: 30.0,
-                            height: 30.0,
+                            width: 20.0,
+                            height: 20.0,
                             point: myLatLng,
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
                             builder: (BuildContext context) => IconButton(
                               tooltip: 'Mi ubicacion actual',
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.person_pin_circle_sharp,
-                                color: Colors.blueAccent,
-                                size: 30.0,
+                                color: Theme.of(context).primaryColor,
+                                size: 20.0,
                               ),
                               onPressed: () {},
                             ),
@@ -188,11 +291,8 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                               AnchorAlign.top,
                             ),
                             builder: (BuildContext context) => IconButton(
-                              icon: Icon(
-                                Icons.location_history,
-                                color: Theme.of(context).primaryColor,
-                                size: 50.0,
-                              ),
+                              iconSize: 50.0,
+                              icon: widget.iconMarker,
                               onPressed: () {},
                             ),
                           ),

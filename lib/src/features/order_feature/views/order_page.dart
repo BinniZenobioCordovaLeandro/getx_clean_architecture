@@ -41,7 +41,7 @@ class _OrderPageState extends State<OrderPage> {
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       endDrawer: const DrawerWidget(
-        title: 'Messages',
+        title: 'Mensajes',
         child: MessagesBoxWidget(),
       ),
       endDrawerEnableOpenDragGesture: true,
@@ -49,18 +49,20 @@ class _OrderPageState extends State<OrderPage> {
         title: 'Order ${widget.abstractOrderEntity?.id}',
         actions: [
           IconButton(
-            onPressed: () {},
+            tooltip: 'Compartir',
             icon: const Icon(
               Icons.ios_share_rounded,
             ),
+            onPressed: () {},
           ),
           IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState!.openEndDrawer();
-            },
+            tooltip: 'Mensajes',
             icon: const Icon(
               Icons.message_rounded,
             ),
+            onPressed: () {
+              _scaffoldKey.currentState!.openEndDrawer();
+            },
           ),
         ],
       ),
@@ -93,28 +95,28 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                   ),
                   PolylineLayerWidget(
-                  options: PolylineLayerOptions(
-                    // ignore: invalid_use_of_protected_member
-                    polylines: [
-                      Polyline(
-                        points: <LatLng>[
-                          ...orderController.polylineListLatLng.value,
-                        ],
-                        strokeWidth: 5,
-                        color: Colors.black,
-                        isDotted: true,
-                        gradientColors: <Color>[
-                          Colors.blue,
-                          Colors.red,
-                          Colors.red,
-                          Colors.red,
-                          Colors.red,
-                          Colors.red,
-                        ],
-                      ),
-                    ],
+                    options: PolylineLayerOptions(
+                      // ignore: invalid_use_of_protected_member
+                      polylines: [
+                        Polyline(
+                          points: <LatLng>[
+                            ...orderController.polylineListLatLng.value,
+                          ],
+                          strokeWidth: 5,
+                          color: Colors.black,
+                          isDotted: true,
+                          gradientColors: <Color>[
+                            Colors.blue,
+                            Colors.red,
+                            Colors.red,
+                            Colors.red,
+                            Colors.red,
+                            Colors.red,
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                   MarkerLayerWidget(
                     options: MarkerLayerOptions(
                       markers: [

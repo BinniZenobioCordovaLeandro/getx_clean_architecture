@@ -8,7 +8,7 @@ import 'package:pickpointer/src/core/providers/notification_provider.dart';
 class PaymentController extends GetxController {
   static PaymentController get instance => Get.put(PaymentController());
 
-  NotificationProvider? notificationProvider =
+  final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
 
   GetOrderUsecase getOrderUsecase = GetOrderUsecase(

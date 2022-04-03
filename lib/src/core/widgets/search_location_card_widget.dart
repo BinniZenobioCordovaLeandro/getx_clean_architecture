@@ -230,7 +230,8 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                                 if (widget.onChanged != null) {
                                   widget.onChanged!(latLng);
                                 }
-                                textEditingController.text = '${listPrediction[i].description}';
+                                textEditingController.text =
+                                    '${listPrediction[i].description}';
                               });
                             });
                           }
@@ -256,7 +257,8 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                         if (widget.onChanged != null) {
                           widget.onChanged!(_latLng);
                         }
-                        textEditingController.text = '${latLng.latitude.toStringAsFixed(6)}, ${latLng.longitude.toStringAsFixed(6)}';
+                        textEditingController.text =
+                            '${latLng.latitude.toStringAsFixed(6)}, ${latLng.longitude.toStringAsFixed(6)}';
                       });
                     })
                   },
@@ -265,15 +267,19 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                       options: MarkerLayerOptions(
                         markers: [
                           Marker(
-                            width: 30.0,
-                            height: 30.0,
+                            width: 20.0,
+                            height: 20.0,
                             point: myLatLng,
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
                             builder: (BuildContext context) => IconButton(
                               tooltip: 'Mi ubicacion actual',
-                              icon: widget.iconMarker,
+                              icon: Icon(
+                                Icons.person_pin_circle_sharp,
+                                color: Theme.of(context).primaryColor,
+                                size: 20.0,
+                              ),
                               onPressed: () {},
                             ),
                           ),

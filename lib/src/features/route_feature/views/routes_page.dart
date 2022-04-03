@@ -74,16 +74,16 @@ class _RoutesPageState extends State<RoutesPage> {
                       options: MarkerLayerOptions(
                         markers: [
                           Marker(
-                            width: 20,
-                            height: 20,
+                            width: 20.0,
+                            height: 20.0,
                             point: routesController.position.value,
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
-                            builder: (BuildContext context) => const Icon(
+                            builder: (BuildContext context) => Icon(
                               Icons.person_pin_circle_sharp,
-                              color: Colors.blueAccent,
-                              size: 50.0,
+                              color: Theme.of(context).primaryColor,
+                              size: 20.0,
                             ),
                           )
                         ],

@@ -15,7 +15,7 @@ class SignInController extends GetxController {
       GoogleSignInProvider.getInstance();
 
   final NotificationProvider? notificationProvider =
-    NotificationProvider.getInstance();
+      NotificationProvider.getInstance();
 
   var isSigned = false.obs;
   var googleIsLoading = false.obs;

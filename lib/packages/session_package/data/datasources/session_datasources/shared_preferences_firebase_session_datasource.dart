@@ -52,7 +52,7 @@ class SharedPreferencesFirebaseSessionDatasources
         final SessionModel sessionModel = SessionModel.fromJson(json);
         sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
           final SessionModel sessionModel =
-              SessionModel.fromJson(snapshot.data().toString());
+              SessionModel.fromMap(snapshot.data() as Map<String, dynamic>);
         });
         return sessionModel;
       } else {

@@ -27,10 +27,23 @@ class _NewRouteState extends State<NewRoute> {
         child: ScaffoldScrollWidget(
           title: 'Solicitar nueva ruta',
           children: [
+            TextFieldWidget(
+              labelText: 'Punto de Origen',
+              helperText: 'Ej. Plaza de Armas de Lima',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Especifique el INICIO de la ruta';
+                }
+                return null;
+              },
+              onChanged: (String string) {
+                newRouteController.from.value = string;
+              },
+            ),
             SearchLocationCardWidget(
               disabled: true,
-              title: 'Punto de partida',
-              labelText: 'Buscar ubicación',
+              title: 'Punto de origen en Mapa',
+              labelText: 'Buscar en Maps',
               leading: const Icon(
                 Icons.taxi_alert_outlined,
                 color: Colors.blue,
@@ -44,10 +57,24 @@ class _NewRouteState extends State<NewRoute> {
                 newRouteController.startPosition.value = latLng;
               },
             ),
+            const Divider(),
+            TextFieldWidget(
+              labelText: 'Punto de Destino',
+              helperText: 'Ej. Colegio Monterrico de Arequipa',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Especifique el FINAL de la ruta';
+                }
+                return null;
+              },
+              onChanged: (String string) {
+                newRouteController.to.value = string;
+              },
+            ),
             SearchLocationCardWidget(
               disabled: true,
-              title: 'Punto de llegada',
-              labelText: 'Buscar ubicación',
+              title: 'Punto de destino en Mapa',
+              labelText: 'Buscar en Maps',
               leading: const Icon(
                 Icons.location_pin,
                 color: Colors.red,
@@ -63,7 +90,7 @@ class _NewRouteState extends State<NewRoute> {
             ),
             const Divider(),
             TextFieldWidget(
-              labelText: 'Precio por asiento',
+              labelText: 'Precio sugerido por asiento',
               helperText: 'Ej. 4.00',
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
@@ -71,7 +98,7 @@ class _NewRouteState extends State<NewRoute> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Especifique el precio por asiento';
+                  return 'Especifique el precio por asiento. Ej. 4.00';
                 }
                 if (!(double.tryParse(value) != null)) {
                   return 'El precio debe ser un número';
@@ -83,7 +110,7 @@ class _NewRouteState extends State<NewRoute> {
               },
             ),
             TextFieldWidget(
-              labelText: 'Titulo',
+              labelText: 'Titulo simple',
               helperText: 'Ej. De Lima a Arequipa',
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -93,20 +120,6 @@ class _NewRouteState extends State<NewRoute> {
               },
               onChanged: (String string) {
                 newRouteController.title.value = string;
-              },
-            ),
-            TextFieldWidget(
-              labelText: 'Descripción',
-              helperText:
-                  'Ej. Desde Plaza de Armas de Lima hasta Colegio Monterrico de Arequipa',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Especifique la descripción de la ruta';
-                }
-                return null;
-              },
-              onChanged: (String string) {
-                newRouteController.description.value = string;
               },
             ),
             const Divider(),

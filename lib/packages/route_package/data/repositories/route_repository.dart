@@ -16,10 +16,10 @@ class RouteRepository implements AbstractRouteRepository {
 
   @override
   Future<AbstractRouteEntity>? getRoute({
-    required String userId,
+    required String routeId,
   }) {
     return _abstractRouteRepository!.getRoute(
-      userId: userId,
+      routeId: routeId,
     );
   }
 

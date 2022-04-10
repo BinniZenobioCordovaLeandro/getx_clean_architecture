@@ -133,7 +133,9 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
     if (widget.initialValue != null) {
       boolean = widget.initialValue!;
     }
-    getMyLocation();
+    WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
+      moveToMyLocation();
+    });
     if (widget.initialLatLng != null) {
       WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
         mapController.move(widget.initialLatLng!, 15.0);

@@ -38,7 +38,6 @@ class _SignInUserPageState extends State<SignInUserPage> {
                   success: 'CONTINUAR CON GOOGLE',
                   onPressed: () {
                     signInController.signInWithGoogle().then((boolean) {
-                      print(boolean);
                       if (boolean) Navigator.of(context).pop(true);
                     });
                   },

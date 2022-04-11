@@ -25,10 +25,10 @@ class OfferRepository implements AbstractOfferRepository {
 
   @override
   Future<AbstractOfferEntity>? getOffer({
-    required String id,
+    required String offerId,
   }) {
     return _abstractOfferRepository!.getOffer(
-      id: id,
+      offerId: offerId,
     );
   }
 

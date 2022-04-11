@@ -57,14 +57,6 @@ class _RoutePageState extends State<RoutePage> {
                 await routeController.verifySession();
               }
               if (routeController.isSigned.value) {
-                // Get.to(
-                //   () => OfferPage(
-                //     abstractRouteEntity: widget.abstractRouteEntity!,
-                //   ),
-                //   arguments: {
-                //     'abstractRouteEntity': widget.abstractRouteEntity,
-                //   },
-                // );
                 ModalBottomSheetHelper(
                     context: context,
                     title: 'Realizar ruta',
@@ -72,7 +64,7 @@ class _RoutePageState extends State<RoutePage> {
                       abstractRouteEntity: widget.abstractRouteEntity!,
                     ),
                     complete: () {
-                      print('complete');
+                      Get.appUpdate();
                     });
               } else {
                 Get.to(
@@ -242,55 +234,59 @@ class _RoutePageState extends State<RoutePage> {
               right: 0,
               child: SafeAreaWidget(
                 child: SizedBox(
-                  height: 300,
-                  child: FractionallySizedBoxWidget(
-                    child: SingleChildScrollViewWidget(
-                      child: WrapWidget(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: <Widget>[
-                          for (final AbstractOfferEntity abstractOfferEntity
-                              in routeController.listAbstractOfferEntity.value)
-                            OfferCardWidget(
-                              abstractOfferEntity: abstractOfferEntity,
-                              onTap: (abstractOfferEntity) {
-                                mapController.fitBounds(LatLngBounds(
-                                  LatLng(
-                                      double.parse(
-                                          '${abstractOfferEntity.startLat}'),
-                                      double.parse(
-                                          '${abstractOfferEntity.startLng}')),
-                                  LatLng(
-                                      double.parse(
-                                          '${abstractOfferEntity.endLat}'),
-                                      double.parse(
-                                          '${abstractOfferEntity.endLng}')),
-                                ));
-                                routeController.showOfferPolylineMarkers(
-                                    abstractOfferEntity);
-                              },
-                              onPressed: (abstractOfferEntity) async {
-                                if (routeController.isSigned.value == false) {
-                                  await routeController.verifySession();
-                                }
-                                if (routeController.isSigned.value) {
-                                  Get.to(
-                                    () => PaymentPage(
-                                      abstractOfferEntity: abstractOfferEntity,
-                                    ),
-                                    arguments: {
-                                      'abstractOfferEntity':
-                                          abstractOfferEntity,
-                                    },
-                                  );
-                                } else {
-                                  Get.to(
-                                    () => const SignInUserPage(),
-                                  );
-                                }
-                              },
-                            ),
-                        ],
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 300,
+                    ),
+                    child: FractionallySizedBoxWidget(
+                      child: SingleChildScrollViewWidget(
+                        child: WrapWidget(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: <Widget>[
+                            for (final AbstractOfferEntity abstractOfferEntity
+                                in routeController.listAbstractOfferEntity.value)
+                              OfferCardWidget(
+                                abstractOfferEntity: abstractOfferEntity,
+                                onTap: (abstractOfferEntity) {
+                                  mapController.fitBounds(LatLngBounds(
+                                    LatLng(
+                                        double.parse(
+                                            '${abstractOfferEntity.startLat}'),
+                                        double.parse(
+                                            '${abstractOfferEntity.startLng}')),
+                                    LatLng(
+                                        double.parse(
+                                            '${abstractOfferEntity.endLat}'),
+                                        double.parse(
+                                            '${abstractOfferEntity.endLng}')),
+                                  ));
+                                  routeController.showOfferPolylineMarkers(
+                                      abstractOfferEntity);
+                                },
+                                onPressed: (abstractOfferEntity) async {
+                                  if (routeController.isSigned.value == false) {
+                                    await routeController.verifySession();
+                                  }
+                                  if (routeController.isSigned.value) {
+                                    Get.to(
+                                      () => PaymentPage(
+                                        abstractOfferEntity: abstractOfferEntity,
+                                      ),
+                                      arguments: {
+                                        'abstractOfferEntity':
+                                            abstractOfferEntity,
+                                      },
+                                    );
+                                  } else {
+                                    Get.to(
+                                      () => const SignInUserPage(),
+                                    );
+                                  }
+                                },
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

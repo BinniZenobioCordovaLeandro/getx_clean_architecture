@@ -34,9 +34,17 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final String? userCarPhoto;
   @override
+  final String? userCarModel;
+  @override
+  final String? userCarColor;
+  @override
   final String? userPhoneNumber;
   @override
   final String? userRank;
+  @override
+  final String? updatedAt;
+  @override
+  final String? createdAt;
 
   const OfferModel({
     this.id,
@@ -54,8 +62,12 @@ class OfferModel implements AbstractOfferEntity {
     this.userAvatar,
     this.userCarPlate,
     this.userCarPhoto,
+    this.userCarModel,
+    this.userCarColor,
     this.userPhoneNumber,
     this.userRank,
+    this.updatedAt,
+    this.createdAt,
   });
 
   factory OfferModel.fromMap(Map<String, dynamic> data) => OfferModel(
@@ -74,8 +86,12 @@ class OfferModel implements AbstractOfferEntity {
         userAvatar: data['user_avatar'] as String?,
         userCarPlate: data['user_car_plate'] as String?,
         userCarPhoto: data['user_car_photo'] as String?,
+        userCarModel: data['user_car_model'] as String?,
+        userCarColor: data['user_car_color'] as String?,
         userPhoneNumber: data['user_phone_number'] as String?,
         userRank: data['user_rank'] as String?,
+        updatedAt: data['updated_at'] as String?,
+        createdAt: data['created_at'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -94,8 +110,12 @@ class OfferModel implements AbstractOfferEntity {
         'user_avatar': userAvatar,
         'user_car_plate': userCarPlate,
         'user_car_photo': userCarPhoto,
+        'user_car_model': userCarModel,
+        'user_car_color': userCarColor,
         'user_phone_number': userPhoneNumber,
         'user_rank': userRank,
+        'updated_at': updatedAt,
+        'created_at': createdAt,
       };
 
   factory OfferModel.fromJson(String data) {
@@ -120,8 +140,12 @@ class OfferModel implements AbstractOfferEntity {
     String? userAvatar,
     String? userCarPlate,
     String? userCarPhoto,
+    String? userCarModel,
+    String? userCarColor,
     String? userPhoneNumber,
     String? userRank,
+    String? updatedAt,
+    String? createdAt,
   }) {
     return OfferModel(
       id: id ?? this.id,
@@ -139,8 +163,12 @@ class OfferModel implements AbstractOfferEntity {
       userAvatar: userAvatar ?? this.userAvatar,
       userCarPlate: userCarPlate ?? this.userCarPlate,
       userCarPhoto: userCarPhoto ?? this.userCarPhoto,
+      userCarModel: userCarModel ?? this.userCarModel,
+      userCarColor: userCarColor ?? this.userCarColor,
       userPhoneNumber: userPhoneNumber ?? this.userPhoneNumber,
       userRank: userRank ?? this.userRank,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -165,8 +193,12 @@ class OfferModel implements AbstractOfferEntity {
       userAvatar,
       userCarPlate,
       userCarPhoto,
+      userCarModel,
+      userCarColor,
       userPhoneNumber,
       userRank,
+      updatedAt,
+      createdAt,
     ];
   }
 }

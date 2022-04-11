@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 class NewRouteController extends GetxController {
   static NewRouteController get instance => Get.put(NewRouteController());
 
+  final Uuid _uuid = const Uuid();
   final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
   final formKey = GlobalKey<FormState>();
@@ -64,7 +65,7 @@ class NewRouteController extends GetxController {
     bool isValidForm = formKey.currentState!.validate();
     if (isValidForm) {
       AbstractRouteEntity abstractRouteEntity = RouteModel(
-        id: const Uuid().v1(),
+        id: _uuid.v1(),
         from: from.value,
         startLat: startPosition.value.latitude.toString(),
         startLng: startPosition.value.longitude.toString(),

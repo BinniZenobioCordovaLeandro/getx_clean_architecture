@@ -61,7 +61,7 @@ class OfferCardWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 TextWidget(
-                                  'Hyundai Negro',
+                                  '${abstractOfferEntity.userCarModel} ${abstractOfferEntity.userCarColor}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText1
@@ -129,7 +129,7 @@ class OfferCardWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 TextWidget(
-                                  'Hyundai Negro',
+                                  '${abstractOfferEntity.userCarModel} ${abstractOfferEntity.userCarColor}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText1

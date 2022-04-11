@@ -16,8 +16,12 @@ abstract class AbstractOfferEntity extends Equatable {
   final String? userAvatar;
   final String? userCarPlate;
   final String? userCarPhoto;
+  final String? userCarModel;
+  final String? userCarColor;
   final String? userPhoneNumber;
   final String? userRank;
+  final String? updatedAt;
+  final String? createdAt;
 
   const AbstractOfferEntity({
     this.id,
@@ -35,7 +39,11 @@ abstract class AbstractOfferEntity extends Equatable {
     this.userAvatar,
     this.userCarPlate,
     this.userCarPhoto,
+    this.userCarModel,
+    this.userCarColor,
     this.userPhoneNumber,
     this.userRank,
+    this.updatedAt,
+    this.createdAt,
   });
 }

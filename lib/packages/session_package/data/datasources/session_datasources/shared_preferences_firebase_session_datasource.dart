@@ -34,7 +34,7 @@ class SharedPreferencesFirebaseSessionDatasources
 
   @override
   AbstractSessionEntity createSession() {
-    final String uuid = _uuid.v5(Uuid.NAMESPACE_X500, "session");
+    final String uuid = _uuid.v1();
     final SessionModel sessionModel = SessionModel(
       isSigned: false,
       idSessions: uuid,

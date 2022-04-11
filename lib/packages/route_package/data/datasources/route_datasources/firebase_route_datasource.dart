@@ -38,8 +38,8 @@ class FirebaseRouteDatasource implements AbstractRouteRepository {
     required AbstractRouteEntity abstractRouteEntity,
   }) {
     RouteModel routeModel = abstractRouteEntity as RouteModel;
-    routes?.doc(abstractRouteEntity.id).set(routeModel.toMap());
-    return Future.value(abstractRouteEntity);
+    routes?.doc(routeModel.id).set(routeModel.toMap());
+    return Future.value(routeModel);
   }
 
   @override
@@ -47,11 +47,8 @@ class FirebaseRouteDatasource implements AbstractRouteRepository {
     required AbstractRouteEntity abstractRouteEntity,
   }) {
     RouteModel routeModel = abstractRouteEntity as RouteModel;
-    return routes?.add(routeModel.toMap()).then((documentReference) {
-      return documentReference.get().then((snapshot) {
-        return RouteModel.fromMap(snapshot.data() as Map<String, dynamic>);
-      });
-    });
+    routes!.add(routeModel);
+    return Future.value(routeModel);
   }
 
   @override
@@ -64,7 +61,7 @@ class FirebaseRouteDatasource implements AbstractRouteRepository {
       ...routeModel.toMap(),
       'user_id': userId,
     }).then((value) {
-      return Future.value(abstractRouteEntity);
+      return Future.value(routeModel);
     });
     return futureAbstractRouteEntity;
   }

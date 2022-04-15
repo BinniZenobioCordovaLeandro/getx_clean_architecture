@@ -1,18 +1,18 @@
 import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
 import 'package:pickpointer/packages/user_package/domain/repositories/abstract_user_repository.dart';
 
-class GetUserUsecase {
+class SetUserUsecase {
   final AbstractUserRepository _abstractUserRepository;
 
-  GetUserUsecase({
+  SetUserUsecase({
     required AbstractUserRepository? abstractUserRepository,
   })  : assert(abstractUserRepository != null),
         _abstractUserRepository = abstractUserRepository!;
 
   Future<AbstractUserEntity>? call({
-    required String userId,
+    required AbstractUserEntity abstractUserEntity,
   }) =>
-      _abstractUserRepository.getUser(
-        userId: userId,
+      _abstractUserRepository.setUser(
+        abstractUserEntity: abstractUserEntity,
       );
 }

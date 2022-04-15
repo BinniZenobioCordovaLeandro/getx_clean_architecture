@@ -19,6 +19,7 @@ class RoutesController extends GetxController {
   final MapController mapController = MapController();
 
   var isSigned = false.obs;
+  var isDriver = false.obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var routes = <AbstractRouteEntity>[].obs;
@@ -54,6 +55,7 @@ class RoutesController extends GetxController {
     Future<bool> futureBool =
         _verifySessionUsecase.call().then((abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
+      isDriver.value = abstractSessionEntity.isDriver ?? false;
       return isSigned.value;
     });
     return futureBool;

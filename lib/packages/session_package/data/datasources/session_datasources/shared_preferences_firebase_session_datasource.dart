@@ -70,7 +70,7 @@ class SharedPreferencesFirebaseSessionDatasources
         SharedPreferences.getInstance().then((sharedPreferences) {
       SessionModel sessionModel = abstractSessionEntity as SessionModel;
       sharedPreferences.setString(_key, sessionModel.toJson());
-      sessions!.doc(sessionModel.idSessions).set(sessionModel.toMap());
+      sessions!.doc(abstractSessionEntity.idSessions).set(sessionModel.toMap());
       return abstractSessionEntity;
     });
     return futureAbstractSessionEntity;

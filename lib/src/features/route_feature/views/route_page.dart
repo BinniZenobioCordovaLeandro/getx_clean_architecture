@@ -51,33 +51,34 @@ class _RoutePageState extends State<RoutePage> {
         title: 'PickPointer + S/. ${widget.abstractRouteEntity?.price}',
         showGoback: true,
         actions: [
-          IconButton(
-            onPressed: () async {
-              if (routeController.isSigned.value == false) {
-                await routeController.verifySession();
-              }
-              if (routeController.isSigned.value) {
-                ModalBottomSheetHelper(
-                    context: context,
-                    title: 'Realizar ruta',
-                    child: OfferPage(
-                      abstractRouteEntity: widget.abstractRouteEntity!,
-                    ),
-                    complete: () {
-                      Get.appUpdate();
-                    });
-              } else {
-                Get.to(
-                  () => const SignInUserPage(),
-                );
-              }
-            },
-            tooltip: 'Realizar ruta',
-            icon: Icon(
-              Icons.taxi_alert_outlined,
-              color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+          if (routeController.isDriver.value)
+            IconButton(
+              onPressed: () async {
+                if (routeController.isSigned.value == false) {
+                  await routeController.verifySession();
+                }
+                if (routeController.isSigned.value) {
+                  ModalBottomSheetHelper(
+                      context: context,
+                      title: 'Realizar ruta',
+                      child: OfferPage(
+                        abstractRouteEntity: widget.abstractRouteEntity!,
+                      ),
+                      complete: () {
+                        Get.appUpdate();
+                      });
+                } else {
+                  Get.to(
+                    () => const SignInUserPage(),
+                  );
+                }
+              },
+              tooltip: 'Realizar ruta',
+              icon: Icon(
+                Icons.taxi_alert_outlined,
+                color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+              ),
             ),
-          ),
         ],
       ),
       body: Obx(() {
@@ -245,7 +246,8 @@ class _RoutePageState extends State<RoutePage> {
                           runSpacing: 8,
                           children: <Widget>[
                             for (final AbstractOfferEntity abstractOfferEntity
-                                in routeController.listAbstractOfferEntity.value)
+                                in routeController
+                                    .listAbstractOfferEntity.value)
                               OfferCardWidget(
                                 abstractOfferEntity: abstractOfferEntity,
                                 onTap: (abstractOfferEntity) {
@@ -271,7 +273,8 @@ class _RoutePageState extends State<RoutePage> {
                                   if (routeController.isSigned.value) {
                                     Get.to(
                                       () => PaymentPage(
-                                        abstractOfferEntity: abstractOfferEntity,
+                                        abstractOfferEntity:
+                                            abstractOfferEntity,
                                       ),
                                       arguments: {
                                         'abstractOfferEntity':

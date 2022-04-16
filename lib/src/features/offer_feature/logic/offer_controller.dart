@@ -8,6 +8,9 @@ import 'package:pickpointer/packages/route_package/domain/entities/abstract_rout
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
+import 'package:pickpointer/packages/user_package/data/datasources/user_datasource.dart/firebase_user_datasource.dart';
+import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
+import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -32,11 +35,18 @@ class OfferController extends GetxController {
     abstractOfferRepository: FirebaseOfferDatasource(),
   );
 
-  Future<bool>? sendNotification() {
+  final GetUserUsecase _getUserUsecase = GetUserUsecase(
+    abstractUserRepository: FirebaseUserDatasource(),
+  );
+
+  Future<bool>? sendNotification({
+    required AbstractRouteEntity abstractRouteEntity,
+  }) {
     Future<bool>? futureBool = notificationProvider
         ?.sendNotification(
-          title: 'Oferta registrada',
-          body: 'Ahora eres vicible para los usuarios en esta ruta',
+          title: 'Oferta registrada, destino "${abstractRouteEntity.to}"',
+          body:
+              'Ahora eres visible para los usuarios en esta ruta:\nDestino: ${abstractRouteEntity.to}\nOrigen: ${abstractRouteEntity.from}',
         )
         .then((value) => value);
     return futureBool;
@@ -52,38 +62,50 @@ class OfferController extends GetxController {
           .call()
           .then((AbstractSessionEntity abstractSessionEntity) {
         if (abstractSessionEntity.isSigned!) {
-          AbstractOfferEntity abstractOfferEntity = OfferModel(
-            id: _uuid.v1(),
-            routeId: abstractRouteEntity.id,
-            count: '0',
-            maxCount: maxCount.value,
-            price: price.value,
-            startLat: abstractRouteEntity.startLat,
-            startLng: abstractRouteEntity.startLng,
-            endLat: abstractRouteEntity.endLat,
-            endLng: abstractRouteEntity.endLng,
-            wayPoints: '[]',
-            userId: abstractSessionEntity.idUsers,
-            userName: abstractSessionEntity.name,
-            userAvatar: abstractSessionEntity.avatar,
-            userCarPlate: abstractSessionEntity.carPlate,
-            userCarPhoto: abstractSessionEntity.carPhoto,
-            userCarModel: abstractSessionEntity.carModel,
-            userCarColor: abstractSessionEntity.carColor,
-            userPhoneNumber: abstractSessionEntity.phoneNumber,
-            userRank: abstractSessionEntity.rank,
-            updatedAt: '${DateTime.now().millisecondsSinceEpoch}',
-            createdAt: '${DateTime.now().millisecondsSinceEpoch}',
-          );
-          _addOfferUsecase
-              .call(abstractOfferEntity: abstractOfferEntity)
-              ?.then((AbstractOfferEntity abstractOfferEntity) {
-            isLoading.value = false;
-            formKey.currentState!.reset();
-            sendNotification();
-            Get.back();
+          _getUserUsecase
+              .call(userId: abstractSessionEntity.idUsers!)!
+              .then((AbstractUserEntity abstractUserEntity) {
+            if (abstractUserEntity.isDriver == '1') {
+              AbstractOfferEntity abstractOfferEntity = OfferModel(
+                id: _uuid.v1(),
+                routeId: abstractRouteEntity.id,
+                count: '0',
+                maxCount: maxCount.value,
+                price: price.value,
+                startLat: abstractRouteEntity.startLat,
+                startLng: abstractRouteEntity.startLng,
+                endLat: abstractRouteEntity.endLat,
+                endLng: abstractRouteEntity.endLng,
+                wayPoints: '[]',
+                userId: abstractSessionEntity.idUsers,
+                userName: abstractUserEntity.name,
+                userAvatar: abstractUserEntity.avatar,
+                userCarPlate: abstractUserEntity.carPlate,
+                userCarPhoto: abstractUserEntity.carPhoto,
+                userCarModel: abstractUserEntity.carModel,
+                userCarColor: abstractUserEntity.carColor,
+                userPhoneNumber: abstractUserEntity.phoneNumber,
+                userRank: abstractUserEntity.rank,
+                updatedAt: '${DateTime.now().millisecondsSinceEpoch}',
+                createdAt: '${DateTime.now().millisecondsSinceEpoch}',
+              );
+              _addOfferUsecase
+                  .call(abstractOfferEntity: abstractOfferEntity)!
+                  .then((AbstractOfferEntity abstractOfferEntity) {
+                isLoading.value = false;
+                formKey.currentState!.reset();
+                sendNotification(
+                  abstractRouteEntity: abstractRouteEntity,
+                );
+                Get.back();
+              });
+            }
           });
+        } else {
+          isLoading.value = false;
         }
+      }).catchError((error) {
+        isLoading.value = false;
       });
     }
   }

@@ -12,7 +12,7 @@ class SharedPreferencesFirebaseSessionDatasources
 
   CollectionReference? sessions;
 
-  SharedPreferencesFirebaseSessionDatasources(){
+  SharedPreferencesFirebaseSessionDatasources() {
     sessions = FirebaseFirestore.instance.collection('c_sessions');
   }
 
@@ -44,22 +44,19 @@ class SharedPreferencesFirebaseSessionDatasources
   }
 
   @override
-  Future<AbstractSessionEntity?> getSession() {
-    Future<AbstractSessionEntity?> futureAbstractSessionEntity =
-        SharedPreferences.getInstance().then((sharedPreferences) {
+  Future<AbstractSessionEntity?> getSession() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       String? json = sharedPreferences.getString(_key);
       if (json != null) {
         final SessionModel sessionModel = SessionModel.fromJson(json);
-        sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
+        return sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
           final SessionModel sessionModel =
               SessionModel.fromMap(snapshot.data() as Map<String, dynamic>);
+          return sessionModel;
         });
-        return sessionModel;
       } else {
-        return null;
+        return Future.value(null);
       }
-    });
-    return futureAbstractSessionEntity;
   }
 
   @override

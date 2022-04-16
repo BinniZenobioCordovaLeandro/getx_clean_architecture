@@ -56,6 +56,9 @@ class OfferCardWidget extends StatelessWidget {
                                   '${abstractOfferEntity.userCarPhoto}',
                             ),
                           ),
+                          const SizedBox(
+                            width: 8,
+                          ),
                           Expanded(
                             flex: 2,
                             child: Column(
@@ -123,6 +126,9 @@ class OfferCardWidget extends StatelessWidget {
                               urlSvgOrImage:
                                   '${abstractOfferEntity.userCarPhoto}',
                             ),
+                          ),
+                          const SizedBox(
+                            width: 8,
                           ),
                           Expanded(
                             flex: 2,

@@ -78,10 +78,12 @@ class _UserPageState extends State<UserPage> {
               onChanged: (value) => userController.avatar.value = value,
             ),
             SwitchListTile(
-              title: const Text('Axtivar modo conductor'),
+              title: const Text('Activar modo conductor'),
               value: userController.isDriver.value,
-              onChanged: (value) =>
-                  userController.isDriver.value = value, // launch a google form
+              onChanged: userController.isDriver.value
+                  ? null
+                  : (value) => userController.isDriver.value =
+                      value,
             ),
             if (userController.isDriver.value)
               TextFieldWidget(

@@ -11,6 +11,7 @@ import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
+import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
@@ -45,44 +46,44 @@ class _RoutePageState extends State<RoutePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBarWidget(
-        title: 'PickPointer + S/. ${widget.abstractRouteEntity?.price}',
-        showGoback: true,
-        actions: [
-          if (routeController.isDriver.value)
-            IconButton(
-              onPressed: () async {
-                if (routeController.isSigned.value == false) {
-                  await routeController.verifySession();
-                }
-                if (routeController.isSigned.value) {
-                  ModalBottomSheetHelper(
-                      context: context,
-                      title: 'Realizar ruta',
-                      child: OfferPage(
-                        abstractRouteEntity: widget.abstractRouteEntity!,
-                      ),
-                      complete: () {
-                        Get.appUpdate();
-                      });
-                } else {
-                  Get.to(
-                    () => const SignInUserPage(),
-                  );
-                }
-              },
-              tooltip: 'Realizar ruta',
-              icon: Icon(
-                Icons.taxi_alert_outlined,
-                color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+    return Obx(() {
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBarWidget(
+          title: 'PickPointer + S/. ${widget.abstractRouteEntity?.price}',
+          showGoback: true,
+          actions: [
+            if (routeController.isDriver.value)
+              IconButton(
+                onPressed: () async {
+                  if (routeController.isSigned.value == false) {
+                    await routeController.verifySession();
+                  }
+                  if (routeController.isSigned.value) {
+                    ModalBottomSheetHelper(
+                        context: context,
+                        title: 'Realizar ruta',
+                        child: OfferPage(
+                          abstractRouteEntity: widget.abstractRouteEntity!,
+                        ),
+                        complete: () {
+                          routeController.onReady();
+                        });
+                  } else {
+                    Get.to(
+                      () => const SignInUserPage(),
+                    );
+                  }
+                },
+                tooltip: 'Realizar ruta',
+                icon: Icon(
+                  Icons.taxi_alert_outlined,
+                  color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+                ),
               ),
-            ),
-        ],
-      ),
-      body: Obx(() {
-        return Stack(
+          ],
+        ),
+        body: Stack(
           children: [
             FlutterMapWidget(
               mapController: mapController,
@@ -223,8 +224,11 @@ class _RoutePageState extends State<RoutePage> {
               right: 0,
               child: SafeAreaWidget(
                 child: FractionallySizedBoxWidget(
-                  child: RouteCardWidget(
-                    abstractRouteEntity: widget.abstractRouteEntity,
+                  child: ShimmerWidget(
+                    enabled: routeController.isLoading.value,
+                    child: RouteCardWidget(
+                      abstractRouteEntity: widget.abstractRouteEntity,
+                    ),
                   ),
                 ),
               ),
@@ -297,8 +301,8 @@ class _RoutePageState extends State<RoutePage> {
               ),
             ),
           ],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }

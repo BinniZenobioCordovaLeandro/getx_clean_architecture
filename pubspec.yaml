@@ -47,7 +47,7 @@ dependencies:
   google_sign_in: ^5.2.3
   modal_bottom_sheet: ^2.0.0
   progress_state_button: ^1.0.4
-  shared_preferences: ^2.0.12
+  shared_preferences: ^2.0.13
   shimmer: ^2.0.0
   uuid: ^3.0.6
 

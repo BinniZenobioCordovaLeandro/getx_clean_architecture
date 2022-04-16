@@ -71,12 +71,7 @@ class SignInController extends GetxController {
           final SessionModel newSessionModel = sessionModel.copyWith(
             isSigned: true,
             idUsers: googleSignInAccount.id,
-            name: googleSignInAccount
-                .displayName, // TODO: think on remove this fields from sessionModel, and get from userModel
-            email: googleSignInAccount.email,
-            avatar: googleSignInAccount.photoUrl,
           );
-
           _getUserUsecase
               .call(userId: googleSignInAccount.id)
               ?.then((AbstractUserEntity abstractUserEntity) {

@@ -50,7 +50,7 @@ class _RoutePageState extends State<RoutePage> {
       return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBarWidget(
-          title: 'PickPointer + S/. ${widget.abstractRouteEntity?.price}',
+          title: 'PickPointer',
           showGoback: true,
           actions: [
             if (routeController.isDriver.value)

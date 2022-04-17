@@ -35,8 +35,10 @@ class PopupMarkerCardWidget extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: TextWidget(
-                          '+ S/. ${abstractRouteEntity?.price}',
-                          style: Theme.of(context).textTheme.subtitle1,
+                          'Aprox. S/. ${abstractRouteEntity?.price}',
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
                           textAlign: TextAlign.end,
                         ),
                       ),
@@ -78,10 +80,11 @@ class PopupMarkerCardWidget extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: TextWidget(
-                          '+ S/. ${abstractRouteEntity?.price}',
+                          'Aprox. S/. ${abstractRouteEntity?.price}',
                           style:
                               Theme.of(context).textTheme.subtitle1?.copyWith(
                                     color: Theme.of(context).primaryColor,
+                                    fontStyle: FontStyle.italic,
                                   ),
                           textAlign: TextAlign.end,
                         ),

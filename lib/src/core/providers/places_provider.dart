@@ -7,7 +7,7 @@ class PlacesProvider {
 
   static PlacesProvider? getInstance() {
     _instance ??= PlacesProvider();
-    _instance!.googleMapsPlaces = GoogleMapsPlaces(
+    _instance!.googleMapsPlaces ??= GoogleMapsPlaces(
       apiKey: ConfigEnv.apiKeyPlaces,
     );
     return _instance!;

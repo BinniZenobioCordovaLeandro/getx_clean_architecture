@@ -12,6 +12,7 @@ import 'package:pickpointer/packages/session_package/domain/entities/abstract_se
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
+import 'package:pickpointer/src/core/providers/package_info_provider.dart';
 import 'package:pickpointer/src/core/providers/places_provider.dart';
 
 class RoutesController extends GetxController {
@@ -31,6 +32,7 @@ class RoutesController extends GetxController {
   var polylines = <Polyline>[].obs;
   var position = LatLng(-12.0, -76.0).obs;
   var predictions = <Prediction>[].obs;
+  var version = 'x.x.x'.obs;
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
@@ -53,13 +55,23 @@ class RoutesController extends GetxController {
   }
 
   Future<bool> verifySession() {
-    Future<bool> futureBool =
-        _verifySessionUsecase.call().then((AbstractSessionEntity abstractSessionEntity) {
+    Future<bool> futureBool = _verifySessionUsecase
+        .call()
+        .then((AbstractSessionEntity abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
       return isSigned.value;
     });
     return futureBool;
+  }
+
+  getVersion() {
+    PackageInfoProvider.getInstance()
+        .then((PackageInfoProvider? packageInfoProvider) {
+      if (packageInfoProvider != null) {
+        version.value = packageInfoProvider.getFullVersion();
+      }
+    });
   }
 
   @override
@@ -179,6 +191,7 @@ class RoutesController extends GetxController {
     });
 
     verifySession();
+    getVersion();
     super.onReady();
   }
 

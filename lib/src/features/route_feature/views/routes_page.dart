@@ -12,6 +12,8 @@ import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
+import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 import 'package:pickpointer/src/features/route_feature/views/new_route.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
@@ -219,6 +221,19 @@ class _RoutesPageState extends State<RoutesPage> {
                         }
                       },
                     ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: ShimmerWidget(
+                  enabled: routesController.isLoading.value,
+                  child: TextWidget(
+                    'version ${routesController.version.value}',
+                    style: Theme.of(context).textTheme.caption?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                        ),
                   ),
                 ),
               ),

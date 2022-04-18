@@ -12,7 +12,7 @@ class SharedPreferencesFirebaseSessionDatasources
 
   CollectionReference? sessions;
 
-  SharedPreferencesFirebaseSessionDatasources(){
+  SharedPreferencesFirebaseSessionDatasources() {
     sessions = FirebaseFirestore.instance.collection('c_sessions');
   }
 
@@ -34,7 +34,7 @@ class SharedPreferencesFirebaseSessionDatasources
 
   @override
   AbstractSessionEntity createSession() {
-    final String uuid = _uuid.v5(Uuid.NAMESPACE_X500, "session");
+    final String uuid = _uuid.v1();
     final SessionModel sessionModel = SessionModel(
       isSigned: false,
       idSessions: uuid,
@@ -44,22 +44,19 @@ class SharedPreferencesFirebaseSessionDatasources
   }
 
   @override
-  Future<AbstractSessionEntity?> getSession() {
-    Future<AbstractSessionEntity?> futureAbstractSessionEntity =
-        SharedPreferences.getInstance().then((sharedPreferences) {
+  Future<AbstractSessionEntity?> getSession() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       String? json = sharedPreferences.getString(_key);
       if (json != null) {
         final SessionModel sessionModel = SessionModel.fromJson(json);
-        sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
+        return sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
           final SessionModel sessionModel =
-              SessionModel.fromJson(snapshot.data().toString());
+              SessionModel.fromMap(snapshot.data() as Map<String, dynamic>);
+          return sessionModel;
         });
-        return sessionModel;
       } else {
-        return null;
+        return Future.value(null);
       }
-    });
-    return futureAbstractSessionEntity;
   }
 
   @override
@@ -70,7 +67,7 @@ class SharedPreferencesFirebaseSessionDatasources
         SharedPreferences.getInstance().then((sharedPreferences) {
       SessionModel sessionModel = abstractSessionEntity as SessionModel;
       sharedPreferences.setString(_key, sessionModel.toJson());
-      sessions!.doc(sessionModel.idSessions).set(sessionModel.toMap());
+      sessions!.doc(abstractSessionEntity.idSessions).set(sessionModel.toMap());
       return abstractSessionEntity;
     });
     return futureAbstractSessionEntity;

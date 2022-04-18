@@ -8,7 +8,7 @@ abstract class AbstractOfferRepository {
   });
 
   Future<AbstractOfferEntity>? getOffer({
-    required String id,
+    required String offerId,
   });
 
   Future<AbstractOfferEntity>? setOffer({

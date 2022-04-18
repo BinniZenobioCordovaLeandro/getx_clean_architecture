@@ -8,6 +8,18 @@ abstract class AbstractUserRepository {
   });
 
   Future<AbstractUserEntity>? getUser({
-    required int userId,
+    required String userId,
+  });
+
+  Future<bool>? userExists({
+    required String userId,
+  });
+
+  Future<AbstractUserEntity>? setUser({
+    required AbstractUserEntity abstractUserEntity,
+  });
+
+  Future<AbstractUserEntity>? updateUser({
+    required AbstractUserEntity abstractUserEntity,
   });
 }

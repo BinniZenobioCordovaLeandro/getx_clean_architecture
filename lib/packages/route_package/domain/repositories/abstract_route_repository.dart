@@ -4,7 +4,7 @@ abstract class AbstractRouteRepository {
   Future<List<AbstractRouteEntity>>? getRoutes();
 
   Future<AbstractRouteEntity>? getRoute({
-    required String userId,
+    required String routeId,
   });
 
   Future<AbstractRouteEntity>? setRoute({

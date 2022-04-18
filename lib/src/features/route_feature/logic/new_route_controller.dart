@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 class NewRouteController extends GetxController {
   static NewRouteController get instance => Get.put(NewRouteController());
 
+  final Uuid _uuid = const Uuid();
   final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
   final formKey = GlobalKey<FormState>();
@@ -24,7 +25,8 @@ class NewRouteController extends GetxController {
   var endPosition = LatLng(0, 0).obs;
   var price = ''.obs;
   var title = ''.obs;
-  var description = ''.obs;
+  var from = ''.obs;
+  var to = ''.obs;
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
     abstractSessionRepository: SharedPreferencesSessionDatasources(),
@@ -63,14 +65,16 @@ class NewRouteController extends GetxController {
     bool isValidForm = formKey.currentState!.validate();
     if (isValidForm) {
       AbstractRouteEntity abstractRouteEntity = RouteModel(
-        id: const Uuid().v1(),
+        id: _uuid.v1(),
+        from: from.value,
         startLat: startPosition.value.latitude.toString(),
         startLng: startPosition.value.longitude.toString(),
+        to: to.value,
         endLat: endPosition.value.latitude.toString(),
         endLng: endPosition.value.longitude.toString(),
         price: price.value,
         title: title.value,
-        description: description.value,
+        description: 'Desde ${from.value}, hasta ${to.value}',
       );
       _verifySessionUsecase.call().then((AbstractSessionEntity abstractSessionEntity) {
         if (abstractSessionEntity.isSigned!) {

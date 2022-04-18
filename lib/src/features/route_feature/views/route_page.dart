@@ -11,6 +11,7 @@ import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
+import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
@@ -45,51 +46,44 @@ class _RoutePageState extends State<RoutePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBarWidget(
-        title: 'PickPointer + S/. ${widget.abstractRouteEntity?.price}',
-        showGoback: true,
-        actions: [
-          IconButton(
-            onPressed: () async {
-              if (routeController.isSigned.value == false) {
-                await routeController.verifySession();
-              }
-              if (routeController.isSigned.value) {
-                // Get.to(
-                //   () => OfferPage(
-                //     abstractRouteEntity: widget.abstractRouteEntity!,
-                //   ),
-                //   arguments: {
-                //     'abstractRouteEntity': widget.abstractRouteEntity,
-                //   },
-                // );
-                ModalBottomSheetHelper(
-                    context: context,
-                    title: 'Realizar ruta',
-                    child: OfferPage(
-                      abstractRouteEntity: widget.abstractRouteEntity!,
-                    ),
-                    complete: () {
-                      print('complete');
-                    });
-              } else {
-                Get.to(
-                  () => const SignInUserPage(),
-                );
-              }
-            },
-            tooltip: 'Realizar ruta',
-            icon: Icon(
-              Icons.taxi_alert_outlined,
-              color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
-            ),
-          ),
-        ],
-      ),
-      body: Obx(() {
-        return Stack(
+    return Obx(() {
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBarWidget(
+          title: 'PickPointer',
+          showGoback: true,
+          actions: [
+            if (routeController.isDriver.value)
+              IconButton(
+                onPressed: () async {
+                  if (routeController.isSigned.value == false) {
+                    await routeController.verifySession();
+                  }
+                  if (routeController.isSigned.value) {
+                    ModalBottomSheetHelper(
+                        context: context,
+                        title: 'Realizar ruta',
+                        child: OfferPage(
+                          abstractRouteEntity: widget.abstractRouteEntity!,
+                        ),
+                        complete: () {
+                          routeController.onReady();
+                        });
+                  } else {
+                    Get.to(
+                      () => const SignInUserPage(),
+                    );
+                  }
+                },
+                tooltip: 'Realizar ruta',
+                icon: Icon(
+                  Icons.taxi_alert_outlined,
+                  color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+                ),
+              ),
+          ],
+        ),
+        body: Stack(
           children: [
             FlutterMapWidget(
               mapController: mapController,
@@ -230,8 +224,11 @@ class _RoutePageState extends State<RoutePage> {
               right: 0,
               child: SafeAreaWidget(
                 child: FractionallySizedBoxWidget(
-                  child: RouteCardWidget(
-                    abstractRouteEntity: widget.abstractRouteEntity,
+                  child: ShimmerWidget(
+                    enabled: routeController.isLoading.value,
+                    child: RouteCardWidget(
+                      abstractRouteEntity: widget.abstractRouteEntity,
+                    ),
                   ),
                 ),
               ),
@@ -242,55 +239,61 @@ class _RoutePageState extends State<RoutePage> {
               right: 0,
               child: SafeAreaWidget(
                 child: SizedBox(
-                  height: 300,
-                  child: FractionallySizedBoxWidget(
-                    child: SingleChildScrollViewWidget(
-                      child: WrapWidget(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: <Widget>[
-                          for (final AbstractOfferEntity abstractOfferEntity
-                              in routeController.listAbstractOfferEntity.value)
-                            OfferCardWidget(
-                              abstractOfferEntity: abstractOfferEntity,
-                              onTap: (abstractOfferEntity) {
-                                mapController.fitBounds(LatLngBounds(
-                                  LatLng(
-                                      double.parse(
-                                          '${abstractOfferEntity.startLat}'),
-                                      double.parse(
-                                          '${abstractOfferEntity.startLng}')),
-                                  LatLng(
-                                      double.parse(
-                                          '${abstractOfferEntity.endLat}'),
-                                      double.parse(
-                                          '${abstractOfferEntity.endLng}')),
-                                ));
-                                routeController.showOfferPolylineMarkers(
-                                    abstractOfferEntity);
-                              },
-                              onPressed: (abstractOfferEntity) async {
-                                if (routeController.isSigned.value == false) {
-                                  await routeController.verifySession();
-                                }
-                                if (routeController.isSigned.value) {
-                                  Get.to(
-                                    () => PaymentPage(
-                                      abstractOfferEntity: abstractOfferEntity,
-                                    ),
-                                    arguments: {
-                                      'abstractOfferEntity':
-                                          abstractOfferEntity,
-                                    },
-                                  );
-                                } else {
-                                  Get.to(
-                                    () => const SignInUserPage(),
-                                  );
-                                }
-                              },
-                            ),
-                        ],
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 300,
+                    ),
+                    child: FractionallySizedBoxWidget(
+                      child: SingleChildScrollViewWidget(
+                        child: WrapWidget(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: <Widget>[
+                            for (final AbstractOfferEntity abstractOfferEntity
+                                in routeController
+                                    .listAbstractOfferEntity.value)
+                              OfferCardWidget(
+                                abstractOfferEntity: abstractOfferEntity,
+                                onTap: (abstractOfferEntity) {
+                                  mapController.fitBounds(LatLngBounds(
+                                    LatLng(
+                                        double.parse(
+                                            '${abstractOfferEntity.startLat}'),
+                                        double.parse(
+                                            '${abstractOfferEntity.startLng}')),
+                                    LatLng(
+                                        double.parse(
+                                            '${abstractOfferEntity.endLat}'),
+                                        double.parse(
+                                            '${abstractOfferEntity.endLng}')),
+                                  ));
+                                  routeController.showOfferPolylineMarkers(
+                                      abstractOfferEntity);
+                                },
+                                onPressed: (abstractOfferEntity) async {
+                                  if (routeController.isSigned.value == false) {
+                                    await routeController.verifySession();
+                                  }
+                                  if (routeController.isSigned.value) {
+                                    Get.to(
+                                      () => PaymentPage(
+                                        abstractOfferEntity:
+                                            abstractOfferEntity,
+                                      ),
+                                      arguments: {
+                                        'abstractOfferEntity':
+                                            abstractOfferEntity,
+                                      },
+                                    );
+                                  } else {
+                                    Get.to(
+                                      () => const SignInUserPage(),
+                                    );
+                                  }
+                                },
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -298,8 +301,8 @@ class _RoutePageState extends State<RoutePage> {
               ),
             ),
           ],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }

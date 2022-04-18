@@ -56,12 +56,15 @@ class OfferCardWidget extends StatelessWidget {
                                   '${abstractOfferEntity.userCarPhoto}',
                             ),
                           ),
+                          const SizedBox(
+                            width: 8,
+                          ),
                           Expanded(
                             flex: 2,
                             child: Column(
                               children: [
                                 TextWidget(
-                                  'Hyundai Negro',
+                                  '${abstractOfferEntity.userCarModel} ${abstractOfferEntity.userCarColor}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText1
@@ -124,12 +127,15 @@ class OfferCardWidget extends StatelessWidget {
                                   '${abstractOfferEntity.userCarPhoto}',
                             ),
                           ),
+                          const SizedBox(
+                            width: 8,
+                          ),
                           Expanded(
                             flex: 2,
                             child: Column(
                               children: [
                                 TextWidget(
-                                  'Hyundai Negro',
+                                  '${abstractOfferEntity.userCarModel} ${abstractOfferEntity.userCarColor}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText1

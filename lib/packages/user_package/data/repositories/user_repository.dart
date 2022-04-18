@@ -23,8 +23,31 @@ class UserRepository implements AbstractUserRepository {
 
   @override
   Future<AbstractUserEntity>? getUser({
-    required int userId,
+    required String userId,
   }) {
     return _abstractUserRepository!.getUser(userId: userId);
+  }
+
+  @override
+  Future<bool>? userExists({
+    required String userId,
+  }) {
+    return _abstractUserRepository!.userExists(userId: userId);
+  }
+
+  @override
+  Future<AbstractUserEntity>? setUser({
+    required AbstractUserEntity abstractUserEntity,
+  }) {
+    return _abstractUserRepository!
+        .setUser(abstractUserEntity: abstractUserEntity);
+  }
+
+  @override
+  Future<AbstractUserEntity>? updateUser({
+    required AbstractUserEntity abstractUserEntity,
+  }) {
+    return _abstractUserRepository!
+        .updateUser(abstractUserEntity: abstractUserEntity);
   }
 }

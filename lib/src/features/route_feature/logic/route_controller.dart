@@ -13,6 +13,7 @@ class RouteController extends GetxController {
   static RouteController get instance => Get.put(RouteController());
 
   var isSigned = false.obs;
+  var isDriver = false.obs;
   var isLoading = false.obs;
   var polylineListLatLng = <LatLng>[].obs;
   var listAbstractOfferEntity = <AbstractOfferEntity>[].obs;
@@ -62,6 +63,7 @@ class RouteController extends GetxController {
     Future<bool> futureBool =
         _verifySessionUsecase.call().then((abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
+      isDriver.value = abstractSessionEntity.isDriver ?? false;
       return isSigned.value;
     });
     return futureBool;

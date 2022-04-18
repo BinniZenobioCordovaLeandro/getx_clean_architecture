@@ -1,6 +1,4 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/src/core/widgets/form_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
@@ -8,6 +6,8 @@ import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/logic/offer_controller.dart';
+import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {
   final AbstractRouteEntity abstractRouteEntity;
@@ -22,16 +22,15 @@ class OfferPage extends StatefulWidget {
 }
 
 class _OfferPageState extends State<OfferPage> {
+  final OfferController offerController = OfferController.instance;
+
   @override
   Widget build(BuildContext context) {
-    final MapController mapController = MapController();
-    final formKey = GlobalKey<FormState>();
-
     return StatefulBuilder(
       builder: (BuildContext context, setState) {
         return SafeAreaWidget(
           child: FormWidget(
-            key: formKey,
+            key: offerController.formKey,
             child: FractionallySizedBoxWidget(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -59,6 +58,9 @@ class _OfferPageState extends State<OfferPage> {
                         }
                         return null;
                       },
+                      onChanged: (String string) {
+                        offerController.maxCount.value = string;
+                      },
                     ),
                     TextFieldWidget(
                       labelText: 'Precio',
@@ -77,7 +79,7 @@ class _OfferPageState extends State<OfferPage> {
                         double minPrice = double.tryParse(
                                 '${widget.abstractRouteEntity.price}') ??
                             5.00;
-                        double maxPrice = minPrice * 2;
+                        double maxPrice = minPrice * 5;
                         if (price < minPrice) {
                           return 'El precio no puede ser menor a ${minPrice.toStringAsFixed(2)}';
                         }
@@ -86,16 +88,21 @@ class _OfferPageState extends State<OfferPage> {
                         }
                         return null;
                       },
+                      onChanged: (String string) {
+                        offerController.price.value = string;
+                      },
                     ),
                     SizedBox(
                       width: double.infinity,
                       child: ProgressStateButtonWidget(
+                        state: offerController.isLoading.value
+                            ? ButtonState.loading
+                            : ButtonState.success,
                         success: 'Publicar',
                         onPressed: () {
-                          bool isformValid = formKey.currentState!.validate();
-                          if (isformValid) {
-                            Get.back();
-                          }
+                          offerController.onSumbit(
+                            abstractRouteEntity: widget.abstractRouteEntity,
+                          );
                         },
                       ),
                     ),

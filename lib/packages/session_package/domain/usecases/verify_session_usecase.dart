@@ -3,6 +3,7 @@ import 'package:pickpointer/packages/session_package/domain/repositories/abstrac
 
 class VerifySessionUsecase {
   final AbstractSessionRepository _abstractSessionRepository;
+
   VerifySessionUsecase({
     required AbstractSessionRepository? abstractSessionRepository,
   })  : assert(abstractSessionRepository != null),

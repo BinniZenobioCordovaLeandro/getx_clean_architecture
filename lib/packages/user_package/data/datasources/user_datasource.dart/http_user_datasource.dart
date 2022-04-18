@@ -55,7 +55,7 @@ class HttpUserDatasource implements AbstractUserRepository {
 
   @override
   Future<AbstractUserEntity>? getUser({
-    required int userId,
+    required String userId,
   }) {
     Future<AbstractUserEntity>? futureAbstractUserEntity = _httpClient
         .getUrl(Uri.parse(
@@ -63,9 +63,30 @@ class HttpUserDatasource implements AbstractUserRepository {
         .then((HttpClientRequest request) {
       return request.close();
     }).then((HttpClientResponse response) {
-      AbstractUserEntity abstractUserEntity = UserModel(id: '$userId');
+      AbstractUserEntity abstractUserEntity = UserModel(id: userId);
       return abstractUserEntity;
     });
     return futureAbstractUserEntity;
+  }
+
+  @override
+  Future<bool>? userExists({
+    required String userId,
+  }) {
+    return Future.value(true);
+  }
+
+  @override
+  Future<AbstractUserEntity>? setUser({
+    required AbstractUserEntity abstractUserEntity,
+  }) {
+    return Future.value(abstractUserEntity);
+  }
+
+  @override
+  Future<AbstractUserEntity>? updateUser({
+    required AbstractUserEntity abstractUserEntity,
+  }) {
+    return Future.value(abstractUserEntity);
   }
 }

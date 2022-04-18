@@ -12,12 +12,15 @@ import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
+import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 import 'package:pickpointer/src/features/route_feature/views/new_route.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_marker_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/search_destination_card_widget.dart';
 import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
+import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
 
 class RoutesPage extends StatefulWidget {
   const RoutesPage({
@@ -57,6 +60,28 @@ class _RoutesPageState extends State<RoutesPage> {
               tooltip: 'Solicitar nueva ruta',
               icon: Icon(
                 Icons.add_location_alt_rounded,
+                color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+              ),
+            ),
+            IconButton(
+              onPressed: () async {
+                if (routesController.isSigned.value == false) {
+                  await routesController.verifySession();
+                }
+                if (routesController.isSigned.value == true) {
+                  Get.to(
+                    () => const UserPage(),
+                    arguments: {},
+                  );
+                } else {
+                  Get.to(
+                    () => const SignInUserPage(),
+                  );
+                }
+              },
+              tooltip: 'Mis datos',
+              icon: Icon(
+                Icons.co_present_outlined,
                 color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
               ),
             ),
@@ -196,6 +221,19 @@ class _RoutesPageState extends State<RoutesPage> {
                         }
                       },
                     ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: ShimmerWidget(
+                  enabled: routesController.isLoading.value,
+                  child: TextWidget(
+                    'version ${routesController.version.value}',
+                    style: Theme.of(context).textTheme.caption?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                        ),
                   ),
                 ),
               ),

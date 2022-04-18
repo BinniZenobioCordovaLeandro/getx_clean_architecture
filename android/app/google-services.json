@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "1006184739013-na2rkr9scf047nrc269a7bpasc5gd23h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pickpointer.app",
+            "certificate_hash": "ffb13afe1953d20bc3dd8075479cb7a574a64c38"
+          }
+        },
+        {
           "client_id": "1006184739013-1g4g90b49nes517a3ncvlauuergdpvf0.apps.googleusercontent.com",
           "client_type": 3
         }

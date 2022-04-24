@@ -41,7 +41,7 @@ dependencies:
   flutter_map_marker_popup: ^2.0.1
   flutter_polyline_points: ^1.0.0
   flutter_svg: ^1.0.0
-  geolocator: ^8.0.1
+  geolocator: ^8.2.0
   get: ^4.6.1
   google_maps_webservice: ^0.0.20-nullsafety.5
   google_sign_in: ^5.2.3

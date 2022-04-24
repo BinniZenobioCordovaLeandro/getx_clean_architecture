@@ -22,6 +22,7 @@ class SearchLocationCardWidget extends StatefulWidget {
   final bool? initialValue;
   final LatLng? initialLatLng;
   final bool disabled;
+  final FormFieldValidator<String>? validator;
   final Function(LatLng)? onChanged;
   final Icon iconMarker;
 
@@ -34,6 +35,7 @@ class SearchLocationCardWidget extends StatefulWidget {
     this.initialValue = false,
     this.initialLatLng,
     this.disabled = false,
+    this.validator,
     this.onChanged,
     this.iconMarker = const Icon(
       Icons.location_history,
@@ -198,6 +200,7 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                     onTap: () {
                       textEditingController.text = '';
                     },
+                    validator: widget.validator,
                     onChanged: (String? value) {
                       if (value != null && value.length >= 3) {
                         debouncer.run(() {

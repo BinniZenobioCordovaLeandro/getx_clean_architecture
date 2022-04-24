@@ -9,14 +9,14 @@ import 'package:pickpointer/src/core/widgets/search_location_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/new_route_controller.dart';
 import 'package:progress_state_button/progress_button.dart';
 
-class NewRoute extends StatefulWidget {
-  const NewRoute({Key? key}) : super(key: key);
+class NewRoutePage extends StatefulWidget {
+  const NewRoutePage({Key? key}) : super(key: key);
 
   @override
-  State<NewRoute> createState() => _NewRouteState();
+  State<NewRoutePage> createState() => _NewRoutePageState();
 }
 
-class _NewRouteState extends State<NewRoute> {
+class _NewRoutePageState extends State<NewRoutePage> {
   final NewRouteController newRouteController = NewRouteController.instance;
 
   @override

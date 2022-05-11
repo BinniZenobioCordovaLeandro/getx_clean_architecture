@@ -62,8 +62,7 @@ class GeolocatorProvider {
     Stream<Position> streamPosition = _geolocatorPlatform.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 100,
-        timeLimit: Duration(seconds: 5),
+        distanceFilter: 1,
       ),
     );
     return streamPosition;

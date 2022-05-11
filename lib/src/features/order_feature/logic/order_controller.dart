@@ -74,7 +74,11 @@ class OrderController extends GetxController {
       print('position: $position');
       positionTaxi.value = LatLng(position.latitude, position.longitude);
       mapController.move(positionTaxi.value, 15);
-    });
+    }, onError: (error) {
+      print('error: $error');
+    }, onDone: () {
+      print('done');
+    }, cancelOnError: true);
     streamPosition!.resume();
   }
 

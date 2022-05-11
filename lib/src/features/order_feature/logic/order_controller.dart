@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_map/plugin_api.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/order_package/data/datasources/firebase_order_datasource.dart';
@@ -10,16 +13,8 @@ import 'package:pickpointer/src/core/providers/polyline_provider.dart';
 
 class OrderController extends GetxController {
   static OrderController get instance => Get.put(OrderController());
-
-  var isLoading = false.obs;
-  var errorMessage = ''.obs;
-  var polylineListLatLng = <LatLng>[].obs;
-  var listWayPoints = <LatLng>[].obs;
-  var polylineTaxiListLatLng = <LatLng>[].obs;
-  var distanceTaxi = 0.0.obs;
-  var positionTaxi = LatLng(-12.0, -76.0).obs;
-  var pickPoint = LatLng(-12.0, -76.0).obs;
-  var latLngBounds = <LatLng>[].obs;
+  
+  final MapController mapController = MapController();
 
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
 
@@ -32,6 +27,18 @@ class OrderController extends GetxController {
 
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
+
+  StreamSubscription<Position>? streamPosition;
+
+  var isLoading = false.obs;
+  var errorMessage = ''.obs;
+  var polylineListLatLng = <LatLng>[].obs;
+  var listWayPoints = <LatLng>[].obs;
+  var polylineTaxiListLatLng = <LatLng>[].obs;
+  var distanceTaxi = 0.0.obs;
+  var positionTaxi = LatLng(-12.0, -76.0).obs;
+  var pickPoint = LatLng(-12.0, -76.0).obs;
+  var latLngBounds = <LatLng>[].obs;
 
   Future<List<LatLng>> getPolylineBetweenCoordinates({
     required LatLng origin,
@@ -62,6 +69,19 @@ class OrderController extends GetxController {
     return futureBool;
   }
 
+  streamCurrentPosition() {
+    streamPosition = geolocatorProvider!.streamPosition().listen((Position position) {
+      print('position: $position');
+      positionTaxi.value = LatLng(position.latitude, position.longitude);
+      mapController.move(positionTaxi.value, 15);
+    }, onError: (error) {
+      print('error: $error');
+    }, onDone: () {
+      print('done');
+    }, cancelOnError: true);
+    streamPosition!.resume();
+  }
+
   @override
   void onReady() {
     AbstractOrderEntity abstractOrderEntity =
@@ -78,7 +98,6 @@ class OrderController extends GetxController {
       double.parse('${abstractOrderEntity.userPickPointLat}'),
       double.parse('${abstractOrderEntity.userPickPointLng}'),
     );
-    positionTaxi.value = origin;
     latLngBounds.value = [origin, destination];
     polylineTaxiListLatLng.value = [origin, destination];
     distanceTaxi.value = geolocatorProvider!.getDistanceBetweenPoints(
@@ -86,6 +105,7 @@ class OrderController extends GetxController {
       destination: destination,
     );
     showOfferPolylineMarkers(abstractOrderEntity);
+    streamCurrentPosition();
   }
 
   showOfferPolylineMarkers(AbstractOrderEntity abstractOrderEntity) {

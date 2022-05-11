@@ -33,7 +33,6 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final OrderController orderController = OrderController.instance;
-  final MapController mapController = MapController();
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +70,7 @@ class _OrderPageState extends State<OrderPage> {
           children: [
             SizedBox(
               child: FlutterMapWidget(
-                mapController: mapController,
+                mapController: orderController.mapController,
                 bounds: orderController.latLngBounds != null
                     ? LatLngBounds(
                         orderController.latLngBounds[0],

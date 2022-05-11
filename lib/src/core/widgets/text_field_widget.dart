@@ -82,7 +82,7 @@ class TextFieldWidget extends StatelessWidget {
       textInputAction: textInputAction,
       textAlignVertical: textAlignVertical,
       validator: validator,
-      maxLines: null,
+      maxLines: 1,
       decoration: InputDecoration(
         labelText: labelText.toString(),
         errorText: errorText,

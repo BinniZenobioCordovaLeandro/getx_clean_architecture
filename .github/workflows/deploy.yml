@@ -22,15 +22,15 @@ jobs:
 
       - name: Build Flutter Android
         run: flutter build apk --debug --split-per-abi
-      - name: Build Flutter iOS
-        run: |
-          flutter build ios --no-codesign
-          cd build/ios/iphoneos
-          mkdir Payload
-          cd Payload
-          ln -s ../Runner.app
-          cd ..
-          zip -r app.ipa Payload
+      # - name: Build Flutter iOS # TODO: activate when iOS account is buyed
+      #   run: |
+      #     flutter build ios --no-codesign
+      #     cd build/ios/iphoneos
+      #     mkdir Payload
+      #     cd Payload
+      #     ln -s ../Runner.app
+      #     cd ..
+      #     zip -r app.ipa Payload
       - name: Build Flutter Web
         run: |
           flutter build web --release

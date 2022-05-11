@@ -5,6 +5,7 @@ class GeolocatorProvider {
   static GeolocatorProvider? _instance;
 
   bool isLocationServiceEnabled = false;
+  GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
   static GeolocatorProvider? getInstance() {
     _instance ??= GeolocatorProvider();
@@ -53,13 +54,18 @@ class GeolocatorProvider {
     if (!isLocationServiceEnabled) {
       throw Exception('Location service is not enabled');
     }
-    return Geolocator.getPositionStream(
+    _geolocatorPlatform.getServiceStatusStream().listen((event) {
+      if (event == ServiceStatus.disabled) {
+        isLocationServiceEnabled = false;
+      }
+    });
+    Stream<Position> streamPosition = _geolocatorPlatform.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 0,
-        timeLimit: Duration(seconds: 10),
+        distanceFilter: 1,
       ),
     );
+    return streamPosition;
   }
 
   double distanceBetween(

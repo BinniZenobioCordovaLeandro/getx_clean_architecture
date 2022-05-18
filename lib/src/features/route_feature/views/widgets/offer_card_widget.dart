@@ -76,16 +76,17 @@ class OfferCardWidget extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Opacity(
-                              opacity: 0,
-                              child: OutlinedButtonWidget(
-                                title: 'S/. ${abstractOfferEntity.price}',
-                                onPressed: () {},
+                          if (onPressed != null)
+                            Expanded(
+                              flex: 1,
+                              child: Opacity(
+                                opacity: 0,
+                                child: OutlinedButtonWidget(
+                                  title: 'S/. ${abstractOfferEntity.price}',
+                                  onPressed: () {},
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ],
@@ -148,15 +149,16 @@ class OfferCardWidget extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: OutlinedButtonWidget(
-                              title: 'S/. ${abstractOfferEntity.price}',
-                              onPressed: () {
-                                onPressed!(abstractOfferEntity);
-                              },
+                          if (onPressed != null)
+                            Expanded(
+                              flex: 1,
+                              child: OutlinedButtonWidget(
+                                title: 'S/. ${abstractOfferEntity.price}',
+                                onPressed: () {
+                                  onPressed!(abstractOfferEntity);
+                                },
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ],

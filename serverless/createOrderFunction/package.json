@@ -1,0 +1,16 @@
+{
+  "name": "createorderfunction",
+  "version": "0.0.1",
+  "description": "to firebase comunication",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js",
+    "start": "node index.js",
+    "zip": "zip -r dist.zip ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^10.2.0"
+  }
+}

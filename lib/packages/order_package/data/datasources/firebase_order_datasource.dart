@@ -69,6 +69,7 @@ class FirebaseOrderDatasource implements AbstractOrderRepository {
     ]);
   }
 
+  @override
   Future<AbstractOrderEntity>? getOrder({
     required String orderId,
   }) {
@@ -106,12 +107,14 @@ class FirebaseOrderDatasource implements AbstractOrderRepository {
     );
   }
 
-  Future<void> addOrder({
+  @override
+  Future<AbstractOrderEntity> addOrder({
     required AbstractOrderEntity order,
   }) {
-    return Future.value();
+    return Future.value(order);
   }
 
+  @override
   Future<AbstractOrderEntity> updateOrder({
     required AbstractOrderEntity order,
   }) {

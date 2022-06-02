@@ -7,7 +7,7 @@ abstract class AbstractOrderRepository {
     required String orderId,
   });
 
-  Future<void> addOrder({
+  Future<AbstractOrderEntity> addOrder({
     required AbstractOrderEntity order,
   });
 

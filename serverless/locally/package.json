@@ -1,0 +1,15 @@
+{
+  "name": "locally",
+  "version": "1.0.0",
+  "description": "to test lambda locally, using express api",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}

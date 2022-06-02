@@ -31,184 +31,180 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final OrderController orderController = OrderController.instance;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      resizeToAvoidBottomInset: true,
-      endDrawer: const DrawerWidget(
-        title: 'Mensajes',
-        child: MessagesBoxWidget(),
-      ),
-      endDrawerEnableOpenDragGesture: true,
-      appBar: AppBarWidget(
-        title: 'Order ${widget.abstractOrderEntity?.id}',
-        actions: [
-          IconButton(
-            tooltip: 'Compartir',
-            icon: const Icon(
-              Icons.ios_share_rounded,
-            ),
-            onPressed: () {},
+    return Obx(() {
+      return Scaffold(
+          key: orderController.scaffoldKey,
+          resizeToAvoidBottomInset: true,
+          endDrawer: const DrawerWidget(
+            title: 'Mensajes',
+            child: MessagesBoxWidget(),
           ),
-          IconButton(
-            tooltip: 'Mensajes',
-            icon: const Icon(
-              Icons.message_rounded,
-            ),
-            onPressed: () {
-              _scaffoldKey.currentState!.openEndDrawer();
-            },
+          endDrawerEnableOpenDragGesture: true,
+          appBar: AppBarWidget(
+            title: 'Order ${widget.abstractOrderEntity?.id}',
+            actions: [
+              IconButton(
+                tooltip: 'Compartir',
+                icon: const Icon(
+                  Icons.ios_share_rounded,
+                ),
+                onPressed: () {},
+              ),
+              IconButton(
+                tooltip: 'Mensajes',
+                icon: const Icon(
+                  Icons.message_rounded,
+                ),
+                onPressed: () {
+                  orderController.scaffoldKey.currentState!.openEndDrawer();
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Obx(() {
-        return Stack(
-          children: [
-            SizedBox(
-              child: FlutterMapWidget(
-                mapController: orderController.mapController,
-                bounds: orderController.latLngBounds != null
-                    ? LatLngBounds(
-                        orderController.latLngBounds[0],
-                        orderController.latLngBounds[1],
-                      )
-                    : null,
-                children: [
-                  PolylineLayerWidget(
-                    options: PolylineLayerOptions(
-                      // ignore: invalid_use_of_protected_member
-                      polylines: [
-                        Polyline(
-                          points: <LatLng>[
-                            ...orderController.polylineTaxiListLatLng.value,
-                          ],
-                          strokeWidth: 5,
-                          color: Colors.blue,
-                          isDotted: true,
-                        ),
-                      ],
+          body: Stack(
+            children: [
+              SizedBox(
+                child: FlutterMapWidget(
+                  mapController: orderController.mapController,
+                  bounds: orderController.latLngBounds != null
+                      ? LatLngBounds(
+                          orderController.latLngBounds[0],
+                          orderController.latLngBounds[1],
+                        )
+                      : null,
+                  children: [
+                    PolylineLayerWidget(
+                      options: PolylineLayerOptions(
+                        polylines: [
+                          Polyline(
+                            points: <LatLng>[
+                              ...orderController.polylineTaxiListLatLng.value,
+                            ],
+                            strokeWidth: 5,
+                            color: Colors.blue,
+                            isDotted: true,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  PolylineLayerWidget(
-                    options: PolylineLayerOptions(
-                      // ignore: invalid_use_of_protected_member
-                      polylines: [
-                        Polyline(
-                          points: <LatLng>[
-                            ...orderController.polylineListLatLng.value,
-                          ],
-                          strokeWidth: 5,
-                          color: Colors.black,
-                          isDotted: true,
-                          gradientColors: <Color>[
-                            Colors.blue,
-                            Colors.red,
-                            Colors.red,
-                            Colors.red,
-                            Colors.red,
-                            Colors.red,
-                          ],
-                        ),
-                      ],
+                    PolylineLayerWidget(
+                      options: PolylineLayerOptions(
+                        polylines: [
+                          Polyline(
+                            points: <LatLng>[
+                              ...orderController.polylineListLatLng.value,
+                            ],
+                            strokeWidth: 5,
+                            color: Colors.black,
+                            isDotted: true,
+                            gradientColors: <Color>[
+                              Colors.blue,
+                              Colors.red,
+                              Colors.red,
+                              Colors.red,
+                              Colors.red,
+                              Colors.red,
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  MarkerLayerWidget(
-                    options: MarkerLayerOptions(
-                      markers: [
-                        for (var wayPoint
-                            in orderController.listWayPoints.value)
+                    MarkerLayerWidget(
+                      options: MarkerLayerOptions(
+                        markers: [
+                          for (var wayPoint
+                              in orderController.listWayPoints.value)
+                            Marker(
+                              width: 20,
+                              height: 20,
+                              anchorPos: AnchorPos.align(
+                                AnchorAlign.top,
+                              ),
+                              point: wayPoint,
+                              builder: (BuildContext context) => Icon(
+                                Icons.person_pin,
+                                color: Theme.of(context).primaryColor,
+                                size: 20,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    PopupMarkerLayerWidget(
+                      options: PopupMarkerLayerOptions(
+                        markers: [
                           Marker(
-                            width: 20,
-                            height: 20,
+                            width: 50,
+                            height: 50,
+                            anchorPos: AnchorPos.align(
+                              AnchorAlign.center,
+                            ),
+                            point: orderController.positionTaxi.value,
+                            builder: (BuildContext context) => Icon(
+                              Icons.local_taxi_rounded,
+                              color: Theme.of(context).primaryColor,
+                              size: 50,
+                            ),
+                          ),
+                          Marker(
+                            width: 50,
+                            height: 50,
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
-                            point: wayPoint,
-                            builder: (BuildContext context) => Icon(
-                              Icons.person_pin,
-                              color: Theme.of(context).primaryColor,
-                              size: 20,
+                            point: orderController.pickPoint.value,
+                            builder: (BuildContext context) => const Icon(
+                              Icons.person_pin_circle_sharp,
+                              color: Colors.blue,
+                              size: 50,
                             ),
                           ),
-                      ],
+                        ],
+                        popupBuilder: (BuildContext context, Marker marker) {
+                          return PopupMarkerTaxiWidget(
+                            meters: orderController.distanceTaxi.value,
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  PopupMarkerLayerWidget(
-                    options: PopupMarkerLayerOptions(
-                      markers: [
-                        Marker(
-                          width: 50,
-                          height: 50,
-                          anchorPos: AnchorPos.align(
-                            AnchorAlign.center,
-                          ),
-                          point: orderController.positionTaxi.value,
-                          builder: (BuildContext context) => Icon(
-                            Icons.local_taxi_rounded,
-                            color: Theme.of(context).primaryColor,
-                            size: 50,
-                          ),
-                        ),
-                        Marker(
-                          width: 50,
-                          height: 50,
-                          anchorPos: AnchorPos.align(
-                            AnchorAlign.top,
-                          ),
-                          point: orderController.pickPoint.value,
-                          builder: (BuildContext context) => const Icon(
-                            Icons.person_pin_circle_sharp,
-                            color: Colors.blue,
-                            size: 50,
-                          ),
-                        ),
-                      ],
-                      popupBuilder: (BuildContext context, Marker marker) {
-                        return PopupMarkerTaxiWidget(
-                          meters: orderController.distanceTaxi.value,
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            if (orderController.isLoading.value)
-              const Positioned(
-                top: 0,
+              if (orderController.isLoading.value)
+                const Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: LinearProgressIndicatorWidget(),
+                ),
+              Positioned(
+                top: 16,
                 left: 0,
                 right: 0,
-                child: LinearProgressIndicatorWidget(),
-              ),
-            Positioned(
-              top: 16,
-              left: 0,
-              right: 0,
-              child: SafeAreaWidget(
-                child: FractionallySizedBoxWidget(
-                  child: OrderCardWidget(
-                    abstractOrderEntity: widget.abstractOrderEntity,
+                child: SafeAreaWidget(
+                  child: FractionallySizedBoxWidget(
+                    child: OrderCardWidget(
+                      abstractOrderEntity: widget.abstractOrderEntity,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const Positioned(
-              bottom: 16,
-              left: 0,
-              right: 0,
-              child: SafeAreaWidget(
-                child: FractionallySizedBoxWidget(
-                  child: CallCardWidget(),
+              const Positioned(
+                bottom: 16,
+                left: 0,
+                right: 0,
+                child: SafeAreaWidget(
+                  child: FractionallySizedBoxWidget(
+                    child: CallCardWidget(),
+                  ),
                 ),
               ),
-            ),
-          ],
-        );
-      }),
-    );
+            ],
+          ));
+    });
   }
 }

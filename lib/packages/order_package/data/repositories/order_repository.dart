@@ -22,7 +22,7 @@ class OrderRepository implements AbstractOrderRepository {
   }
 
   @override
-  Future<void> addOrder({
+  Future<AbstractOrderEntity> addOrder({
     required AbstractOrderEntity order,
   }) {
     return _abstractOrderRepository!.addOrder(order: order);

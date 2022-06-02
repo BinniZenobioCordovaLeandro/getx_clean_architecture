@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -13,10 +14,13 @@ import 'package:pickpointer/src/core/providers/polyline_provider.dart';
 
 class OrderController extends GetxController {
   static OrderController get instance => Get.put(OrderController());
-  
+
   final MapController mapController = MapController();
 
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GeolocatorProvider? geolocatorProvider =
+      GeolocatorProvider.getInstance();
 
   NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
@@ -24,9 +28,6 @@ class OrderController extends GetxController {
   GetOrderUsecase getOrderUsecase = GetOrderUsecase(
     abstractOrderRepository: FirebaseOrderDatasource(),
   );
-
-  final GeolocatorProvider? geolocatorProvider =
-      GeolocatorProvider.getInstance();
 
   StreamSubscription<Position>? streamPosition;
 
@@ -70,7 +71,8 @@ class OrderController extends GetxController {
   }
 
   streamCurrentPosition() {
-    streamPosition = geolocatorProvider!.streamPosition().listen((Position position) {
+    streamPosition =
+        geolocatorProvider!.streamPosition().listen((Position position) {
       print('position: $position');
       positionTaxi.value = LatLng(position.latitude, position.longitude);
       mapController.move(positionTaxi.value, 15);
@@ -80,32 +82,6 @@ class OrderController extends GetxController {
       print('done');
     }, cancelOnError: true);
     streamPosition!.resume();
-  }
-
-  @override
-  void onReady() {
-    AbstractOrderEntity abstractOrderEntity =
-        Get.arguments['abstractOrderEntity'];
-    LatLng origin = LatLng(
-      double.parse('${abstractOrderEntity.routeStartLat}'),
-      double.parse('${abstractOrderEntity.routeStartLng}'),
-    );
-    LatLng destination = LatLng(
-      double.parse('${abstractOrderEntity.userPickPointLat}'),
-      double.parse('${abstractOrderEntity.userPickPointLng}'),
-    );
-    pickPoint.value = LatLng(
-      double.parse('${abstractOrderEntity.userPickPointLat}'),
-      double.parse('${abstractOrderEntity.userPickPointLng}'),
-    );
-    latLngBounds.value = [origin, destination];
-    polylineTaxiListLatLng.value = [origin, destination];
-    distanceTaxi.value = geolocatorProvider!.getDistanceBetweenPoints(
-      origin: origin,
-      destination: destination,
-    );
-    showOfferPolylineMarkers(abstractOrderEntity);
-    streamCurrentPosition();
   }
 
   showOfferPolylineMarkers(AbstractOrderEntity abstractOrderEntity) {
@@ -136,5 +112,31 @@ class OrderController extends GetxController {
     ).then(
       (value) => polylineListLatLng.value = value,
     );
+  }
+
+  @override
+  void onReady() {
+    AbstractOrderEntity abstractOrderEntity =
+        Get.arguments['abstractOrderEntity'];
+    LatLng origin = LatLng(
+      double.parse('${abstractOrderEntity.routeStartLat}'),
+      double.parse('${abstractOrderEntity.routeStartLng}'),
+    );
+    LatLng destination = LatLng(
+      double.parse('${abstractOrderEntity.userPickPointLat}'),
+      double.parse('${abstractOrderEntity.userPickPointLng}'),
+    );
+    pickPoint.value = LatLng(
+      double.parse('${abstractOrderEntity.userPickPointLat}'),
+      double.parse('${abstractOrderEntity.userPickPointLng}'),
+    );
+    latLngBounds.value = [origin, destination];
+    polylineTaxiListLatLng.value = [origin, destination];
+    distanceTaxi.value = geolocatorProvider!.getDistanceBetweenPoints(
+      origin: origin,
+      destination: destination,
+    );
+    showOfferPolylineMarkers(abstractOrderEntity);
+    streamCurrentPosition();
   }
 }

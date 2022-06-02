@@ -14,6 +14,9 @@ class RouteController extends GetxController {
 
   var isSigned = false.obs;
   var isDriver = false.obs;
+  var onRoad = false.obs;
+  var currentOfferId = ''.obs;
+
   var isLoading = false.obs;
   var polylineListLatLng = <LatLng>[].obs;
   var listAbstractOfferEntity = <AbstractOfferEntity>[].obs;
@@ -64,6 +67,8 @@ class RouteController extends GetxController {
         _verifySessionUsecase.call().then((abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
+      onRoad.value = abstractSessionEntity.onRoad ?? false;
+      currentOfferId.value = abstractSessionEntity.currentOfferId ?? '';
       return isSigned.value;
     });
     return futureBool;

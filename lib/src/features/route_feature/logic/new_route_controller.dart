@@ -76,7 +76,9 @@ class NewRouteController extends GetxController {
         title: title.value,
         description: 'Desde ${from.value}, hasta ${to.value}',
       );
-      _verifySessionUsecase.call().then((AbstractSessionEntity abstractSessionEntity) {
+      _verifySessionUsecase
+          .call()
+          .then((AbstractSessionEntity abstractSessionEntity) {
         if (abstractSessionEntity.isSigned!) {
           addRequestRoute(abstractRouteEntity, abstractSessionEntity.idUsers!)
               ?.then((bool boolean) {

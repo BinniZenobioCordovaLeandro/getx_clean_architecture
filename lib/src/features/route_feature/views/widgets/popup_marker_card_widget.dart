@@ -36,9 +36,10 @@ class PopupMarkerCardWidget extends StatelessWidget {
                         width: double.infinity,
                         child: TextWidget(
                           'Aprox. S/. ${abstractRouteEntity?.price}',
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                            fontStyle: FontStyle.italic,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    fontStyle: FontStyle.italic,
+                                  ),
                           textAlign: TextAlign.end,
                         ),
                       ),

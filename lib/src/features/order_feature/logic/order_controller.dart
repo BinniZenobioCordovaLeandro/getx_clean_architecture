@@ -8,6 +8,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/order_package/data/datasources/firebase_order_datasource.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/usecases/get_order_usecase.dart';
+import 'package:pickpointer/packages/vehicle_package/data/datasources/vehicle_datasources/firebase_vehicle_datasource.dart';
+import 'package:pickpointer/packages/vehicle_package/domain/entities/abstract_vehicle_entity.dart';
+import 'package:pickpointer/packages/vehicle_package/domain/usecases/stream_vehicle_usecase.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
@@ -29,7 +32,12 @@ class OrderController extends GetxController {
     abstractOrderRepository: FirebaseOrderDatasource(),
   );
 
+  StreamVehicleUsecase streamVehicleUsecase = StreamVehicleUsecase(
+    abstractVehicleRepository: FirebaseVehicleDatasource(),
+  );
+
   StreamSubscription<Position>? streamPosition;
+  StreamSubscription<AbstractVehicleEntity>? streamTaxiPosition;
 
   var isLoading = false.obs;
   var errorMessage = ''.obs;
@@ -37,7 +45,8 @@ class OrderController extends GetxController {
   var listWayPoints = <LatLng>[].obs;
   var polylineTaxiListLatLng = <LatLng>[].obs;
   var distanceTaxi = 0.0.obs;
-  var positionTaxi = LatLng(-12.0, -76.0).obs;
+  var clientPosition = LatLng(-12.0, -76.0).obs;
+  var taxiPosition = LatLng(-12.0, -76.0).obs;
   var pickPoint = LatLng(-12.0, -76.0).obs;
   var latLngBounds = <LatLng>[].obs;
 
@@ -70,17 +79,29 @@ class OrderController extends GetxController {
     return futureBool;
   }
 
+  streamCurrentTaxiPosition() {
+    streamTaxiPosition = streamVehicleUsecase
+        .call(
+      vehicleId: '1',
+    )
+        .listen((AbstractVehicleEntity abstractVehicleEntity) {
+      print('abstractVehicleEntity');
+      print(abstractVehicleEntity);
+      taxiPosition.value = LatLng(
+        double.parse(abstractVehicleEntity.lat!),
+        double.parse(abstractVehicleEntity.lng!),
+      );
+      mapController.move(taxiPosition.value, 15);
+    });
+    streamTaxiPosition!.resume();
+  }
+
   streamCurrentPosition() {
     streamPosition =
         geolocatorProvider!.streamPosition().listen((Position position) {
       print('position: $position');
-      positionTaxi.value = LatLng(position.latitude, position.longitude);
-      mapController.move(positionTaxi.value, 15);
-    }, onError: (error) {
-      print('error: $error');
-    }, onDone: () {
-      print('done');
-    }, cancelOnError: true);
+      clientPosition.value = LatLng(position.latitude, position.longitude);
+    });
     streamPosition!.resume();
   }
 
@@ -138,5 +159,6 @@ class OrderController extends GetxController {
     );
     showOfferPolylineMarkers(abstractOrderEntity);
     streamCurrentPosition();
+    streamCurrentTaxiPosition();
   }
 }

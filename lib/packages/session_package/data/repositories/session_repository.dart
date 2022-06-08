@@ -10,12 +10,12 @@ class SessionRepository implements AbstractSessionRepository {
         _abstractSessionRepository = abstractSessionRepository!;
 
   @override
-  Future<AbstractSessionEntity> verifySession(){
+  Future<AbstractSessionEntity> verifySession() {
     return _abstractSessionRepository.verifySession();
   }
 
   @override
-  AbstractSessionEntity createSession(){
+  AbstractSessionEntity createSession() {
     return _abstractSessionRepository.createSession();
   }
 

@@ -12,5 +12,6 @@ class UpdateUserUsecase {
   Future<AbstractUserEntity>? call({
     required AbstractUserEntity abstractUserEntity,
   }) =>
-      _abstractUserRepository.updateUser(abstractUserEntity: abstractUserEntity);
+      _abstractUserRepository.updateUser(
+          abstractUserEntity: abstractUserEntity);
 }

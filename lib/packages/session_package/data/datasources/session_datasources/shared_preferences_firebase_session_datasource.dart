@@ -46,17 +46,17 @@ class SharedPreferencesFirebaseSessionDatasources
   @override
   Future<AbstractSessionEntity?> getSession() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      String? json = sharedPreferences.getString(_key);
-      if (json != null) {
-        final SessionModel sessionModel = SessionModel.fromJson(json);
-        return sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
-          final SessionModel sessionModel =
-              SessionModel.fromMap(snapshot.data() as Map<String, dynamic>);
-          return sessionModel;
-        });
-      } else {
-        return Future.value(null);
-      }
+    String? json = sharedPreferences.getString(_key);
+    if (json != null) {
+      final SessionModel sessionModel = SessionModel.fromJson(json);
+      return sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
+        final SessionModel sessionModel =
+            SessionModel.fromMap(snapshot.data() as Map<String, dynamic>);
+        return sessionModel;
+      });
+    } else {
+      return Future.value(null);
+    }
   }
 
   @override

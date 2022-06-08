@@ -27,9 +27,12 @@ class PolylineProvider {
         destination.latitude,
         destination.longitude,
       ),
-      wayPoints: (wayPoints != null && wayPoints.isNotEmpty) ? wayPoints.map((wayPoint) {
-        return PolylineWayPoint(location: '${wayPoint.latitude},${wayPoint.longitude}');
-      }).toList() : [],
+      wayPoints: (wayPoints != null && wayPoints.isNotEmpty)
+          ? wayPoints.map((wayPoint) {
+              return PolylineWayPoint(
+                  location: '${wayPoint.latitude},${wayPoint.longitude}');
+            }).toList()
+          : [],
     )
         .then((PolylineResult polylineResult) {
       if (polylineResult.errorMessage?.isNotEmpty == true) {

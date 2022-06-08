@@ -7,7 +7,7 @@ class Debouncer {
   Debouncer({
     this.milliseconds = 500,
   });
-  
+
   Timer? _timer;
 
   run(VoidCallback action) {

@@ -29,9 +29,7 @@ class _RechargeWalletPageState extends State<RechargeWalletPage> {
       title: 'Recargar Monedero',
       footer: ElevatedButtonWidget(
         title: 'Recargar S/. 9.00',
-        onPressed: (groupValue > 0) ? () {
-
-        } : null,
+        onPressed: (groupValue > 0) ? () {} : null,
       ),
       children: [
         SizedBox(
@@ -41,9 +39,7 @@ class _RechargeWalletPageState extends State<RechargeWalletPage> {
             style: Theme.of(context).textTheme.headline6,
           ),
         ),
-        ListAmountWidget(
-          onChanged: (value) {}
-        ),
+        ListAmountWidget(onChanged: (value) {}),
         const Divider(),
         SizedBox(
           width: double.infinity,

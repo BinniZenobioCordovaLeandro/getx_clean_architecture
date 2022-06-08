@@ -7,6 +7,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
+import 'package:pickpointer/packages/vehicle_package/data/datasources/vehicle_datasources/firebase_vehicle_datasource.dart';
+import 'package:pickpointer/packages/vehicle_package/data/models/vehicle_model.dart';
+import 'package:pickpointer/packages/vehicle_package/domain/usecases/update_vehicle_usecase.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
 
@@ -18,6 +21,10 @@ class OfferController extends GetxController {
       GeolocatorProvider.getInstance();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
+
+  UpdateVehicleUsecase updateVehicleUsecase = UpdateVehicleUsecase(
+    abstractVehicleRepository: FirebaseVehicleDatasource(),
+  );
 
   StreamSubscription<Position>? streamPosition;
 
@@ -58,6 +65,12 @@ class OfferController extends GetxController {
       print('position: $position');
       positionTaxi.value = LatLng(position.latitude, position.longitude);
       mapController.move(positionTaxi.value, 15);
+      updateVehicleUsecase.call(
+          vehicle: VehicleModel(
+        id: '1',
+        lat: '${position.latitude}',
+        lng: '${position.longitude}',
+      ));
     }, onError: (error) {
       print('error: $error');
     }, onDone: () {

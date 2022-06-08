@@ -31,7 +31,8 @@ class FirebaseOrderDatasource implements AbstractOrderRepository {
         routeStartLng: '-76.87233782753958',
         routeEndLat: '-12.0552257792263',
         routeEndLng: '-76.96429734159008',
-        routeWayPoints: '["-12.076121251499771, -76.90765870404498", "-12.071811365487575, -76.95666951452563"]',
+        routeWayPoints:
+            '["-12.076121251499771, -76.90765870404498", "-12.071811365487575, -76.95666951452563"]',
         driverId: '2',
         driverName: 'edith Thomas Cord',
         driverPhone: '+1 123 456 7890',
@@ -59,7 +60,8 @@ class FirebaseOrderDatasource implements AbstractOrderRepository {
         routeStartLng: '-76.87233782753958',
         routeEndLat: '-12.0552257792263',
         routeEndLng: '-76.96429734159008',
-        routeWayPoints: '["-12.076121251499771, -76.90765870404498", "-12.071811365487575, -76.95666951452563"]',
+        routeWayPoints:
+            '["-12.076121251499771, -76.90765870404498", "-12.071811365487575, -76.95666951452563"]',
         driverId: '2',
         driverName: 'edith Thomas Cord',
         driverPhone: '+1 123 456 7890',
@@ -97,7 +99,8 @@ class FirebaseOrderDatasource implements AbstractOrderRepository {
         routeStartLng: '-76.87233782753958',
         routeEndLat: '-12.0552257792263',
         routeEndLng: '-76.96429734159008',
-        routeWayPoints: '["-12.076121251499771, -76.90765870404498", "-12.071811365487575, -76.95666951452563"]',
+        routeWayPoints:
+            '["-12.076121251499771, -76.90765870404498", "-12.071811365487575, -76.95666951452563"]',
         driverId: '2',
         driverName: 'edith Thomas Cord',
         driverPhone: '+1 123 456 7890',

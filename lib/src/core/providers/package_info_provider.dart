@@ -25,7 +25,7 @@ class PackageInfoProvider {
   getBuildNumber() {
     return _packageInfo!.buildNumber;
   }
-  
+
   getBuildSignature() {
     return _packageInfo!.buildSignature;
   }

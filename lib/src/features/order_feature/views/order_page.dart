@@ -143,7 +143,20 @@ class _OrderPageState extends State<OrderPage> {
                             anchorPos: AnchorPos.align(
                               AnchorAlign.center,
                             ),
-                            point: orderController.positionTaxi.value,
+                            point: orderController.clientPosition.value,
+                            builder: (BuildContext context) => Icon(
+                              Icons.mode_of_travel_outlined,
+                              color: Theme.of(context).primaryColor,
+                              size: 50,
+                            ),
+                          ),
+                          Marker(
+                            width: 50,
+                            height: 50,
+                            anchorPos: AnchorPos.align(
+                              AnchorAlign.center,
+                            ),
+                            point: orderController.taxiPosition.value,
                             builder: (BuildContext context) => Icon(
                               Icons.local_taxi_rounded,
                               color: Theme.of(context).primaryColor,

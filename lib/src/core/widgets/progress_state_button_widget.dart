@@ -28,7 +28,7 @@ class ProgressStateButtonWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: 50,
@@ -67,10 +67,12 @@ class ProgressStateButtonWidget extends StatelessWidget {
           )
         },
         stateColors: {
-          ButtonState.idle: background?.withOpacity(0.3) ?? Theme.of(context).primaryColor,
-          ButtonState.loading: background?.withOpacity(0.3) ?? Theme.of(context).primaryColor,
-          ButtonState.fail: background  ?? Theme.of(context).primaryColor,
-          ButtonState.success: background  ?? Theme.of(context).primaryColor,
+          ButtonState.idle:
+              background?.withOpacity(0.3) ?? Theme.of(context).primaryColor,
+          ButtonState.loading:
+              background?.withOpacity(0.3) ?? Theme.of(context).primaryColor,
+          ButtonState.fail: background ?? Theme.of(context).primaryColor,
+          ButtonState.success: background ?? Theme.of(context).primaryColor,
         },
         onPressed: () {
           if (state != ButtonState.idle && state != ButtonState.loading) {

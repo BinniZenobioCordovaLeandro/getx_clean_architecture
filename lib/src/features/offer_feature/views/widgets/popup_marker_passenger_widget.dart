@@ -6,10 +6,12 @@ import 'package:pickpointer/src/core/widgets/text_widget.dart';
 
 class PopupMarkerPassengerWidget extends StatelessWidget {
   final double meters;
+  final String? urlSvgOrImage;
 
   const PopupMarkerPassengerWidget({
     Key? key,
     required this.meters,
+    required this.urlSvgOrImage,
   }) : super(key: key);
 
   child(BuildContext context) {
@@ -21,9 +23,9 @@ class PopupMarkerPassengerWidget extends StatelessWidget {
           direction: Axis.horizontal,
           children: [
             Column(
-              children: const [
+              children: [
                 CircleAvatarImageWidget(
-                  urlSvgOrImage: 'assets/images/avatar.png',
+                  urlSvgOrImage: '$urlSvgOrImage',
                   radius: 30,
                 ),
               ],

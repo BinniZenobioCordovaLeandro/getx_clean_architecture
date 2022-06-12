@@ -32,7 +32,20 @@ class OfferController extends GetxController {
   var errorMessage = ''.obs;
   var positionTaxi = LatLng(-12.0, -76.0).obs;
   var listWayPoints = <LatLng>[].obs;
+  var listOrders = [].obs;
   var polylineListLatLng = <LatLng>[].obs;
+
+  double distanceBetween({
+    required LatLng start,
+    required LatLng end,
+  }) {
+    return geolocatorProvider!.distanceBetween(
+      start.latitude,
+      start.longitude,
+      end.latitude,
+      end.longitude,
+    );
+  }
 
   moveToMyLocation() {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
@@ -108,6 +121,15 @@ class OfferController extends GetxController {
     );
   }
 
+  showDynamicsMarkers(AbstractOfferEntity abstractOfferEntity) {
+    List localListOrders = [];
+    String? orders = abstractOfferEntity.orders;
+    if (orders != null && orders.length > 10) {
+      localListOrders = jsonDecode(orders);
+    }
+    listOrders.value = localListOrders;
+  }
+
   @override
   void onInit() {
     prepareStreamCurrentPosition();
@@ -119,6 +141,7 @@ class OfferController extends GetxController {
     AbstractOfferEntity abstractOfferEntity =
         Get.arguments['abstractOfferEntity'];
     showOfferPolylineMarkers(abstractOfferEntity);
+    showDynamicsMarkers(abstractOfferEntity);
     streamPosition!.resume();
     moveToMyLocation();
     super.onReady();

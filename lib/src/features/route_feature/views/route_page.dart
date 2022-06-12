@@ -60,7 +60,8 @@ class _RoutePageState extends State<RoutePage> {
               IconButton(
                 onPressed: () async {
                   if (routeController.isSigned.value) {
-                    if (routeController.onRoad.value) {
+                    if (false) {
+                      // TODO: routeController.onRoad.value
                       ModalBottomSheetHelper(
                         context: context,
                         title: 'Ya estas en cola en una ruta!',

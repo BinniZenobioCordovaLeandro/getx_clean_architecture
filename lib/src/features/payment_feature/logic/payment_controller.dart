@@ -63,6 +63,7 @@ class PaymentController extends GetxController {
           userPhone: '+1 123 456 7890',
           userPickPointLat: '-12.118871',
           userPickPointLng: '-76.870707',
+          offerId: '1',
           routeId: '1',
           routeDescription: 'Manchay a Ovalo Santa Anita',
           routeTo: 'Ovalo Santa Anita',

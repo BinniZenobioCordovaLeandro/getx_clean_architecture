@@ -13,6 +13,7 @@ abstract class AbstractOrderEntity extends Equatable {
   final String? userPhone;
   final String? userPickPointLat;
   final String? userPickPointLng;
+  final String? offerId;
   final String? routeId;
   final String? routeDescription;
   final String? routeTo;
@@ -45,6 +46,7 @@ abstract class AbstractOrderEntity extends Equatable {
     this.total,
     this.status,
     this.statusId,
+    this.offerId,
     this.routeId,
     this.routeDescription,
     this.routeTo,

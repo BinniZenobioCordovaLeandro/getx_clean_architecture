@@ -84,7 +84,10 @@ class NewOfferController extends GetxController {
                 startLng: abstractRouteEntity.startLng,
                 endLat: abstractRouteEntity.endLat,
                 endLng: abstractRouteEntity.endLng,
-                wayPoints: '[]',
+                wayPoints:
+                    '["-12.114398419240583, -76.87099057482455", "-12.100091477862088, -76.86953248267001", "-12.084886779107038, -76.8750718551892"]',
+                orders:
+                    '[{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Abel Rocksnamas","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.114398419240583","lng":"-76.87099057482455"},{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Borrir Docs Gamers","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.100091477862088","lng":"-76.86953248267001"},{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Donkey Kong","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.084886779107038","lng":"-76.8750718551892"}]',
                 userId: abstractSessionEntity.idUsers,
                 userName: abstractUserEntity.name,
                 userAvatar: abstractUserEntity.avatar,

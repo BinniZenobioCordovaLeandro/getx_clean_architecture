@@ -28,6 +28,8 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? userPickPointLng;
   @override
+  final String? offerId;
+  @override
   final String? routeId;
   @override
   final String? routeDescription;
@@ -77,6 +79,7 @@ class OrderModel implements AbstractOrderEntity {
     this.userPhone,
     this.userPickPointLat,
     this.userPickPointLng,
+    this.offerId,
     this.routeId,
     this.routeDescription,
     this.routeTo,
@@ -109,6 +112,7 @@ class OrderModel implements AbstractOrderEntity {
         userPhone: data['user_phone'] as String?,
         userPickPointLat: data['user_pick_point_lat'] as String?,
         userPickPointLng: data['user_pick_point_lng'] as String?,
+        offerId: data['offer_id'] as String?,
         routeId: data['route_id'] as String?,
         routeDescription: data['route_description'] as String?,
         routeTo: data['route_to'] as String?,
@@ -141,6 +145,7 @@ class OrderModel implements AbstractOrderEntity {
         'user_phone': userPhone,
         'user_pick_point_lat': userPickPointLat,
         'user_pick_point_lng': userPickPointLng,
+        'offer_id': offerId,
         'route_id': routeId,
         'route_description': routeDescription,
         'route_to': routeTo,
@@ -185,6 +190,7 @@ class OrderModel implements AbstractOrderEntity {
     String? userPhone,
     String? userPickPointLat,
     String? userPickPointLng,
+    String? offerId,
     String? routeId,
     String? routeDescription,
     String? routeTo,
@@ -215,6 +221,8 @@ class OrderModel implements AbstractOrderEntity {
       userEmail: userEmail ?? this.userEmail,
       userPhone: userPhone ?? this.userPhone,
       userPickPointLat: userPickPointLat ?? this.userPickPointLat,
+      userPickPointLng: userPickPointLng ?? this.userPickPointLng,
+      offerId: offerId ?? this.offerId,
       routeId: routeId ?? this.routeId,
       routeDescription: routeDescription ?? this.routeDescription,
       routeTo: routeTo ?? this.routeTo,
@@ -253,6 +261,7 @@ class OrderModel implements AbstractOrderEntity {
       userPhone,
       userPickPointLat,
       userPickPointLng,
+      offerId,
       routeId,
       routeDescription,
       routeTo,

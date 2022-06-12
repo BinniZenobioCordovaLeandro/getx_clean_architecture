@@ -11,6 +11,7 @@ abstract class AbstractOfferEntity extends Equatable {
   final String? endLat;
   final String? endLng;
   final String? wayPoints;
+  final String? orders;
   final String? userId;
   final String? userName;
   final String? userAvatar;
@@ -34,6 +35,7 @@ abstract class AbstractOfferEntity extends Equatable {
     this.endLat,
     this.endLng,
     this.wayPoints,
+    this.orders,
     this.userId,
     this.userName,
     this.userAvatar,

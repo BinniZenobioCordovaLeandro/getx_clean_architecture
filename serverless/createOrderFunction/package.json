@@ -1,0 +1,17 @@
+{
+  "name": "createorderfunction",
+  "version": "0.0.1",
+  "description": "to firebase comunication",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js",
+    "start": "npm run locally",
+    "locally": "node -e \"console.log(require('./index').handler(require('./event.json')));\"",
+    "zip": "zip -r dist.zip ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^10.2.0"
+  }
+}

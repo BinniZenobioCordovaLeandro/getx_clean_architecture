@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -47,6 +49,7 @@ class RoutesController extends GetxController {
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
   final PlacesProvider? placesProvider = PlacesProvider.getInstance();
+  StreamSubscription<Position>? streamPosition;
 
   moveToMyLocation() {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
@@ -74,32 +77,32 @@ class RoutesController extends GetxController {
     });
   }
 
-  @override
-  void onReady() {
-    isLoading.value = true;
+  prepareStreamCurrentPosition() {
+    streamPosition =
+        geolocatorProvider!.streamPosition().listen((Position streamPosition) {
+      print('position: $streamPosition');
+      position.value =
+          LatLng(streamPosition.latitude, streamPosition.longitude);
+      mapController.move(position.value, 15);
+    }, onError: (error) {
+      print('error: $error');
+    }, onDone: () {
+      print('done');
+    }, cancelOnError: true);
+  }
 
-    notificationProvider?.checkPermission();
+  getCurrentPosition() {
     geolocatorProvider?.checkPermission().then((bool boolean) {
       if (boolean) {
         geolocatorProvider?.getCurrentPosition()?.then((Position? position) {
           if (position != null) {
-            final LatLng latLng = LatLng(
+            this.position.value = LatLng(
               position.latitude,
               position.longitude,
             );
-            this.position.value = latLng;
-            WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-              mapController.move(latLng, 15.0);
-            });
+            moveToMyLocation();
+            prepareStreamCurrentPosition();
           }
-          geolocatorProvider?.streamPosition().listen((Position? position) {
-            if (position != null) {
-              this.position.value = LatLng(
-                position.latitude,
-                position.longitude,
-              );
-            }
-          });
           isLoading.value = false;
         });
       } else {
@@ -108,6 +111,14 @@ class RoutesController extends GetxController {
     }, onError: (dynamic error) {
       errorMessage.value = error.toString();
     });
+  }
+
+  @override
+  void onReady() {
+    isLoading.value = true;
+
+    notificationProvider?.checkPermission();
+    getCurrentPosition();
 
     futureListAbstractRouteEntity.value = _getRoutesUsecase
         .call()!

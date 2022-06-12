@@ -11,7 +11,6 @@ class LinearProgressIndicatorWidget extends StatefulWidget {
 class _LinearProgressIndicatorWidgetState
     extends State<LinearProgressIndicatorWidget>
     with SingleTickerProviderStateMixin {
-  
   AnimationController? _animationController;
 
   @override

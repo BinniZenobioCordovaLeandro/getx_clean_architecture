@@ -10,12 +10,18 @@ class SessionModel extends AbstractSessionEntity {
   final String? idSessions;
   @override
   final String? idUsers;
+  @override
+  final bool? onRoad;
+  @override
+  final String? currentOfferId;
 
   const SessionModel({
     this.isSigned,
     this.isDriver,
     this.idSessions,
     this.idUsers,
+    this.onRoad,
+    this.currentOfferId,
   });
 
   factory SessionModel.fromMap(Map<String, dynamic> data) => SessionModel(
@@ -23,6 +29,8 @@ class SessionModel extends AbstractSessionEntity {
         isDriver: data['is_driver'] as bool?,
         idSessions: data['id_sessions'] as String?,
         idUsers: data['id_users'] as String?,
+        onRoad: data['on_road'] as bool?,
+        currentOfferId: data['current_offer_id'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -30,6 +38,8 @@ class SessionModel extends AbstractSessionEntity {
         'is_driver': isDriver,
         'id_sessions': idSessions,
         'id_users': idUsers,
+        'on_road': onRoad,
+        'current_offer_id': currentOfferId,
       };
 
   /// `dart:convert`
@@ -49,12 +59,16 @@ class SessionModel extends AbstractSessionEntity {
     bool? isDriver,
     String? idSessions,
     String? idUsers,
+    bool? onRoad,
+    String? currentOfferId,
   }) {
     return SessionModel(
       isSigned: isSigned ?? this.isSigned,
       isDriver: isDriver ?? this.isDriver,
       idSessions: idSessions ?? this.idSessions,
       idUsers: idUsers ?? this.idUsers,
+      onRoad: onRoad ?? this.onRoad,
+      currentOfferId: currentOfferId ?? this.currentOfferId,
     );
   }
 
@@ -62,5 +76,6 @@ class SessionModel extends AbstractSessionEntity {
   bool get stringify => true;
 
   @override
-  List<Object?> get props => [isSigned, isDriver, idSessions, idUsers];
+  List<Object?> get props =>
+      [isSigned, isDriver, idSessions, idUsers, currentOfferId, onRoad];
 }

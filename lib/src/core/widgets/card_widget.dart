@@ -19,7 +19,6 @@ class CardWidget extends StatelessWidget {
     this.color,
     this.margin = EdgeInsets.zero,
     this.borderOnForeground = true,
-
     this.width = double.infinity,
   }) : super(key: key);
 

@@ -9,7 +9,7 @@ class AddOrderUsecase {
   })  : assert(abstractOrderRepository != null),
         _abstractOrderRepository = abstractOrderRepository!;
 
-  Future<void> call({
+  Future<AbstractOrderEntity> call({
     required AbstractOrderEntity order,
   }) =>
       _abstractOrderRepository.addOrder(order: order);

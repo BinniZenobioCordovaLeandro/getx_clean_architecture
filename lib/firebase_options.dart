@@ -60,8 +60,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1006184739013',
     projectId: 'pickpointer',
     storageBucket: 'pickpointer.appspot.com',
-    androidClientId: '1006184739013-279qjiq5fgig8h1bublh3fif1t71621p.apps.googleusercontent.com',
-    iosClientId: '1006184739013-f9fru1hpjl9j8v5ei94tho8a1d7hmb01.apps.googleusercontent.com',
+    androidClientId:
+        '1006184739013-279qjiq5fgig8h1bublh3fif1t71621p.apps.googleusercontent.com',
+    iosClientId:
+        '1006184739013-f9fru1hpjl9j8v5ei94tho8a1d7hmb01.apps.googleusercontent.com',
     iosBundleId: 'com.pickpointer.app',
   );
 }

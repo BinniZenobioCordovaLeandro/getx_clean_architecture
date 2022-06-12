@@ -28,7 +28,8 @@ class FlutterMapWidget extends StatelessWidget {
         maxZoom: 18.3,
         zoom: 13.0,
         center: center,
-        interactiveFlags: interactiveFlags ?? InteractiveFlag.pinchZoom | InteractiveFlag.drag,
+        interactiveFlags: interactiveFlags ??
+            InteractiveFlag.pinchZoom | InteractiveFlag.drag,
         bounds: bounds,
         boundsOptions: const FitBoundsOptions(
           padding: EdgeInsets.all(

@@ -31,21 +31,28 @@ class MessagesBoxWidget extends StatelessWidget {
                         for (var i = 0; i < 10; i++)
                           CardWidget(
                             child: ListTile(
-                              leading: i % 2 == 0 ? CircleAvatar(
-                                backgroundColor: Colors.blue,
-                                child: Text('${i}'),
-                              ): null,
-                              trailing: i % 2 == 0 ? null : CircleAvatar(
-                                backgroundColor: Colors.blue,
-                                child: Text('${i}'),
-                              ),
+                              leading: i % 2 == 0
+                                  ? CircleAvatar(
+                                      backgroundColor: Colors.blue,
+                                      child: Text('${i}'),
+                                    )
+                                  : null,
+                              trailing: i % 2 == 0
+                                  ? null
+                                  : CircleAvatar(
+                                      backgroundColor: Colors.blue,
+                                      child: Text('${i}'),
+                                    ),
                               dense: true,
                               title: Text(
-                                  'Hola, nos podemos ver a 2 cuadras del estadio principal de la ciudad.',
-                                  style: Theme.of(context).textTheme.bodyText2,),
+                                'Hola, nos podemos ver a 2 cuadras del estadio principal de la ciudad.',
+                                style: Theme.of(context).textTheme.bodyText2,
+                              ),
                               subtitle: Text(
                                 'Hoy, a las 12:00',
-                                textAlign: i % 2 == 0 ? TextAlign.right : TextAlign.left,
+                                textAlign: i % 2 == 0
+                                    ? TextAlign.right
+                                    : TextAlign.left,
                               ),
                             ),
                           ),

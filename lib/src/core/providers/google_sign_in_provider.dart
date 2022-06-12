@@ -13,7 +13,6 @@ class GoogleSignInProvider {
   GoogleSignInProvider() {
     googleSignIn = GoogleSignIn(
       scopes: ['email'],
-      clientId: '123054099128-91nov2744gl9rihf4qoc0aa22q1j029j.apps.googleusercontent.com',
       signInOption: SignInOption.standard,
     );
   }

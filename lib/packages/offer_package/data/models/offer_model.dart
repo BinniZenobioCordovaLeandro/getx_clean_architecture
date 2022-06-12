@@ -24,6 +24,8 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final String? wayPoints;
   @override
+  final String? orders;
+  @override
   final String? userId;
   @override
   final String? userName;
@@ -57,6 +59,7 @@ class OfferModel implements AbstractOfferEntity {
     this.endLat,
     this.endLng,
     this.wayPoints,
+    this.orders,
     this.userId,
     this.userName,
     this.userAvatar,
@@ -81,6 +84,7 @@ class OfferModel implements AbstractOfferEntity {
         endLat: data['end_lat'] as String?,
         endLng: data['end_lng'] as String?,
         wayPoints: data['way_points'] as String?,
+        orders: data['orders'] as String?,
         userId: data['user_id'] as String?,
         userName: data['user_name'] as String?,
         userAvatar: data['user_avatar'] as String?,
@@ -105,6 +109,7 @@ class OfferModel implements AbstractOfferEntity {
         'end_lat': endLat,
         'end_lng': endLng,
         'way_points': wayPoints,
+        'orders': orders,
         'user_id': userId,
         'user_name': userName,
         'user_avatar': userAvatar,
@@ -135,6 +140,7 @@ class OfferModel implements AbstractOfferEntity {
     String? endLat,
     String? endLng,
     String? wayPoints,
+    String? orders,
     String? userId,
     String? userName,
     String? userAvatar,
@@ -158,6 +164,7 @@ class OfferModel implements AbstractOfferEntity {
       endLat: endLat ?? this.endLat,
       endLng: endLng ?? this.endLng,
       wayPoints: wayPoints ?? this.wayPoints,
+      orders: orders ?? this.orders,
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
       userAvatar: userAvatar ?? this.userAvatar,
@@ -188,6 +195,7 @@ class OfferModel implements AbstractOfferEntity {
       endLat,
       endLng,
       wayPoints,
+      orders,
       userId,
       userName,
       userAvatar,

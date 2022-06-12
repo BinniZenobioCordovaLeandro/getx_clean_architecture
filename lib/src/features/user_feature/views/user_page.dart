@@ -82,8 +82,7 @@ class _UserPageState extends State<UserPage> {
               value: userController.isDriver.value,
               onChanged: userController.isDriver.value
                   ? null
-                  : (value) => userController.isDriver.value =
-                      value,
+                  : (value) => userController.isDriver.value = value,
             ),
             if (userController.isDriver.value)
               TextFieldWidget(

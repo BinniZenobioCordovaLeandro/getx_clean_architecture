@@ -82,3 +82,8 @@ after, run into command line
 ```
 
 References: `https://youtu.be/WPEsnJgW99M`
+
+## Continuos integration
+
+Use GITHUB Actions to run the tests.
+Use GITHUB Actions to build and deploy to firebase.

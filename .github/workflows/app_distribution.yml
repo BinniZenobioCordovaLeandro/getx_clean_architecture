@@ -8,6 +8,9 @@ jobs:
   build:
     name: Deploy to App Distribution
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.18.0]
     steps:
       - uses: actions/checkout@v1
 
@@ -40,4 +43,4 @@ jobs:
           appId: ${{secrets.FIREBASE_ANDROID_APPID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           group: testers
-          file: app-release.apk
+          file: build/app/outputs/apk/release/app-release.apk

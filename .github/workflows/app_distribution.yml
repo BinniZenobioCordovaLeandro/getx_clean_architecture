@@ -1,8 +1,14 @@
+# on:
+#   workflow_run:
+#     workflows: ['Deploy to Hosting']
+#     types:
+#       - completed
 on:
-  workflow_run:
-    workflows: ['Deploy to Hosting']
-    types:
-      - completed
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
 name: "Deploy to App Distribution"
 jobs:
   build:
@@ -10,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.18.0]
+        node-version: [15]
     steps:
       - uses: actions/checkout@v1
 
@@ -40,6 +46,7 @@ jobs:
       - name: Upload APK
         uses: wzieba/Firebase-Distribution-Github-Action@v1.2.1
         with:
+          node-version: '15'
           appId: ${{secrets.FIREBASE_ANDROID_APPID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           group: testers

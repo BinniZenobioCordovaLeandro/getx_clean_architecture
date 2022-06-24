@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
-import 'package:pickpointer/packages/order_package/data/datasources/firebase_order_datasource.dart';
+import 'package:pickpointer/packages/order_package/data/datasources/http_order_datasource.dart';
 import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/usecases/add_order_usecase.dart';
@@ -18,7 +18,7 @@ class PaymentController extends GetxController {
       NotificationProvider.getInstance();
 
   final AddOrderUsecase addOrderUsecase = AddOrderUsecase(
-    abstractOrderRepository: FirebaseOrderDatasource(),
+    abstractOrderRepository: HttpOrderDatasource(),
   );
 
   AbstractOfferEntity? abstractOfferEntity;
@@ -51,7 +51,7 @@ class PaymentController extends GetxController {
     if (formKey.currentState!.validate() && payMethod.value != 0) {
       addOrderUsecase
           .call(
-        order: const OrderModel(
+        order: OrderModel(
           id: '1',
           orderId: '123456789',
           price: '100',
@@ -63,25 +63,27 @@ class PaymentController extends GetxController {
           userPhone: '+1 123 456 7890',
           userPickPointLat: '-12.118871',
           userPickPointLng: '-76.870707',
-          offerId: '1',
-          routeId: '1',
+          userOutPointLat: '-12.1',
+          userOutPointLng: '-76.2',
+          offerId: abstractOfferEntity.id,
+          routeId: abstractOfferEntity.routeId,
           routeDescription: 'Manchay a Ovalo Santa Anita',
           routeTo: 'Ovalo Santa Anita',
           routeFrom: 'Manchay',
-          routePrice: '100',
+          routePrice: abstractOfferEntity.price,
           routeQuantity: '1',
-          routeTotal: '90',
+          routeTotal:
+              (double.parse(abstractOfferEntity.price!) * 1).toStringAsFixed(2),
           routeStartLat: '-12.123276353363956',
           routeStartLng: '-76.87233782753958',
           routeEndLat: '-12.0552257792263',
           routeEndLng: '-76.96429734159008',
-          routeWayPoints:
-              '["-12.076121251499771, -76.90765870404498", "-12.071811365487575, -76.95666951452563"]',
-          driverId: '2',
-          driverName: 'edith Thomas Cord',
-          driverPhone: '+1 123 456 7890',
-          createdAt: '2020-01-01',
-          updatedAt: '2020-01-05',
+          routeWayPoints: abstractOfferEntity.wayPoints,
+          driverId: abstractOfferEntity.userId,
+          driverName: abstractOfferEntity.userName,
+          driverPhone: abstractOfferEntity.userPhoneNumber,
+          createdAt: DateTime.now().toString(),
+          updatedAt: DateTime.now().toString(),
         ),
       )
           .then((AbstractOrderEntity abstractOrderEntity) {

@@ -46,7 +46,8 @@ class _RoutesPageState extends State<RoutesPage> {
                 if (routesController.isSigned.value == false) {
                   await routesController.verifySession();
                 }
-                if (routesController.isSigned.value == true) {
+                if (routesController.isSigned.value == true &&
+                    routesController.isDriver.value == true) {
                   Get.to(
                     () => const NewRoutePage(),
                     arguments: {},

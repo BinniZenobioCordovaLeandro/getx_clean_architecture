@@ -28,8 +28,9 @@ class _NewRoutePageState extends State<NewRoutePage> {
           title: 'Solicitar nueva ruta',
           children: [
             TextFieldWidget(
-              labelText: 'Punto de Origen',
-              helperText: 'Ej. Plaza de Armas de Lima',
+              maxLines: 3,
+              labelText: 'Describe Punto de Origen',
+              helperText: 'Ej. Frente a plaza de Armas de Lima',
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Especifique el INICIO de la ruta';
@@ -43,7 +44,7 @@ class _NewRoutePageState extends State<NewRoutePage> {
             SearchLocationCardWidget(
               disabled: true,
               title: 'Punto de origen en Mapa',
-              labelText: 'Buscar en Maps',
+              labelText: 'Buscar en GoogleMaps',
               leading: const Icon(
                 Icons.taxi_alert_outlined,
                 color: Colors.blue,
@@ -59,8 +60,9 @@ class _NewRoutePageState extends State<NewRoutePage> {
             ),
             const Divider(),
             TextFieldWidget(
-              labelText: 'Punto de Destino',
-              helperText: 'Ej. Colegio Monterrico de Arequipa',
+              maxLines: 3,
+              labelText: 'Describe Punto de Destino',
+              helperText: 'Ej. Frente al Colegio Monterrico de Arequipa',
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Especifique el FINAL de la ruta';

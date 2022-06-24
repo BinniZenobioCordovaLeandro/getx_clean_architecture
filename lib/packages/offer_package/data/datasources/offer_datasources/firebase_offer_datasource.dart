@@ -61,10 +61,7 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
     required AbstractOfferEntity abstractOfferEntity,
   }) {
     OfferModel offerModel = abstractOfferEntity as OfferModel;
-    Future<AbstractOfferEntity>? futureAbstractOfferEntity =
-        offers?.add(offerModel.toMap()).then((documentReference) {
-      return Future.value(offerModel);
-    });
-    return futureAbstractOfferEntity;
+    offers?.doc(offerModel.id).set(offerModel.toMap());
+    return Future.value(offerModel);
   }
 }

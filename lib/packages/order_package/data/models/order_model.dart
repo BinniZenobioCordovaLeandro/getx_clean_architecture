@@ -28,6 +28,10 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? userPickPointLng;
   @override
+  final String? userOutPointLat;
+  @override
+  final String? userOutPointLng;
+  @override
   final String? offerId;
   @override
   final String? routeId;
@@ -79,6 +83,8 @@ class OrderModel implements AbstractOrderEntity {
     this.userPhone,
     this.userPickPointLat,
     this.userPickPointLng,
+    this.userOutPointLat,
+    this.userOutPointLng,
     this.offerId,
     this.routeId,
     this.routeDescription,
@@ -112,6 +118,8 @@ class OrderModel implements AbstractOrderEntity {
         userPhone: data['user_phone'] as String?,
         userPickPointLat: data['user_pick_point_lat'] as String?,
         userPickPointLng: data['user_pick_point_lng'] as String?,
+        userOutPointLat: data['user_out_point_lat'] as String?,
+        userOutPointLng: data['user_out_point_lng'] as String?,
         offerId: data['offer_id'] as String?,
         routeId: data['route_id'] as String?,
         routeDescription: data['route_description'] as String?,
@@ -145,6 +153,8 @@ class OrderModel implements AbstractOrderEntity {
         'user_phone': userPhone,
         'user_pick_point_lat': userPickPointLat,
         'user_pick_point_lng': userPickPointLng,
+        'user_out_point_lat': userOutPointLat,
+        'user_out_point_lng': userOutPointLng,
         'offer_id': offerId,
         'route_id': routeId,
         'route_description': routeDescription,
@@ -190,6 +200,8 @@ class OrderModel implements AbstractOrderEntity {
     String? userPhone,
     String? userPickPointLat,
     String? userPickPointLng,
+    String? userOutPointLat,
+    String? userOutPointLng,
     String? offerId,
     String? routeId,
     String? routeDescription,
@@ -222,6 +234,8 @@ class OrderModel implements AbstractOrderEntity {
       userPhone: userPhone ?? this.userPhone,
       userPickPointLat: userPickPointLat ?? this.userPickPointLat,
       userPickPointLng: userPickPointLng ?? this.userPickPointLng,
+      userOutPointLat: userOutPointLat ?? this.userOutPointLat,
+      userOutPointLng: userOutPointLng ?? this.userOutPointLng,
       offerId: offerId ?? this.offerId,
       routeId: routeId ?? this.routeId,
       routeDescription: routeDescription ?? this.routeDescription,
@@ -261,6 +275,8 @@ class OrderModel implements AbstractOrderEntity {
       userPhone,
       userPickPointLat,
       userPickPointLng,
+      userOutPointLat,
+      userOutPointLng,
       offerId,
       routeId,
       routeDescription,

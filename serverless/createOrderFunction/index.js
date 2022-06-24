@@ -1,53 +1,82 @@
 const admin = require("firebase-admin");
 const serviceAccount = require("./pickpointer-firebase-adminsdk-kador-cbb28cea76.json");
+const uuid = require('uuid');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 
 exports.handler = (event, context, callback) => {
-    // Do whatever you want to do with firestore
-    return new Promise((resolve, reject) => {
-        console.log('event', event);
-
+    return new Promise(async (resolve, reject) => {
+        console.log('createOrderFunction>');
         firebaseFirestore = admin.firestore();
+
+        const offersCollection = firebaseFirestore.collection("c_offers");
+        const ordersCollection = firebaseFirestore.collection("c_orders");
+
+        const orderRequest = event;
+
+        userPickPointLat = orderRequest.user_pick_point_lat;
+        userPickPointLng = orderRequest.user_pick_point_lng;
 
         console.log('firebaseFirestore');
 
-        firebaseFirestore.collection("c_orders").add({
-            name: "John Doe",
-            email: "any",
-            date: new Date(),
-        }).then(function (docRef) {
-            console.log("Document written with ID: ", docRef.id);
-            resolve(
-                {
-                    id: `${docRef.id}`,
-                    route_id: '1',
-                    count: '1',
-                    max_count: '3',
-                    price: '12',
-                    start_lat: '-12.123276353363956',
-                    start_lng: '-76.87233782753958',
-                    end_lat: '-12.0552257792263',
-                    end_lng: '-76.96429734159008',
-                    way_points: '["-12.076121251499771, -76.90765870404498", "-12.071811365487575, -76.95666951452563"]',
-                    user_id: '1',
-                    user_name: 'John Doe',
-                    user_avatar: '',
-                    user_car_plate: 'ERWIN-12',
-                    user_car_photo: '',
-                    user_car_model: 'TIco 24',
-                    user_car_color: 'red',
-                    user_phone_number: '+1 123 456 7890',
-                    user_rank: '5',
-                    updated_at: '2020-01-01',
-                    created_at: '2020-01-05',
+        offersCollection.doc(orderRequest.offer_id).get().then(async (doc) => {
+            console.log('offerSnapshot');
+            const currentDate = new Date();
+            const orderId = uuid.v1();
+            const offerDocument = doc.data();
+
+            console.log('offerDocument : ', offerDocument);
+
+            var requestQuantity = parseInt(orderRequest.route_quantity);
+            var counter = parseInt(offerDocument.count);
+            var availableQuantity = parseInt(offerDocument.max_count) - counter;
+
+            console.log('routeQuantity <= availableQuantity : ', requestQuantity <= availableQuantity);
+
+            if (requestQuantity <= availableQuantity) {
+                // Update offer
+                var newData = { count: `${counter + requestQuantity}`, updated_at: currentDate };
+
+                var clientInformation = {
+                    userId: orderRequest.user_id,
+                    orderId: orderId,
+                    userToken: "ASCASVAS1wewq122",
+                    fullName: orderRequest.user_name,
+                    avatar: "https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png",
+                    pickPointLat: orderRequest.user_pick_point_lat,
+                    pickPointLng: orderRequest.user_pick_point_lng,
+                    outPointLat: orderRequest.user_out_point_lat,
+                    outPointLng: orderRequest.user_out_point_lng,
                 }
-            );
-        }).catch(function (error) {
-            console.error("Error adding document: ", error);
-            reject(error);
+
+                var way_points = JSON.parse(offerDocument.way_points);
+                way_points.push(`${userPickPointLat}, ${userPickPointLng} `);
+                newData.way_points = JSON.stringify(way_points);
+
+                var clientsInformation = JSON.parse(offerDocument.orders);
+                clientsInformation.push(clientInformation);
+                newData.orders = JSON.stringify(clientsInformation);
+
+                offersCollection.doc(orderRequest.offer_id).update(newData);
+
+                const orderDocument = {
+                    ...orderRequest, ...{
+                        id: orderId,
+                        way_points: newData.way_points,
+                        updated_at: currentDate,
+                    }
+                }
+                ordersCollection.doc(orderId).set(orderDocument).then(() => {
+                    console.log("Document written with ID: ", orderId);
+                    // Return the offer updated.
+                    resolve(orderDocument);
+                }).catch((error) => {
+                    console.error("Error adding document: ", error);
+                    reject(error);
+                });
+            }
         });
     });
 };

@@ -31,6 +31,7 @@ class TextFieldWidget extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final bool autofocus;
   final FormFieldValidator<String>? validator;
+  final int maxLines;
 
   const TextFieldWidget({
     Key? key,
@@ -63,6 +64,7 @@ class TextFieldWidget extends StatelessWidget {
     this.textInputAction,
     this.textAlignVertical = TextAlignVertical.center,
     this.validator,
+    this.maxLines = 1,
   }) : super(key: key);
 
   @override
@@ -82,7 +84,7 @@ class TextFieldWidget extends StatelessWidget {
       textInputAction: textInputAction,
       textAlignVertical: textAlignVertical,
       validator: validator,
-      maxLines: 1,
+      maxLines: maxLines,
       decoration: InputDecoration(
         labelText: labelText.toString(),
         errorText: errorText,

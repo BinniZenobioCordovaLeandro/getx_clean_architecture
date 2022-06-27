@@ -138,16 +138,16 @@ class _OrderPageState extends State<OrderPage> {
                       options: PopupMarkerLayerOptions(
                         markers: [
                           Marker(
-                            width: 50,
-                            height: 50,
+                            width: 30,
+                            height: 30,
                             anchorPos: AnchorPos.align(
-                              AnchorAlign.center,
+                              AnchorAlign.top,
                             ),
                             point: orderController.clientPosition.value,
-                            builder: (BuildContext context) => Icon(
-                              Icons.mode_of_travel_outlined,
-                              color: Theme.of(context).primaryColor,
-                              size: 50,
+                            builder: (BuildContext context) => const Icon(
+                              Icons.adjust_rounded,
+                              color: Colors.blue,
+                              size: 30,
                             ),
                           ),
                           Marker(

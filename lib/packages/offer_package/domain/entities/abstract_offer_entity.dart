@@ -2,18 +2,20 @@ import 'package:equatable/equatable.dart';
 
 abstract class AbstractOfferEntity extends Equatable {
   final String? id;
-  final String? routeId;
-  final String? count;
-  final String? maxCount;
-  final String? price;
+  final int? count;
+  final int? maxCount;
+  final double? price;
   final String? startLat;
   final String? startLng;
   final String? endLat;
   final String? endLng;
   final String? wayPoints;
   final String? orders;
+  final String? stateId;
+  final String? stateDescription;
   final String? userId;
   final String? userName;
+  final String? userEmail;
   final String? userAvatar;
   final String? userCarPlate;
   final String? userCarPhoto;
@@ -21,12 +23,21 @@ abstract class AbstractOfferEntity extends Equatable {
   final String? userCarColor;
   final String? userPhoneNumber;
   final String? userRank;
-  final String? updatedAt;
-  final String? createdAt;
+  final String? routeId;
+  final String? routeTitle;
+  final String? routeDescription;
+  final double? routePrice;
+  final String? routeFrom;
+  final String? routeTo;
+  final String? routeStartLat;
+  final String? routeStartLng;
+  final String? routeEndLat;
+  final String? routeEndLng;
+  final int? updatedAt;
+  final int? createdAt;
 
   const AbstractOfferEntity({
     this.id,
-    this.routeId,
     this.count,
     this.maxCount,
     this.price,
@@ -36,8 +47,11 @@ abstract class AbstractOfferEntity extends Equatable {
     this.endLng,
     this.wayPoints,
     this.orders,
+    this.stateId,
+    this.stateDescription,
     this.userId,
     this.userName,
+    this.userEmail,
     this.userAvatar,
     this.userCarPlate,
     this.userCarPhoto,
@@ -45,6 +59,16 @@ abstract class AbstractOfferEntity extends Equatable {
     this.userCarColor,
     this.userPhoneNumber,
     this.userRank,
+    this.routeId,
+    this.routeTitle,
+    this.routeDescription,
+    this.routePrice,
+    this.routeFrom,
+    this.routeTo,
+    this.routeStartLat,
+    this.routeStartLng,
+    this.routeEndLat,
+    this.routeEndLng,
     this.updatedAt,
     this.createdAt,
   });

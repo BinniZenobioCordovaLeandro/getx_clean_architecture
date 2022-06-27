@@ -8,13 +8,15 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? orderId;
   @override
-  final String? price;
+  final double? price;
   @override
-  final String? total;
+  final int? count;
   @override
-  final String? status;
+  final double? total;
   @override
-  final String? statusId;
+  final String? stateId;
+  @override
+  final String? stateDescription;
   @override
   final String? userId;
   @override
@@ -28,25 +30,41 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? userPickPointLng;
   @override
-  final String? userOutPointLat;
+  final String? userDropPointLat;
   @override
-  final String? userOutPointLng;
+  final String? userDropPointLng;
   @override
   final String? offerId;
   @override
+  final int? offerCount;
+  @override
+  final int? offerMaxCount;
+  @override
+  final double? offerPrice;
+  @override
+  final String? offerStartLat;
+  @override
+  final String? offerStartLng;
+  @override
+  final String? offerEndLat;
+  @override
+  final String? offerEndLng;
+  @override
+  final String? offerWayPoints;
+  @override
+  final String? offerOrders;
+  @override
   final String? routeId;
+  @override
+  final String? routeTitle;
   @override
   final String? routeDescription;
   @override
-  final String? routeTo;
+  final double? routePrice;
   @override
   final String? routeFrom;
   @override
-  final String? routePrice;
-  @override
-  final String? routeQuantity;
-  @override
-  final String? routeTotal;
+  final String? routeTo;
   @override
   final String? routeStartLat;
   @override
@@ -56,52 +74,76 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? routeEndLng;
   @override
-  final String? routeWayPoints;
-  @override
   final String? driverId;
   @override
   final String? driverName;
   @override
   final String? driverEmail;
   @override
-  final String? driverPhone;
+  final String? driverAvatar;
   @override
-  final String? createdAt;
+  final String? driverCarPlate;
   @override
-  final String? updatedAt;
+  final String? driverCarPhoto;
+  @override
+  final String? driverCarModel;
+  @override
+  final String? driverCarColor;
+  @override
+  final String? driverPhoneNumber;
+  @override
+  final String? driverRank;
+  @override
+  final int? createdAt;
+  @override
+  final int? updatedAt;
 
   const OrderModel({
     this.id,
     this.orderId,
     this.price,
+    this.count,
     this.total,
-    this.status,
-    this.statusId,
+    this.stateId,
+    this.stateDescription,
     this.userId,
     this.userName,
     this.userEmail,
     this.userPhone,
     this.userPickPointLat,
     this.userPickPointLng,
-    this.userOutPointLat,
-    this.userOutPointLng,
+    this.userDropPointLat,
+    this.userDropPointLng,
     this.offerId,
+    this.offerCount,
+    this.offerMaxCount,
+    this.offerPrice,
+    this.offerStartLat,
+    this.offerStartLng,
+    this.offerEndLat,
+    this.offerEndLng,
+    this.offerWayPoints,
+    this.offerOrders,
     this.routeId,
+    this.routeTitle,
     this.routeDescription,
-    this.routeTo,
-    this.routeFrom,
     this.routePrice,
-    this.routeQuantity,
-    this.routeTotal,
+    this.routeFrom,
+    this.routeTo,
     this.routeStartLat,
     this.routeStartLng,
     this.routeEndLat,
     this.routeEndLng,
-    this.routeWayPoints,
     this.driverId,
     this.driverName,
     this.driverEmail,
-    this.driverPhone,
+    this.driverAvatar,
+    this.driverCarPlate,
+    this.driverCarPhoto,
+    this.driverCarModel,
+    this.driverCarColor,
+    this.driverPhoneNumber,
+    this.driverRank,
     this.createdAt,
     this.updatedAt,
   });
@@ -109,69 +151,99 @@ class OrderModel implements AbstractOrderEntity {
   factory OrderModel.fromMap(Map<String, dynamic> data) => OrderModel(
         id: data['id'] as String?,
         orderId: data['order_id'] as String?,
-        price: data['price'] as String?,
-        total: data['total'] as String?,
-        status: data['status'] as String?,
+        price: double.parse('${data['price']}'),
+        count: data['count'] as int?,
+        total: double.parse('${data['total']}'),
+        stateId: data['state_id'] as String?,
+        stateDescription: data['state_description'] as String?,
         userId: data['user_id'] as String?,
         userName: data['user_name'] as String?,
         userEmail: data['user_email'] as String?,
         userPhone: data['user_phone'] as String?,
         userPickPointLat: data['user_pick_point_lat'] as String?,
         userPickPointLng: data['user_pick_point_lng'] as String?,
-        userOutPointLat: data['user_out_point_lat'] as String?,
-        userOutPointLng: data['user_out_point_lng'] as String?,
+        userDropPointLat: data['user_drop_point_lat'] as String?,
+        userDropPointLng: data['user_drop_point_lng'] as String?,
         offerId: data['offer_id'] as String?,
+        offerCount: data['offer_count'] as int?,
+        offerMaxCount: data['offer_max_count'] as int?,
+        offerPrice: double.parse('${data['offer_price']}'),
+        offerStartLat: data['offer_start_lat'] as String?,
+        offerStartLng: data['offer_start_lng'] as String?,
+        offerEndLat: data['offer_end_lat'] as String?,
+        offerEndLng: data['offer_end_lng'] as String?,
+        offerWayPoints: data['offer_way_points'] as String?,
+        offerOrders: data['offer_orders'] as String?,
         routeId: data['route_id'] as String?,
+        routeTitle: data['route_title'] as String?,
         routeDescription: data['route_description'] as String?,
-        routeTo: data['route_to'] as String?,
+        routePrice: double.parse('${data['route_price']}'),
         routeFrom: data['route_from'] as String?,
-        routePrice: data['route_price'] as String?,
-        routeQuantity: data['route_quantity'] as String?,
-        routeTotal: data['route_total'] as String?,
+        routeTo: data['route_to'] as String?,
         routeStartLat: data['route_start_lat'] as String?,
         routeStartLng: data['route_start_lng'] as String?,
         routeEndLat: data['route_end_lat'] as String?,
         routeEndLng: data['route_end_lng'] as String?,
-        routeWayPoints: data['route_way_points'] as String?,
         driverId: data['driver_id'] as String?,
         driverName: data['driver_name'] as String?,
         driverEmail: data['driver_email'] as String?,
-        driverPhone: data['driver_phone'] as String?,
-        createdAt: data['created_at'] as String?,
-        updatedAt: data['updated_at'] as String?,
+        driverAvatar: data['driver_avatar'] as String?,
+        driverCarPlate: data['driver_car_plate'] as String?,
+        driverCarPhoto: data['driver_car_photo'] as String?,
+        driverCarModel: data['driver_car_model'] as String?,
+        driverCarColor: data['driver_car_color'] as String?,
+        driverPhoneNumber: data['driver_phone_number'] as String?,
+        driverRank: data['driver_rank'] as String?,
+        createdAt: data['created_at'] as int?,
+        updatedAt: data['updated_at'] as int?,
       );
 
   Map<String, dynamic> toMap() => {
         'id': id,
         'order_id': orderId,
         'price': price,
+        'count': count,
         'total': total,
-        'status': status,
+        'state_id': stateId,
+        'state_description': stateDescription,
         'user_id': userId,
         'user_name': userName,
         'user_email': userEmail,
         'user_phone': userPhone,
         'user_pick_point_lat': userPickPointLat,
         'user_pick_point_lng': userPickPointLng,
-        'user_out_point_lat': userOutPointLat,
-        'user_out_point_lng': userOutPointLng,
+        'user_drop_point_lat': userDropPointLat,
+        'user_drop_point_lng': userDropPointLng,
         'offer_id': offerId,
+        'offer_count': offerCount,
+        'offer_max_count': offerMaxCount,
+        'offer_price': offerPrice,
+        'offer_start_lat': offerStartLat,
+        'offer_start_lng': offerStartLng,
+        'offer_end_lat': offerEndLat,
+        'offer_end_lng': offerEndLng,
+        'offer_way_points': offerWayPoints,
+        'offer_orders': offerOrders,
         'route_id': routeId,
+        'route_title': routeTitle,
         'route_description': routeDescription,
-        'route_to': routeTo,
-        'route_from': routeFrom,
         'route_price': routePrice,
-        'route_quantity': routeQuantity,
-        'route_total': routeTotal,
+        'route_from': routeFrom,
+        'route_to': routeTo,
         'route_start_lat': routeStartLat,
         'route_start_lng': routeStartLng,
         'route_end_lat': routeEndLat,
         'route_end_lng': routeEndLng,
-        'route_way_points': routeWayPoints,
         'driver_id': driverId,
         'driver_name': driverName,
         'driver_email': driverEmail,
-        'driver_phone': driverPhone,
+        'driver_avatar': driverAvatar,
+        'driver_car_plate': driverCarPlate,
+        'driver_car_photo': driverCarPhoto,
+        'driver_car_model': driverCarModel,
+        'driver_car_color': driverCarColor,
+        'driver_phone_number': driverPhoneNumber,
+        'driver_rank': driverRank,
         'created_at': createdAt,
         'updated_at': updatedAt,
       };
@@ -191,68 +263,98 @@ class OrderModel implements AbstractOrderEntity {
   OrderModel copyWith({
     String? id,
     String? orderId,
-    String? price,
-    String? total,
-    String? status,
+    double? price,
+    int? count,
+    double? total,
+    String? stateId,
+    String? stateDescription,
     String? userId,
     String? userName,
     String? userEmail,
     String? userPhone,
     String? userPickPointLat,
     String? userPickPointLng,
-    String? userOutPointLat,
-    String? userOutPointLng,
+    String? userDropPointLat,
+    String? userDropPointLng,
     String? offerId,
+    int? offerCount,
+    int? offerMaxCount,
+    double? offerPrice,
+    String? offerStartLat,
+    String? offerStartLng,
+    String? offerEndLat,
+    String? offerEndLng,
+    String? offerWayPoints,
+    String? offerOrders,
     String? routeId,
+    String? routeTitle,
     String? routeDescription,
-    String? routeTo,
+    double? routePrice,
     String? routeFrom,
-    String? routePrice,
-    String? routeQuantity,
-    String? routeTotal,
+    String? routeTo,
     String? routeStartLat,
     String? routeStartLng,
     String? routeEndLat,
     String? routeEndLng,
-    String? routeWayPoints,
     String? driverId,
     String? driverName,
     String? driverEmail,
-    String? driverPhone,
-    String? createdAt,
-    String? updatedAt,
+    String? driverAvatar,
+    String? driverCarPlate,
+    String? driverCarPhoto,
+    String? driverCarModel,
+    String? driverCarColor,
+    String? driverPhoneNumber,
+    String? driverRank,
+    int? createdAt,
+    int? updatedAt,
   }) {
     return OrderModel(
       id: id ?? this.id,
       orderId: orderId ?? this.orderId,
       price: price ?? this.price,
+      count: count ?? this.count,
       total: total ?? this.total,
-      status: status ?? this.status,
+      stateId: stateId ?? this.stateId,
+      stateDescription: stateDescription ?? this.stateDescription,
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
       userEmail: userEmail ?? this.userEmail,
       userPhone: userPhone ?? this.userPhone,
       userPickPointLat: userPickPointLat ?? this.userPickPointLat,
       userPickPointLng: userPickPointLng ?? this.userPickPointLng,
-      userOutPointLat: userOutPointLat ?? this.userOutPointLat,
-      userOutPointLng: userOutPointLng ?? this.userOutPointLng,
+      userDropPointLat: userDropPointLat ?? this.userDropPointLat,
+      userDropPointLng: userDropPointLng ?? this.userDropPointLng,
       offerId: offerId ?? this.offerId,
+      offerCount: offerCount ?? this.offerCount,
+      offerMaxCount: offerMaxCount ?? this.offerMaxCount,
+      offerPrice: offerPrice ?? this.offerPrice,
+      offerStartLat: offerStartLat ?? this.offerStartLat,
+      offerStartLng: offerStartLng ?? this.offerStartLng,
+      offerEndLat: offerEndLat ?? this.offerEndLat,
+      offerEndLng: offerEndLng ?? this.offerEndLng,
+      offerWayPoints: offerWayPoints ?? this.offerWayPoints,
+      offerOrders: offerOrders ?? this.offerOrders,
       routeId: routeId ?? this.routeId,
+      routeTitle: routeTitle ?? this.routeTitle,
       routeDescription: routeDescription ?? this.routeDescription,
-      routeTo: routeTo ?? this.routeTo,
-      routeFrom: routeFrom ?? this.routeFrom,
       routePrice: routePrice ?? this.routePrice,
-      routeQuantity: routeQuantity ?? this.routeQuantity,
-      routeTotal: routeTotal ?? this.routeTotal,
+      routeFrom: routeFrom ?? this.routeFrom,
+      routeTo: routeTo ?? this.routeTo,
       routeStartLat: routeStartLat ?? this.routeStartLat,
       routeStartLng: routeStartLng ?? this.routeStartLng,
       routeEndLat: routeEndLat ?? this.routeEndLat,
       routeEndLng: routeEndLng ?? this.routeEndLng,
-      routeWayPoints: routeWayPoints ?? this.routeWayPoints,
       driverId: driverId ?? this.driverId,
       driverName: driverName ?? this.driverName,
       driverEmail: driverEmail ?? this.driverEmail,
-      driverPhone: driverPhone ?? this.driverPhone,
+      driverAvatar: driverAvatar ?? this.driverAvatar,
+      driverCarPlate: driverCarPlate ?? this.driverCarPlate,
+      driverCarPhoto: driverCarPhoto ?? this.driverCarPhoto,
+      driverCarModel: driverCarModel ?? this.driverCarModel,
+      driverCarColor: driverCarColor ?? this.driverCarColor,
+      driverPhoneNumber: driverPhoneNumber ?? this.driverPhoneNumber,
+      driverRank: driverRank ?? this.driverRank,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -267,33 +369,48 @@ class OrderModel implements AbstractOrderEntity {
       id,
       orderId,
       price,
+      count,
       total,
-      status,
+      stateId,
+      stateDescription,
       userId,
       userName,
       userEmail,
       userPhone,
       userPickPointLat,
       userPickPointLng,
-      userOutPointLat,
-      userOutPointLng,
+      userDropPointLat,
+      userDropPointLng,
       offerId,
+      offerCount,
+      offerMaxCount,
+      offerPrice,
+      offerStartLat,
+      offerStartLng,
+      offerEndLat,
+      offerEndLng,
+      offerWayPoints,
+      offerOrders,
       routeId,
+      routeTitle,
       routeDescription,
-      routeTo,
-      routeFrom,
       routePrice,
-      routeQuantity,
-      routeTotal,
+      routeFrom,
+      routeTo,
       routeStartLat,
       routeStartLng,
       routeEndLat,
       routeEndLng,
-      routeWayPoints,
       driverId,
       driverName,
       driverEmail,
-      driverPhone,
+      driverAvatar,
+      driverCarPlate,
+      driverCarPhoto,
+      driverCarModel,
+      driverCarColor,
+      driverPhoneNumber,
+      driverRank,
       createdAt,
       updatedAt,
     ];

@@ -6,6 +6,15 @@ import 'package:pickpointer/packages/order_package/data/datasources/http_order_d
 import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/usecases/add_order_usecase.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
+import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
+import 'package:pickpointer/packages/user_package/data/datasources/user_datasource.dart/firebase_user_datasource.dart';
+import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
+import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
 
@@ -17,16 +26,29 @@ class PaymentController extends GetxController {
   final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
 
+  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
+    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+  );
+
+  final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
+  );
+
   final AddOrderUsecase addOrderUsecase = AddOrderUsecase(
     abstractOrderRepository: HttpOrderDatasource(),
+  );
+
+  final GetUserUsecase _getUserUsecase = GetUserUsecase(
+    abstractUserRepository: FirebaseUserDatasource(),
   );
 
   AbstractOfferEntity? abstractOfferEntity;
 
   final isLoading = false.obs;
+  final seats = 0.obs;
   final originLatLng = LatLng(0, 0).obs;
   final destinationLatLng = LatLng(0, 0).obs;
-  final payMethod = 0.obs;
+  final payMethod = 1.obs;
 
   Future<bool>? sendNotification({
     required AbstractOrderEntity abstractOrderEntity,
@@ -48,54 +70,104 @@ class PaymentController extends GetxController {
   onSubmit({
     required AbstractOfferEntity abstractOfferEntity,
   }) {
-    if (formKey.currentState!.validate() && payMethod.value != 0) {
-      addOrderUsecase
-          .call(
-        order: OrderModel(
-          id: '1',
-          orderId: '123456789',
-          price: '100',
-          total: '90',
-          status: 'Pending',
-          statusId: '1',
-          userId: '1',
-          userName: 'John Doe',
-          userPhone: '+1 123 456 7890',
-          userPickPointLat: '-12.118871',
-          userPickPointLng: '-76.870707',
-          userOutPointLat: '-12.1',
-          userOutPointLng: '-76.2',
-          offerId: abstractOfferEntity.id,
-          routeId: abstractOfferEntity.routeId,
-          routeDescription: 'Manchay a Ovalo Santa Anita',
-          routeTo: 'Ovalo Santa Anita',
-          routeFrom: 'Manchay',
-          routePrice: abstractOfferEntity.price,
-          routeQuantity: '1',
-          routeTotal:
-              (double.parse(abstractOfferEntity.price!) * 1).toStringAsFixed(2),
-          routeStartLat: '-12.123276353363956',
-          routeStartLng: '-76.87233782753958',
-          routeEndLat: '-12.0552257792263',
-          routeEndLng: '-76.96429734159008',
-          routeWayPoints: abstractOfferEntity.wayPoints,
-          driverId: abstractOfferEntity.userId,
-          driverName: abstractOfferEntity.userName,
-          driverPhone: abstractOfferEntity.userPhoneNumber,
-          createdAt: DateTime.now().toString(),
-          updatedAt: DateTime.now().toString(),
-        ),
-      )
-          .then((AbstractOrderEntity abstractOrderEntity) {
-        sendNotification(abstractOrderEntity: abstractOrderEntity);
-        Get.to(
-          () => OrderPage(
-            abstractOrderEntity: abstractOrderEntity,
-          ),
-          arguments: {
-            'abstractOrderEntity': abstractOrderEntity,
-          },
-        );
+    bool isValidForm = formKey.currentState!.validate();
+    if (isValidForm && payMethod.value != 0) {
+      isLoading.value = true;
+      _verifySessionUsecase
+          .call()
+          .then((AbstractSessionEntity abstractSessionEntity) {
+        // if (abstractSessionEntity.isSigned == true &&
+        //     abstractSessionEntity.onRoad != true) {
+        if (abstractSessionEntity.isSigned == true) {
+          _getUserUsecase
+              .call(userId: abstractSessionEntity.idUsers!)!
+              .then((AbstractUserEntity abstractUserEntity) {
+            print('abstractUserEntity');
+            addOrderUsecase
+                .call(
+              order: OrderModel(
+                id: '1',
+                orderId: '123456789',
+                price: abstractOfferEntity.price,
+                count: seats.value,
+                total: double.parse(
+                  (abstractOfferEntity.price! * seats.value).toStringAsFixed(3),
+                ),
+                stateId:
+                    '- 1', // Esperando -1, enCarretera 0 , Completado 1, Cancelado 2
+                stateDescription:
+                    'Esperando', // Esperando -1, enCarretera 0 , Completado 1, Cancelado 2
+                userId: abstractUserEntity.id,
+                userName: abstractUserEntity.name,
+                userEmail: abstractUserEntity.email,
+                userPhone: abstractUserEntity.phoneNumber,
+                userPickPointLat: '${originLatLng.value.latitude}',
+                userPickPointLng: '${originLatLng.value.longitude}',
+                userDropPointLat: '${destinationLatLng.value.latitude}',
+                userDropPointLng: '${destinationLatLng.value.longitude}',
+                offerId: abstractOfferEntity.id,
+                offerCount: abstractOfferEntity.count,
+                offerMaxCount: abstractOfferEntity.maxCount,
+                offerPrice: abstractOfferEntity.price,
+                offerStartLat: abstractOfferEntity.startLat,
+                offerStartLng: abstractOfferEntity.startLng,
+                offerEndLat: abstractOfferEntity.endLat,
+                offerEndLng: abstractOfferEntity.endLng,
+                offerWayPoints: abstractOfferEntity.wayPoints,
+                offerOrders: abstractOfferEntity.orders,
+                routeId: abstractOfferEntity.routeId,
+                routeTitle: abstractOfferEntity.routeTitle,
+                routeDescription: abstractOfferEntity.routeDescription,
+                routePrice: abstractOfferEntity.routePrice,
+                routeFrom: abstractOfferEntity.routeFrom,
+                routeTo: abstractOfferEntity.routeTo,
+                routeStartLat: abstractOfferEntity.routeStartLat,
+                routeStartLng: abstractOfferEntity.routeStartLng,
+                routeEndLat: abstractOfferEntity.routeEndLat,
+                routeEndLng: abstractOfferEntity.routeEndLng,
+                driverId: abstractOfferEntity.userId,
+                driverName: abstractOfferEntity.userName,
+                driverEmail: abstractOfferEntity.userEmail,
+                driverAvatar: abstractOfferEntity.userAvatar,
+                driverCarPlate: abstractOfferEntity.userCarPlate,
+                driverCarPhoto: abstractOfferEntity.userCarPhoto,
+                driverCarModel: abstractOfferEntity.userCarModel,
+                driverCarColor: abstractOfferEntity.userCarColor,
+                driverPhoneNumber: abstractOfferEntity.userPhoneNumber,
+                driverRank: abstractOfferEntity.userRank,
+                createdAt: DateTime.now().millisecondsSinceEpoch,
+                updatedAt: DateTime.now().millisecondsSinceEpoch,
+              ),
+            )
+                .then((AbstractOrderEntity abstractOrderEntity) {
+              isLoading.value = false;
+              sendNotification(abstractOrderEntity: abstractOrderEntity);
+              _updateSessionUsecase.call(
+                abstractSessionEntity:
+                    (abstractSessionEntity as SessionModel).copyWith(
+                  onRoad: true,
+                  currentOfferId: abstractOfferEntity.id,
+                  currentOrderId: abstractOrderEntity.id,
+                ),
+              );
+              Get.to(
+                () => OrderPage(
+                  abstractOrderEntity: abstractOrderEntity,
+                ),
+                arguments: {
+                  'abstractOrderEntity': abstractOrderEntity,
+                },
+              );
+            }).catchError((error) {
+              print('// TODO: Order is not created, not available');
+              isLoading.value = false;
+              print(error);
+            });
+          });
+        } else {
+          isLoading.value = false;
+          print('// TODO: user is currently in road!');
+        }
       });
     }
   }

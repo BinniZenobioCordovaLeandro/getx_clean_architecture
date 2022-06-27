@@ -3,70 +3,98 @@ import 'package:equatable/equatable.dart';
 abstract class AbstractOrderEntity extends Equatable {
   final String? id;
   final String? orderId;
-  final String? price;
-  final String? total;
-  final String? status;
-  final String? statusId;
+  final double? price;
+  final int? count;
+  final double? total;
+  final String? stateId;
+  final String? stateDescription;
   final String? userId;
   final String? userName;
   final String? userEmail;
   final String? userPhone;
   final String? userPickPointLat;
   final String? userPickPointLng;
-  final String? userOutPointLat;
-  final String? userOutPointLng;
+  final String? userDropPointLat;
+  final String? userDropPointLng;
   final String? offerId;
+  final int? offerCount;
+  final int? offerMaxCount;
+  final double? offerPrice;
+  final String? offerStartLat;
+  final String? offerStartLng;
+  final String? offerEndLat;
+  final String? offerEndLng;
+  final String? offerWayPoints;
+  final String? offerOrders;
   final String? routeId;
+  final String? routeTitle;
   final String? routeDescription;
-  final String? routeTo;
+  final double? routePrice;
   final String? routeFrom;
-  final String? routePrice;
-  final String? routeQuantity;
-  final String? routeTotal;
+  final String? routeTo;
   final String? routeStartLat;
   final String? routeStartLng;
   final String? routeEndLat;
   final String? routeEndLng;
-  final String? routeWayPoints;
   final String? driverId;
   final String? driverName;
   final String? driverEmail;
-  final String? driverPhone;
-  final String? createdAt;
-  final String? updatedAt;
+  final String? driverAvatar;
+  final String? driverCarPlate;
+  final String? driverCarPhoto;
+  final String? driverCarModel;
+  final String? driverCarColor;
+  final String? driverPhoneNumber;
+  final String? driverRank;
+  final int? createdAt;
+  final int? updatedAt;
 
   const AbstractOrderEntity({
     this.id,
     this.orderId,
+    this.price,
+    this.count,
+    this.total,
+    this.stateId,
+    this.stateDescription,
     this.userId,
     this.userName,
     this.userEmail,
     this.userPhone,
     this.userPickPointLat,
     this.userPickPointLng,
-    this.userOutPointLat,
-    this.userOutPointLng,
-    this.price,
-    this.total,
-    this.status,
-    this.statusId,
+    this.userDropPointLat,
+    this.userDropPointLng,
     this.offerId,
+    this.offerCount,
+    this.offerMaxCount,
+    this.offerPrice,
+    this.offerStartLat,
+    this.offerStartLng,
+    this.offerEndLat,
+    this.offerEndLng,
+    this.offerWayPoints,
+    this.offerOrders,
     this.routeId,
+    this.routeTitle,
     this.routeDescription,
-    this.routeTo,
-    this.routeFrom,
     this.routePrice,
-    this.routeQuantity,
-    this.routeTotal,
+    this.routeFrom,
+    this.routeTo,
     this.routeStartLat,
     this.routeStartLng,
     this.routeEndLat,
     this.routeEndLng,
-    this.routeWayPoints,
     this.driverId,
     this.driverName,
     this.driverEmail,
-    this.driverPhone,
+    this.driverAvatar,
+    this.driverCarPlate,
+    this.driverCarPhoto,
+    this.driverCarModel,
+    this.driverCarColor,
+    this.driverPhoneNumber,
+    this.driverRank,
     this.createdAt,
     this.updatedAt,
   });

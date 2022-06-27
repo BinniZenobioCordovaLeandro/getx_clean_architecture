@@ -27,10 +27,13 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
   }) {
     return offers
         ?.where('route_id', isEqualTo: routeId)
+        .where('state_id', isEqualTo: '-1')
         .orderBy('created_at')
         .get()
         .then((snapshot) {
       List<AbstractOfferEntity> offers = [];
+      print('snapshot.docs');
+      print(snapshot.docs);
       for (DocumentSnapshot offer in snapshot.docs) {
         offers.add(OfferModel.fromMap(offer.data() as Map<String, dynamic>));
       }

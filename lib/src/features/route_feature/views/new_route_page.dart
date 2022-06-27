@@ -28,7 +28,7 @@ class _NewRoutePageState extends State<NewRoutePage> {
           title: 'Solicitar nueva ruta',
           children: [
             TextFieldWidget(
-              maxLines: 3,
+              maxLines: 2,
               labelText: 'Describe Punto de Origen',
               helperText: 'Ej. Frente a plaza de Armas de Lima',
               validator: (value) {
@@ -60,7 +60,7 @@ class _NewRoutePageState extends State<NewRoutePage> {
             ),
             const Divider(),
             TextFieldWidget(
-              maxLines: 3,
+              maxLines: 2,
               labelText: 'Describe Punto de Destino',
               helperText: 'Ej. Frente al Colegio Monterrico de Arequipa',
               validator: (value) {
@@ -105,10 +105,14 @@ class _NewRoutePageState extends State<NewRoutePage> {
                 if (!(double.tryParse(value) != null)) {
                   return 'El precio debe ser un número';
                 }
+                if (double.parse(value) < 5) {
+                  return 'El precio debe ser mayor a 5.00';
+                }
                 return null;
               },
               onChanged: (string) {
-                newRouteController.price.value = string;
+                String price = double.parse(string).toStringAsFixed(3);
+                newRouteController.price.value = double.parse(price);
               },
             ),
             TextFieldWidget(

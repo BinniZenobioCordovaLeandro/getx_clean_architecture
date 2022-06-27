@@ -24,7 +24,7 @@ class NewRouteController extends GetxController {
 
   var startPosition = LatLng(0, 0).obs;
   var endPosition = LatLng(0, 0).obs;
-  var price = ''.obs;
+  var price = 0.0.obs;
   var title = ''.obs;
   var from = ''.obs;
   var to = ''.obs;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/form_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
@@ -32,8 +33,6 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   final PaymentController paymentController = PaymentController.instance;
 
-  MethodPayType methodPayType = MethodPayType.wallet;
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -45,7 +44,7 @@ class _PaymentPageState extends State<PaymentPage> {
             SizedBox(
               width: double.infinity,
               child: TextWidget(
-                'Configuración de Ruta',
+                'Configuración de viaje',
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
@@ -83,7 +82,6 @@ class _PaymentPageState extends State<PaymentPage> {
                   color: Colors.red,
                 ),
                 initialValue: true,
-                disabled: true,
                 helperText:
                     'El punto de bajada, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
                 initialLatLng: LatLng(
@@ -105,13 +103,54 @@ class _PaymentPageState extends State<PaymentPage> {
             SizedBox(
               width: double.infinity,
               child: TextWidget(
+                'Asientos',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            SizedBox(
+              child: TextFieldWidget(
+                labelText: 'Cantidad de asientos',
+                helperText:
+                    'Maximo de ${widget.abstractOfferEntity!.maxCount! - widget.abstractOfferEntity!.count!} asientos disponibles',
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: false,
+                  signed: false,
+                ),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Debe ingresar la cantidad de asientos';
+                  }
+                  if (!(int.tryParse(value) != null)) {
+                    return 'Debe ingresar un número entero';
+                  }
+                  if (int.parse(value) <= 0) {
+                    return 'Debe ingresar la cantidad de asientos';
+                  }
+                  if (int.parse(value) >
+                      (widget.abstractOfferEntity!.maxCount! -
+                          widget.abstractOfferEntity!.count!)) {
+                    int max = widget.abstractOfferEntity!.maxCount! -
+                        widget.abstractOfferEntity!.count!;
+                    return 'Maximo de $max asientos disponibles';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  paymentController.seats.value = int.parse(value);
+                },
+              ),
+            ),
+            const Divider(),
+            SizedBox(
+              width: double.infinity,
+              child: TextWidget(
                 'Metodos de pago',
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
             CashMethodPayRadioWidget(
-              title: 'Cash',
-              groupValue: methodPayType,
+              title: 'Efectivo',
+              groupValue: MethodPayType.cash,
               value: MethodPayType.cash,
               onChanged: (value) {
                 paymentController.payMethod.value = 1;
@@ -121,7 +160,7 @@ class _PaymentPageState extends State<PaymentPage> {
               state: paymentController.isLoading.value
                   ? ButtonState.loading
                   : ButtonState.success,
-              success: 'Enviar solicitud',
+              success: 'Contratar',
               onPressed: () {
                 if (paymentController.payMethod.value != 0) {
                   paymentController.onSubmit(

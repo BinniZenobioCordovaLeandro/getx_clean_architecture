@@ -83,7 +83,6 @@ class RoutesController extends GetxController {
       print('position: $streamPosition');
       position.value =
           LatLng(streamPosition.latitude, streamPosition.longitude);
-      mapController.move(position.value, 15);
     }, onError: (error) {
       print('error: $error');
     }, onDone: () {

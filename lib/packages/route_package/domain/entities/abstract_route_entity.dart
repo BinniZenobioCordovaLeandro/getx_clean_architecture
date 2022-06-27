@@ -4,7 +4,7 @@ abstract class AbstractRouteEntity extends Equatable {
   final String? id;
   final String? title;
   final String? description;
-  final String? price;
+  final double? price;
   final String? from;
   final String? to;
   final String? startLat;

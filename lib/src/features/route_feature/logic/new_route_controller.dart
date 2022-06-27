@@ -5,6 +5,7 @@ import 'package:pickpointer/packages/route_package/data/datasources/route_dataso
 import 'package:pickpointer/packages/route_package/data/models/route_model.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/usecases/add_request_usecase.dart';
+import 'package:pickpointer/packages/route_package/domain/usecases/add_route_usecase.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
@@ -23,7 +24,7 @@ class NewRouteController extends GetxController {
 
   var startPosition = LatLng(0, 0).obs;
   var endPosition = LatLng(0, 0).obs;
-  var price = ''.obs;
+  var price = 0.0.obs;
   var title = ''.obs;
   var from = ''.obs;
   var to = ''.obs;
@@ -33,6 +34,10 @@ class NewRouteController extends GetxController {
   );
 
   final AddRequestRouteUsecase _addRequestRouteUsecase = AddRequestRouteUsecase(
+    abstractRouteRepository: FirebaseRouteDatasource(),
+  );
+
+  final AddRouteUsecase _addRouteUsecase = AddRouteUsecase(
     abstractRouteRepository: FirebaseRouteDatasource(),
   );
 
@@ -48,6 +53,9 @@ class NewRouteController extends GetxController {
       isLoading.value = false;
       return true;
     });
+    _addRouteUsecase.call(
+      abstractRouteEntity: abstractRouteEntity,
+    );
     return futureBool;
   }
 
@@ -55,7 +63,8 @@ class NewRouteController extends GetxController {
     Future<bool>? futureBool = notificationProvider
         ?.sendNotification(
           title: 'Solicitud enviada con exito',
-          body: 'Su solicitud de ruta ha sido enviada con exito',
+          body:
+              'Su solicitud de ruta ha sido enviada con exito, y aprobada de inmediato.',
         )
         .then((value) => value);
     return futureBool;

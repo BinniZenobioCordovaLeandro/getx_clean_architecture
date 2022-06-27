@@ -107,7 +107,7 @@ class OrderController extends GetxController {
 
   showOfferPolylineMarkers(AbstractOrderEntity abstractOrderEntity) {
     List<LatLng> listLatLng = [];
-    String? wayPoints = abstractOrderEntity.routeWayPoints;
+    String? wayPoints = abstractOrderEntity.offerWayPoints;
     if (wayPoints != null && wayPoints.length > 10) {
       List list = jsonDecode(wayPoints);
       listLatLng = list.map((string) {

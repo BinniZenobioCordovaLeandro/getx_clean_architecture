@@ -1,15 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/repositories/abstract_order_repository.dart';
+import 'package:http/http.dart' as http;
 
 class HttpOrderDatasource implements AbstractOrderRepository {
-  final HttpClient _httpClient;
-
-  HttpOrderDatasource({required HttpClient httpClient})
-      : _httpClient = httpClient;
-
   @override
   Future<List<AbstractOrderEntity>>? getOrders() {
     return Future.value();
@@ -26,15 +21,16 @@ class HttpOrderDatasource implements AbstractOrderRepository {
   Future<AbstractOrderEntity> addOrder({
     required AbstractOrderEntity order,
   }) {
-    Future<AbstractOrderEntity> futureAbstractOrderEntity = _httpClient
-        .getUrl(Uri.parse('http://localhost:3000/createOrder'))
-        .then((HttpClientRequest request) {
-      return request.close();
-    }).then((HttpClientResponse response) {
-      return response.transform(utf8.decoder).join();
-    }).then((String string) {
-      final data = json.decode(string);
-      return OrderModel.fromMap(data);
+    Future<AbstractOrderEntity> futureAbstractOrderEntity = http
+        .put(
+      Uri.parse('http://192.168.1.2:3000/createOrder'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: (order as OrderModel).toJson(),
+    )
+        .then((http.Response value) {
+      return OrderModel.fromJson(value.body);
     });
     return futureAbstractOrderEntity;
   }

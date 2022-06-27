@@ -9,7 +9,7 @@ class RouteModel implements AbstractRouteEntity {
   @override
   final String? description;
   @override
-  final String? price;
+  final double? price;
   @override
   final String? from;
   @override
@@ -40,7 +40,7 @@ class RouteModel implements AbstractRouteEntity {
         id: data['id'] as String?,
         title: data['title'] as String?,
         description: data['description'] as String?,
-        price: data['price'] as String?,
+        price: double.parse('${data['price']}'),
         from: data['from'] as String?,
         to: data['to'] as String?,
         startLat: data['start_lat'] as String?,
@@ -78,7 +78,7 @@ class RouteModel implements AbstractRouteEntity {
     String? id,
     String? title,
     String? description,
-    String? price,
+    double? price,
     String? from,
     String? to,
     String? startLat,

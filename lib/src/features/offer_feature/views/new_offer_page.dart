@@ -59,7 +59,7 @@ class _NewOfferPageState extends State<NewOfferPage> {
                       return null;
                     },
                     onChanged: (String string) {
-                      offerController.maxCount.value = string;
+                      offerController.maxCount.value = int.parse(string);
                     },
                   ),
                   TextFieldWidget(
@@ -79,7 +79,7 @@ class _NewOfferPageState extends State<NewOfferPage> {
                       double minPrice = double.tryParse(
                               '${widget.abstractRouteEntity.price}') ??
                           5.00;
-                      double maxPrice = minPrice * 5;
+                      double maxPrice = minPrice * 3;
                       if (price < minPrice) {
                         return 'El precio no puede ser menor a ${minPrice.toStringAsFixed(2)}';
                       }
@@ -89,7 +89,8 @@ class _NewOfferPageState extends State<NewOfferPage> {
                       return null;
                     },
                     onChanged: (String string) {
-                      offerController.price.value = string;
+                      String price = double.parse(string).toStringAsFixed(3);
+                      offerController.price.value = double.parse(price);
                     },
                   ),
                   SizedBox(

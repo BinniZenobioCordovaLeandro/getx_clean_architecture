@@ -6,13 +6,11 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final String? id;
   @override
-  final String? routeId;
+  final int? count;
   @override
-  final String? count;
+  final int? maxCount;
   @override
-  final String? maxCount;
-  @override
-  final String? price;
+  final double? price;
   @override
   final String? startLat;
   @override
@@ -26,9 +24,15 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final String? orders;
   @override
+  final String? stateId;
+  @override
+  final String? stateDescription;
+  @override
   final String? userId;
   @override
   final String? userName;
+  @override
+  final String? userEmail;
   @override
   final String? userAvatar;
   @override
@@ -44,13 +48,32 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final String? userRank;
   @override
-  final String? updatedAt;
+  final String? routeId;
   @override
-  final String? createdAt;
+  final String? routeTitle;
+  @override
+  final String? routeDescription;
+  @override
+  final double? routePrice;
+  @override
+  final String? routeFrom;
+  @override
+  final String? routeTo;
+  @override
+  final String? routeStartLat;
+  @override
+  final String? routeStartLng;
+  @override
+  final String? routeEndLat;
+  @override
+  final String? routeEndLng;
+  @override
+  final int? updatedAt;
+  @override
+  final int? createdAt;
 
   const OfferModel({
     this.id,
-    this.routeId,
     this.count,
     this.maxCount,
     this.price,
@@ -60,8 +83,11 @@ class OfferModel implements AbstractOfferEntity {
     this.endLng,
     this.wayPoints,
     this.orders,
+    this.stateId,
+    this.stateDescription,
     this.userId,
     this.userName,
+    this.userEmail,
     this.userAvatar,
     this.userCarPlate,
     this.userCarPhoto,
@@ -69,24 +95,36 @@ class OfferModel implements AbstractOfferEntity {
     this.userCarColor,
     this.userPhoneNumber,
     this.userRank,
+    this.routeId,
+    this.routeTitle,
+    this.routeDescription,
+    this.routePrice,
+    this.routeFrom,
+    this.routeTo,
+    this.routeStartLat,
+    this.routeStartLng,
+    this.routeEndLat,
+    this.routeEndLng,
     this.updatedAt,
     this.createdAt,
   });
 
   factory OfferModel.fromMap(Map<String, dynamic> data) => OfferModel(
         id: data['id'] as String?,
-        routeId: data['route_id'] as String?,
-        count: data['count'] as String?,
-        maxCount: data['max_count'] as String?,
-        price: data['price'] as String?,
+        count: data['count'] as int?,
+        maxCount: data['max_count'] as int?,
+        price: double.parse('${data['price']}'),
         startLat: data['start_lat'] as String?,
         startLng: data['start_lng'] as String?,
         endLat: data['end_lat'] as String?,
         endLng: data['end_lng'] as String?,
         wayPoints: data['way_points'] as String?,
         orders: data['orders'] as String?,
+        stateId: data['state_id'] as String?,
+        stateDescription: data['state_description'] as String?,
         userId: data['user_id'] as String?,
         userName: data['user_name'] as String?,
+        userEmail: data['user_email'] as String?,
         userAvatar: data['user_avatar'] as String?,
         userCarPlate: data['user_car_plate'] as String?,
         userCarPhoto: data['user_car_photo'] as String?,
@@ -94,13 +132,22 @@ class OfferModel implements AbstractOfferEntity {
         userCarColor: data['user_car_color'] as String?,
         userPhoneNumber: data['user_phone_number'] as String?,
         userRank: data['user_rank'] as String?,
-        updatedAt: data['updated_at'] as String?,
-        createdAt: data['created_at'] as String?,
+        routeId: data['route_id'] as String?,
+        routeTitle: data['route_title'] as String?,
+        routeDescription: data['route_description'] as String?,
+        routePrice: double.parse('${data['route_price']}'),
+        routeFrom: data['route_from'] as String?,
+        routeTo: data['route_to'] as String?,
+        routeStartLat: data['route_start_lat'] as String?,
+        routeStartLng: data['route_start_lng'] as String?,
+        routeEndLat: data['route_end_lat'] as String?,
+        routeEndLng: data['route_end_lng'] as String?,
+        updatedAt: data['updated_at'] as int?,
+        createdAt: data['created_at'] as int?,
       );
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'route_id': routeId,
         'count': count,
         'max_count': maxCount,
         'price': price,
@@ -110,8 +157,11 @@ class OfferModel implements AbstractOfferEntity {
         'end_lng': endLng,
         'way_points': wayPoints,
         'orders': orders,
+        'state_id': stateId,
+        'state_description': stateDescription,
         'user_id': userId,
         'user_name': userName,
+        'user_email': userEmail,
         'user_avatar': userAvatar,
         'user_car_plate': userCarPlate,
         'user_car_photo': userCarPhoto,
@@ -119,6 +169,16 @@ class OfferModel implements AbstractOfferEntity {
         'user_car_color': userCarColor,
         'user_phone_number': userPhoneNumber,
         'user_rank': userRank,
+        'route_id': routeId,
+        'route_title': routeTitle,
+        'route_description': routeDescription,
+        'route_price': routePrice,
+        'route_from': routeFrom,
+        'route_to': routeTo,
+        'route_start_lat': routeStartLat,
+        'route_start_lng': routeStartLng,
+        'route_end_lat': routeEndLat,
+        'route_end_lng': routeEndLng,
         'updated_at': updatedAt,
         'created_at': createdAt,
       };
@@ -131,18 +191,20 @@ class OfferModel implements AbstractOfferEntity {
 
   OfferModel copyWith({
     String? id,
-    String? routeId,
-    String? count,
-    String? maxCount,
-    String? price,
+    int? count,
+    int? maxCount,
+    double? price,
     String? startLat,
     String? startLng,
     String? endLat,
     String? endLng,
     String? wayPoints,
     String? orders,
+    String? stateId,
+    String? stateDescription,
     String? userId,
     String? userName,
+    String? userEmail,
     String? userAvatar,
     String? userCarPlate,
     String? userCarPhoto,
@@ -150,12 +212,21 @@ class OfferModel implements AbstractOfferEntity {
     String? userCarColor,
     String? userPhoneNumber,
     String? userRank,
-    String? updatedAt,
-    String? createdAt,
+    String? routeId,
+    String? routeTitle,
+    String? routeDescription,
+    double? routePrice,
+    String? routeFrom,
+    String? routeTo,
+    String? routeStartLat,
+    String? routeStartLng,
+    String? routeEndLat,
+    String? routeEndLng,
+    int? updatedAt,
+    int? createdAt,
   }) {
     return OfferModel(
       id: id ?? this.id,
-      routeId: routeId ?? this.routeId,
       count: count ?? this.count,
       maxCount: maxCount ?? this.maxCount,
       price: price ?? this.price,
@@ -165,8 +236,11 @@ class OfferModel implements AbstractOfferEntity {
       endLng: endLng ?? this.endLng,
       wayPoints: wayPoints ?? this.wayPoints,
       orders: orders ?? this.orders,
+      stateId: stateId ?? this.stateId,
+      stateDescription: stateDescription ?? this.stateDescription,
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
+      userEmail: userEmail ?? this.userEmail,
       userAvatar: userAvatar ?? this.userAvatar,
       userCarPlate: userCarPlate ?? this.userCarPlate,
       userCarPhoto: userCarPhoto ?? this.userCarPhoto,
@@ -174,6 +248,16 @@ class OfferModel implements AbstractOfferEntity {
       userCarColor: userCarColor ?? this.userCarColor,
       userPhoneNumber: userPhoneNumber ?? this.userPhoneNumber,
       userRank: userRank ?? this.userRank,
+      routeId: routeId ?? this.routeId,
+      routeTitle: routeTitle ?? this.routeTitle,
+      routeDescription: routeDescription ?? this.routeDescription,
+      routePrice: routePrice ?? this.routePrice,
+      routeFrom: routeFrom ?? this.routeFrom,
+      routeTo: routeTo ?? this.routeTo,
+      routeStartLat: routeStartLat ?? this.routeStartLat,
+      routeStartLng: routeStartLng ?? this.routeStartLng,
+      routeEndLat: routeEndLat ?? this.routeEndLat,
+      routeEndLng: routeEndLng ?? this.routeEndLng,
       updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -186,7 +270,6 @@ class OfferModel implements AbstractOfferEntity {
   List<Object?> get props {
     return [
       id,
-      routeId,
       count,
       maxCount,
       price,
@@ -196,8 +279,11 @@ class OfferModel implements AbstractOfferEntity {
       endLng,
       wayPoints,
       orders,
+      stateId,
+      stateDescription,
       userId,
       userName,
+      userEmail,
       userAvatar,
       userCarPlate,
       userCarPhoto,
@@ -205,6 +291,16 @@ class OfferModel implements AbstractOfferEntity {
       userCarColor,
       userPhoneNumber,
       userRank,
+      routeId,
+      routeTitle,
+      routeDescription,
+      routePrice,
+      routeFrom,
+      routeTo,
+      routeStartLat,
+      routeStartLng,
+      routeEndLat,
+      routeEndLng,
       updatedAt,
       createdAt,
     ];

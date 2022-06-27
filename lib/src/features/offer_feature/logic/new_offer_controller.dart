@@ -28,8 +28,8 @@ class NewOfferController extends GetxController {
 
   var isLoading = false.obs;
 
-  var maxCount = ''.obs;
-  var price = ''.obs;
+  var maxCount = 0.obs;
+  var price = 0.0.obs;
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
     abstractSessionRepository: SharedPreferencesSessionDatasources(),
@@ -76,8 +76,7 @@ class NewOfferController extends GetxController {
             if (abstractUserEntity.isDriver == '1') {
               AbstractOfferEntity abstractOfferEntity = OfferModel(
                 id: _uuid.v1(),
-                routeId: abstractRouteEntity.id,
-                count: '0',
+                count: 0,
                 maxCount: maxCount.value,
                 price: price.value,
                 startLat: abstractRouteEntity.startLat,
@@ -88,8 +87,12 @@ class NewOfferController extends GetxController {
                     '["-12.114398419240583, -76.87099057482455", "-12.100091477862088, -76.86953248267001", "-12.084886779107038, -76.8750718551892"]',
                 orders:
                     '[{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Abel Rocksnamas","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.114398419240583","lng":"-76.87099057482455"},{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Borrir Docs Gamers","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.100091477862088","lng":"-76.86953248267001"},{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Donkey Kong","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.084886779107038","lng":"-76.8750718551892"}]',
+                stateId: '-1',
+                stateDescription:
+                    'Esperando', // Esperando -1, enCarretera 0 , Completado 1, Cancelado 2
                 userId: abstractSessionEntity.idUsers,
                 userName: abstractUserEntity.name,
+                userEmail: abstractUserEntity.email,
                 userAvatar: abstractUserEntity.avatar,
                 userCarPlate: abstractUserEntity.carPlate,
                 userCarPhoto: abstractUserEntity.carPhoto,
@@ -97,8 +100,18 @@ class NewOfferController extends GetxController {
                 userCarColor: abstractUserEntity.carColor,
                 userPhoneNumber: abstractUserEntity.phoneNumber,
                 userRank: abstractUserEntity.rank,
-                updatedAt: '${DateTime.now().millisecondsSinceEpoch}',
-                createdAt: '${DateTime.now().millisecondsSinceEpoch}',
+                routeId: abstractRouteEntity.id,
+                routeTitle: abstractRouteEntity.title,
+                routeDescription: abstractRouteEntity.description,
+                routePrice: abstractRouteEntity.price,
+                routeFrom: abstractRouteEntity.from,
+                routeTo: abstractRouteEntity.to,
+                routeStartLat: abstractRouteEntity.startLat,
+                routeStartLng: abstractRouteEntity.startLng,
+                routeEndLat: abstractRouteEntity.endLat,
+                routeEndLng: abstractRouteEntity.endLng,
+                updatedAt: DateTime.now().millisecondsSinceEpoch,
+                createdAt: DateTime.now().millisecondsSinceEpoch,
               );
               _addOfferUsecase
                   .call(abstractOfferEntity: abstractOfferEntity)!

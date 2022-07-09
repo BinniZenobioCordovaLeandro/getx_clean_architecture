@@ -138,7 +138,7 @@ class ModalBottomSheetHelper {
                       key: const Key('children'),
                       color: Theme.of(context)
                           .scaffoldBackgroundColor
-                          .withOpacity(0.5),
+                          .withOpacity(0.8),
                       constraints: (maxHeight > 0)
                           ? BoxConstraints(
                               maxHeight: maxHeight,
@@ -154,7 +154,7 @@ class ModalBottomSheetHelper {
                         key: const Key('footer'),
                         color: Theme.of(context)
                             .scaffoldBackgroundColor
-                            .withOpacity(0.5),
+                            .withOpacity(0.8),
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: childFooter!,

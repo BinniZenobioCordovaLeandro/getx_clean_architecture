@@ -69,6 +69,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   return null;
                 },
                 onChanged: (LatLng latLng) {
+                  print(latLng);
                   paymentController.originLatLng.value = latLng;
                 },
               ),

@@ -10,7 +10,7 @@ class BlurWidget extends StatelessWidget {
   const BlurWidget({
     Key? key,
     required this.child,
-    this.blur = 5.0,
+    this.blur = 20.0,
     this.color,
     this.borderRadius,
   }) : super(key: key);

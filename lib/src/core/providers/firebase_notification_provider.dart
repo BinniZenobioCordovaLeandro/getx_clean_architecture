@@ -34,13 +34,11 @@ class FirebaseNotificationProvider {
   }
 
   Future<void> handlerMessage(RemoteMessage? message) async {
-    print('message');
-    print(message);
-    print(message!.toMap());
-    NotificationMessageModel notificationMessageModel =
-        NotificationMessageModel.fromRemoteMessage(message!);
-    print(notificationMessageModel.toJson());
-    _pushController.sink.add(notificationMessageModel);
+    if (message != null) {
+      NotificationMessageModel notificationMessageModel =
+          NotificationMessageModel.fromRemoteMessage(message);
+      _pushController.sink.add(notificationMessageModel);
+    }
   }
 
   Future<bool> checkPermission() async {

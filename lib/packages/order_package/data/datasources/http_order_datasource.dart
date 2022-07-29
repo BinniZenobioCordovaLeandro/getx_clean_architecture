@@ -23,7 +23,8 @@ class HttpOrderDatasource implements AbstractOrderRepository {
   }) {
     Future<AbstractOrderEntity> futureAbstractOrderEntity = http
         .put(
-      Uri.parse('http://192.168.1.102:3000/createOrder'),
+      Uri.parse(
+          'https://us-central1-pickpointer.cloudfunctions.net/createOrder'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },

@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: LightTheme().get(),
       darkTheme: DarkTheme().get(),
-      home: App(),
+      home: const App(),
       defaultTransition: Transition.cupertino,
     );
   }

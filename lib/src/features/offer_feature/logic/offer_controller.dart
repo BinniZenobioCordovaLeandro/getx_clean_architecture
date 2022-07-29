@@ -132,12 +132,12 @@ class OfferController extends GetxController {
 
   @override
   void onInit() {
-    prepareStreamCurrentPosition();
     super.onInit();
   }
 
   @override
   void onReady() {
+    prepareStreamCurrentPosition();
     AbstractOfferEntity abstractOfferEntity =
         Get.arguments['abstractOfferEntity'];
     showOfferPolylineMarkers(abstractOfferEntity);

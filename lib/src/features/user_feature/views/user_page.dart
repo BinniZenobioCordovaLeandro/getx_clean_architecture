@@ -45,6 +45,23 @@ class _UserPageState extends State<UserPage> {
               onChanged: (value) => userController.name.value = value,
             ),
             TextFieldWidget(
+              labelText: 'Email',
+              initialValue: userController.email.value,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Este campo es requerido';
+                }
+                RegExp emailPath = RegExp(
+                  r'^[a-zA-Z0-9.a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+                );
+                if (!emailPath.hasMatch(value)) {
+                  return 'El email no es válido';
+                }
+                return null;
+              },
+              onChanged: (value) => userController.email.value = value,
+            ),
+            TextFieldWidget(
               labelText: 'Documento de Identidad',
               initialValue: userController.document.value,
               validator: (String? value) {

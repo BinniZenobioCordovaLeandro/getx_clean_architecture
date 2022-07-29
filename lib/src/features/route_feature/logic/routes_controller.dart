@@ -10,7 +10,9 @@ import 'package:pickpointer/packages/route_package/data/datasources/route_dataso
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/usecases/get_routes_usecase.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
@@ -40,6 +42,10 @@ class RoutesController extends GetxController {
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
+  final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
+    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+  );
+
   final GetRoutesUsecase _getRoutesUsecase = GetRoutesUsecase(
     abstractRouteRepository: FirebaseRouteDatasource(),
   );
@@ -63,6 +69,7 @@ class RoutesController extends GetxController {
         .then((AbstractSessionEntity abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
+      _updateSessionUsecase.call(abstractSessionEntity: abstractSessionEntity);
       return isSigned.value;
     });
     return futureBool;

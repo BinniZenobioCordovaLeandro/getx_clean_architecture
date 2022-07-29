@@ -18,6 +18,7 @@ class UserController extends GetxController {
 
   var userId = ''.obs;
   var name = ''.obs;
+  var email = ''.obs;
   var avatar = ''.obs;
   var document = ''.obs;
   var carPlate = ''.obs;
@@ -49,6 +50,7 @@ class UserController extends GetxController {
             .then((AbstractUserEntity abstractUserEntity) => {
                   userId.value = abstractSessionEntity.idUsers!,
                   name.value = abstractUserEntity.name ?? '',
+                  email.value = abstractUserEntity.email ?? '',
                   avatar.value = abstractUserEntity.avatar ?? '',
                   document.value = abstractUserEntity.document ?? '',
                   carPlate.value = abstractUserEntity.carPlate ?? '',
@@ -74,6 +76,7 @@ class UserController extends GetxController {
       final UserModel _userModel = UserModel(
         id: userId.value,
         name: name.value,
+        email: email.value,
         avatar: avatar.value,
         document: document.value,
         carPlate: carPlate.value,

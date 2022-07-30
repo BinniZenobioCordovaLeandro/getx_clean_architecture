@@ -39,6 +39,8 @@ class OrderController extends GetxController {
   StreamSubscription<Position>? streamPosition;
   StreamSubscription<AbstractVehicleEntity>? streamTaxiPosition;
 
+  AbstractOrderEntity? abstractOrderEntity;
+
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var polylineListLatLng = <LatLng>[].obs;
@@ -137,19 +139,18 @@ class OrderController extends GetxController {
 
   @override
   void onReady() {
-    AbstractOrderEntity abstractOrderEntity =
-        Get.arguments['abstractOrderEntity'];
+    abstractOrderEntity = Get.arguments['abstractOrderEntity'];
     LatLng origin = LatLng(
-      double.parse('${abstractOrderEntity.routeStartLat}'),
-      double.parse('${abstractOrderEntity.routeStartLng}'),
+      double.parse('${abstractOrderEntity!.routeStartLat}'),
+      double.parse('${abstractOrderEntity!.routeStartLng}'),
     );
     LatLng destination = LatLng(
-      double.parse('${abstractOrderEntity.userPickPointLat}'),
-      double.parse('${abstractOrderEntity.userPickPointLng}'),
+      double.parse('${abstractOrderEntity!.userPickPointLat}'),
+      double.parse('${abstractOrderEntity!.userPickPointLng}'),
     );
     pickPoint.value = LatLng(
-      double.parse('${abstractOrderEntity.userPickPointLat}'),
-      double.parse('${abstractOrderEntity.userPickPointLng}'),
+      double.parse('${abstractOrderEntity!.userPickPointLat}'),
+      double.parse('${abstractOrderEntity!.userPickPointLng}'),
     );
     latLngBounds.value = [origin, destination];
     polylineTaxiListLatLng.value = [origin, destination];
@@ -157,7 +158,7 @@ class OrderController extends GetxController {
       origin: origin,
       destination: destination,
     );
-    showOfferPolylineMarkers(abstractOrderEntity);
+    showOfferPolylineMarkers(abstractOrderEntity!);
     streamCurrentPosition();
     streamCurrentTaxiPosition();
   }

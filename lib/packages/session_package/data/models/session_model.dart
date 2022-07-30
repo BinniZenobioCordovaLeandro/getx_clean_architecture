@@ -16,6 +16,8 @@ class SessionModel extends AbstractSessionEntity {
   final String? currentOfferId;
   @override
   final String? currentOrderId;
+  @override
+  final String? tokenMessaging;
 
   const SessionModel({
     this.isSigned,
@@ -25,6 +27,7 @@ class SessionModel extends AbstractSessionEntity {
     this.onRoad,
     this.currentOfferId,
     this.currentOrderId,
+    this.tokenMessaging,
   });
 
   factory SessionModel.fromMap(Map<String, dynamic> data) => SessionModel(
@@ -35,6 +38,7 @@ class SessionModel extends AbstractSessionEntity {
         onRoad: data['on_road'] as bool?,
         currentOfferId: data['current_offer_id'] as String?,
         currentOrderId: data['current_order_id'] as String?,
+        tokenMessaging: data['token_messaging'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -45,6 +49,7 @@ class SessionModel extends AbstractSessionEntity {
         'on_road': onRoad,
         'current_offer_id': currentOfferId,
         'current_order_id': currentOrderId,
+        'token_messaging': tokenMessaging,
       };
 
   /// `dart:convert`
@@ -67,6 +72,7 @@ class SessionModel extends AbstractSessionEntity {
     bool? onRoad,
     String? currentOfferId,
     String? currentOrderId,
+    String? tokenMessaging,
   }) {
     return SessionModel(
       isSigned: isSigned ?? this.isSigned,
@@ -76,6 +82,7 @@ class SessionModel extends AbstractSessionEntity {
       onRoad: onRoad ?? this.onRoad,
       currentOfferId: currentOfferId ?? this.currentOfferId,
       currentOrderId: currentOrderId ?? this.currentOrderId,
+      tokenMessaging: tokenMessaging ?? this.tokenMessaging,
     );
   }
 
@@ -90,6 +97,7 @@ class SessionModel extends AbstractSessionEntity {
         idUsers,
         onRoad,
         currentOfferId,
-        currentOrderId
+        currentOrderId,
+        tokenMessaging,
       ];
 }

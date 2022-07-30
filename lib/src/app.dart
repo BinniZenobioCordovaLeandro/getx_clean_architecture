@@ -38,7 +38,6 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     firebaseNotificationProvider?.initialize();
-    firebaseNotificationProvider?.getToken();
     notificationProvider?.initialize();
     validateVersion = false;
   }

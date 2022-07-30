@@ -100,6 +100,7 @@ class NewOfferController extends GetxController {
                 userCarColor: abstractUserEntity.carColor,
                 userPhoneNumber: abstractUserEntity.phoneNumber,
                 userRank: abstractUserEntity.rank,
+                userTokenMessaging: abstractSessionEntity.tokenMessaging,
                 routeId: abstractRouteEntity.id,
                 routeTitle: abstractRouteEntity.title,
                 routeDescription: abstractRouteEntity.description,

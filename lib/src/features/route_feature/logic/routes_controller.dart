@@ -10,10 +10,11 @@ import 'package:pickpointer/packages/route_package/data/datasources/route_dataso
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/usecases/get_routes_usecase.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
-import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
+import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/package_info_provider.dart';
@@ -23,6 +24,8 @@ class RoutesController extends GetxController {
   static RoutesController get instance => Get.put(RoutesController());
 
   final MapController mapController = MapController();
+  final FirebaseNotificationProvider? firebaseNotificationProvider =
+      FirebaseNotificationProvider.getInstance();
 
   var isSigned = false.obs;
   var isDriver = false.obs;
@@ -43,7 +46,7 @@ class RoutesController extends GetxController {
   );
 
   final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
-    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
   final GetRoutesUsecase _getRoutesUsecase = GetRoutesUsecase(
@@ -69,7 +72,18 @@ class RoutesController extends GetxController {
         .then((AbstractSessionEntity abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
-      _updateSessionUsecase.call(abstractSessionEntity: abstractSessionEntity);
+      if (abstractSessionEntity.isSigned!) {
+        firebaseNotificationProvider?.getToken().then((String? tokenMessaging) {
+          if (tokenMessaging != null) {
+            SessionModel newabstractSessionEntity =
+                abstractSessionEntity as SessionModel;
+            _updateSessionUsecase.call(
+                abstractSessionEntity: newabstractSessionEntity.copyWith(
+              tokenMessaging: tokenMessaging,
+            ));
+          }
+        });
+      }
       return isSigned.value;
     });
     return futureBool;

@@ -48,6 +48,8 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final String? userRank;
   @override
+  final String? userTokenMessaging;
+  @override
   final String? routeId;
   @override
   final String? routeTitle;
@@ -95,6 +97,7 @@ class OfferModel implements AbstractOfferEntity {
     this.userCarColor,
     this.userPhoneNumber,
     this.userRank,
+    this.userTokenMessaging,
     this.routeId,
     this.routeTitle,
     this.routeDescription,
@@ -132,6 +135,7 @@ class OfferModel implements AbstractOfferEntity {
         userCarColor: data['user_car_color'] as String?,
         userPhoneNumber: data['user_phone_number'] as String?,
         userRank: data['user_rank'] as String?,
+        userTokenMessaging: data['user_token_messaging'] as String?,
         routeId: data['route_id'] as String?,
         routeTitle: data['route_title'] as String?,
         routeDescription: data['route_description'] as String?,
@@ -169,6 +173,7 @@ class OfferModel implements AbstractOfferEntity {
         'user_car_color': userCarColor,
         'user_phone_number': userPhoneNumber,
         'user_rank': userRank,
+        'user_token_messaging': userTokenMessaging,
         'route_id': routeId,
         'route_title': routeTitle,
         'route_description': routeDescription,
@@ -212,6 +217,7 @@ class OfferModel implements AbstractOfferEntity {
     String? userCarColor,
     String? userPhoneNumber,
     String? userRank,
+    String? userTokenMessaging,
     String? routeId,
     String? routeTitle,
     String? routeDescription,
@@ -248,6 +254,7 @@ class OfferModel implements AbstractOfferEntity {
       userCarColor: userCarColor ?? this.userCarColor,
       userPhoneNumber: userPhoneNumber ?? this.userPhoneNumber,
       userRank: userRank ?? this.userRank,
+      userTokenMessaging: userTokenMessaging ?? this.userTokenMessaging,
       routeId: routeId ?? this.routeId,
       routeTitle: routeTitle ?? this.routeTitle,
       routeDescription: routeDescription ?? this.routeDescription,
@@ -291,6 +298,7 @@ class OfferModel implements AbstractOfferEntity {
       userCarColor,
       userPhoneNumber,
       userRank,
+      userTokenMessaging,
       routeId,
       routeTitle,
       routeDescription,

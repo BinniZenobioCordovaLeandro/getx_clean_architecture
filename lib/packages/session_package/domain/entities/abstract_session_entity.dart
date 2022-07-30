@@ -8,6 +8,7 @@ abstract class AbstractSessionEntity extends Equatable {
   final bool? onRoad;
   final String? currentOfferId;
   final String? currentOrderId;
+  final String? tokenMessaging;
 
   const AbstractSessionEntity({
     this.isSigned,
@@ -17,5 +18,6 @@ abstract class AbstractSessionEntity extends Equatable {
     this.onRoad,
     this.currentOfferId,
     this.currentOrderId,
+    this.tokenMessaging,
   });
 }

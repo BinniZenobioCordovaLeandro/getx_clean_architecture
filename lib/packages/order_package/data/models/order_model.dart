@@ -24,6 +24,8 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? userEmail;
   @override
+  final String? userAvatar;
+  @override
   final String? userPhone;
   @override
   final String? userPickPointLat;
@@ -33,6 +35,8 @@ class OrderModel implements AbstractOrderEntity {
   final String? userDropPointLat;
   @override
   final String? userDropPointLng;
+  @override
+  final String? userTokenMessaging;
   @override
   final String? offerId;
   @override
@@ -94,6 +98,8 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? driverRank;
   @override
+  final String? driverTokenMessaging;
+  @override
   final int? createdAt;
   @override
   final int? updatedAt;
@@ -109,11 +115,13 @@ class OrderModel implements AbstractOrderEntity {
     this.userId,
     this.userName,
     this.userEmail,
+    this.userAvatar,
     this.userPhone,
     this.userPickPointLat,
     this.userPickPointLng,
     this.userDropPointLat,
     this.userDropPointLng,
+    this.userTokenMessaging,
     this.offerId,
     this.offerCount,
     this.offerMaxCount,
@@ -144,6 +152,7 @@ class OrderModel implements AbstractOrderEntity {
     this.driverCarColor,
     this.driverPhoneNumber,
     this.driverRank,
+    this.driverTokenMessaging,
     this.createdAt,
     this.updatedAt,
   });
@@ -159,11 +168,13 @@ class OrderModel implements AbstractOrderEntity {
         userId: data['user_id'] as String?,
         userName: data['user_name'] as String?,
         userEmail: data['user_email'] as String?,
+        userAvatar: data['user_avatar'] as String?,
         userPhone: data['user_phone'] as String?,
         userPickPointLat: data['user_pick_point_lat'] as String?,
         userPickPointLng: data['user_pick_point_lng'] as String?,
         userDropPointLat: data['user_drop_point_lat'] as String?,
         userDropPointLng: data['user_drop_point_lng'] as String?,
+        userTokenMessaging: data['user_token_messaging'] as String?,
         offerId: data['offer_id'] as String?,
         offerCount: data['offer_count'] as int?,
         offerMaxCount: data['offer_max_count'] as int?,
@@ -194,6 +205,7 @@ class OrderModel implements AbstractOrderEntity {
         driverCarColor: data['driver_car_color'] as String?,
         driverPhoneNumber: data['driver_phone_number'] as String?,
         driverRank: data['driver_rank'] as String?,
+        driverTokenMessaging: data['driver_token_messaging'] as String?,
         createdAt: data['created_at'] as int?,
         updatedAt: data['updated_at'] as int?,
       );
@@ -209,11 +221,13 @@ class OrderModel implements AbstractOrderEntity {
         'user_id': userId,
         'user_name': userName,
         'user_email': userEmail,
+        'user_avatar': userAvatar,
         'user_phone': userPhone,
         'user_pick_point_lat': userPickPointLat,
         'user_pick_point_lng': userPickPointLng,
         'user_drop_point_lat': userDropPointLat,
         'user_drop_point_lng': userDropPointLng,
+        'user_token_messaging': userTokenMessaging,
         'offer_id': offerId,
         'offer_count': offerCount,
         'offer_max_count': offerMaxCount,
@@ -244,6 +258,7 @@ class OrderModel implements AbstractOrderEntity {
         'driver_car_color': driverCarColor,
         'driver_phone_number': driverPhoneNumber,
         'driver_rank': driverRank,
+        'driver_token_messaging': driverTokenMessaging,
         'created_at': createdAt,
         'updated_at': updatedAt,
       };
@@ -271,11 +286,13 @@ class OrderModel implements AbstractOrderEntity {
     String? userId,
     String? userName,
     String? userEmail,
+    String? userAvatar,
     String? userPhone,
     String? userPickPointLat,
     String? userPickPointLng,
     String? userDropPointLat,
     String? userDropPointLng,
+    String? userTokenMessaging,
     String? offerId,
     int? offerCount,
     int? offerMaxCount,
@@ -306,6 +323,7 @@ class OrderModel implements AbstractOrderEntity {
     String? driverCarColor,
     String? driverPhoneNumber,
     String? driverRank,
+    String? driverTokenMessaging,
     int? createdAt,
     int? updatedAt,
   }) {
@@ -320,11 +338,13 @@ class OrderModel implements AbstractOrderEntity {
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
       userEmail: userEmail ?? this.userEmail,
+      userAvatar: userAvatar ?? this.userAvatar,
       userPhone: userPhone ?? this.userPhone,
       userPickPointLat: userPickPointLat ?? this.userPickPointLat,
       userPickPointLng: userPickPointLng ?? this.userPickPointLng,
       userDropPointLat: userDropPointLat ?? this.userDropPointLat,
       userDropPointLng: userDropPointLng ?? this.userDropPointLng,
+      userTokenMessaging: userTokenMessaging ?? this.userTokenMessaging,
       offerId: offerId ?? this.offerId,
       offerCount: offerCount ?? this.offerCount,
       offerMaxCount: offerMaxCount ?? this.offerMaxCount,
@@ -355,6 +375,7 @@ class OrderModel implements AbstractOrderEntity {
       driverCarColor: driverCarColor ?? this.driverCarColor,
       driverPhoneNumber: driverPhoneNumber ?? this.driverPhoneNumber,
       driverRank: driverRank ?? this.driverRank,
+      driverTokenMessaging: driverTokenMessaging ?? this.driverTokenMessaging,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -376,11 +397,13 @@ class OrderModel implements AbstractOrderEntity {
       userId,
       userName,
       userEmail,
+      userAvatar,
       userPhone,
       userPickPointLat,
       userPickPointLng,
       userDropPointLat,
       userDropPointLng,
+      userTokenMessaging,
       offerId,
       offerCount,
       offerMaxCount,
@@ -411,6 +434,7 @@ class OrderModel implements AbstractOrderEntity {
       driverCarColor,
       driverPhoneNumber,
       driverRank,
+      driverTokenMessaging,
       createdAt,
       updatedAt,
     ];

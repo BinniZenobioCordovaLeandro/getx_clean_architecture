@@ -59,10 +59,8 @@ class FirebaseNotificationProvider {
     return settings.authorizationStatus == AuthorizationStatus.authorized;
   }
 
-  Future<String?> getToken() async {
-    String? token = await messaging.getToken();
-    print(token);
-    return token;
+  Future<String?> getToken() {
+    return messaging.getToken();
   }
 
   Future<bool> sendMessage({

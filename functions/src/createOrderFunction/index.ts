@@ -1,3 +1,4 @@
+import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as uuid from "uuid";
 
@@ -5,7 +6,7 @@ admin.initializeApp();
 
 export const handler = (event: any) => {
   return new Promise((resolve, reject) => {
-    console.log("createOrderFunction>");
+    functions.logger.info("createOrderFunction>");
     const firebaseFirestore = admin.firestore();
 
     const offersCollection = firebaseFirestore.collection("c_offers");
@@ -18,26 +19,26 @@ export const handler = (event: any) => {
     const userDropPointLat = orderRequest.user_drop_point_lat;
     const userDropPointLng = orderRequest.user_drop_point_lng;
 
-    console.log("firebaseFirestore");
+    functions.logger.info("firebaseFirestore");
 
     offersCollection
         .doc(orderRequest.offer_id)
         .get()
-        .then(async (doc) => {
-          console.log("offerSnapshot");
+        .then(async (doc: any) => {
+          // console.log("offerSnapshot");
           const currentDate = Date.now();
           const orderId = uuid.v1();
           const offerDocument = doc.data();
           if (!offerDocument) reject(Error("offer not found"));
 
-          console.log("offerDocument : ", offerDocument);
+          // console.log("offerDocument : ", offerDocument);
 
           const requestQuantity = parseInt(orderRequest.count);
           const counter = parseInt(offerDocument!.count);
           const availableQuantity = parseInt(offerDocument!.max_count) - counter;
 
-          console.log("routeQuantity <= availableQuantity : ");
-          console.log(requestQuantity <= availableQuantity);
+          // console.log("routeQuantity <= availableQuantity : ");
+          // console.log(requestQuantity <= availableQuantity);
 
           if (requestQuantity <= availableQuantity) {
           // STATUS
@@ -57,12 +58,14 @@ export const handler = (event: any) => {
               orderId: orderId,
               userToken: "ASCASVAS1wewq122",
               fullName: orderRequest.user_name,
-              avatar:
-              "https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png",
+              avatar: orderRequest.user_avatar ||
+                "https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png",
+              count: requestQuantity,
               pickPointLat: orderRequest.user_pick_point_lat,
               pickPointLng: orderRequest.user_pick_point_lng,
               dropPointLat: orderRequest.user_drop_point_lat,
               dropPointLng: orderRequest.user_drop_point_lng,
+              tokenMessaging: orderRequest.user_token_messaging,
             };
 
             const wayPoints = JSON.parse(offerDocument!.way_points);
@@ -93,20 +96,63 @@ export const handler = (event: any) => {
                 .set(orderDocument)
                 .then(() => {
                   console.log("Document written with ID: ", orderId);
-                  // Return the offer updated.
-                  console.log(
-                      "------------------------------------------------------"
-                  );
-                  console.log("orderDocument : ", orderDocument);
                   resolve(orderDocument);
-                  if (newStatus.state_id == "2") {
-                    // TODO: Automatic init driver, send notification to driver to start the trip.
-                    console.log(
-                        "// TODO: send notification to user and driver, that the offer is \"en carretera\""
-                    );
+
+                  const plural = requestQuantity > 1 ? "s": "";
+                  switch (newStatus.state_id) {
+                    case "-1": // Esperando
+                      console.log(
+                          "// TODO: send notification to user and driver, that the offer is \"en carretera\""
+                      );
+                      // message to client
+                      console.log("orderRequest.user_token_messaging: ", orderRequest.user_token_messaging);
+                      admin.messaging().sendToDevice(orderRequest.user_token_messaging, {
+                        notification: {
+                          title: `¡Compraste ${requestQuantity} asiento${plural}!`,
+                          body: `Destino: ${orderRequest.route_to}`,
+                          imageUrl: orderRequest.driver_car_photo,
+                        },
+                      });
+                      // message to Driver
+                      console.log("orderRequest.driver_token_messaging: ", orderRequest.driver_token_messaging);
+                      admin.messaging().sendToDevice(orderRequest.driver_token_messaging, {
+                        notification: {
+                          title: `¡${requestQuantity} asiento${plural} vendido${plural}!`,
+                          body: `${clientInformation.fullName}, compro ${requestQuantity} asiento${plural}`,
+                          imageUrl: clientInformation.avatar,
+                        },
+                      });
+                      break;
+                    case "2": // enCarretera
+                      console.log();
+                      // message to clients, notify that the offer is in the way
+                      console.log("clientsInformation: ", clientsInformation.map(
+                          (clientInformation: any) => clientInformation.tokenMessaging));
+                      admin.messaging().sendToDevice(clientsInformation.map(
+                          (clientInformation: any) => clientInformation.tokenMessaging), {
+                        notification: {
+                          title: `¡El vehiculo está en ruta!, ${orderRequest.driver_car_plate}`,
+                          body: "Por favor, espere en el punto de encuentro seleccionado",
+                          imageUrl: orderRequest.driver_car_photo,
+                        },
+                      });
+                      // message to driver, notify that the offer is in the way
+                      console.log("orderRequest.driver_token_messaging: ", orderRequest.driver_token_messaging);
+                      admin.messaging().sendToDevice(orderRequest.driver_token_messaging, {
+                        notification: {
+                          title: "¡LISTO! Inicia la ruta",
+                          body: `Los ${availableQuantity} asientos fueron vendidos,
+                            ponte en ruta con el vehiculo ${orderRequest.driver_car_plate}`,
+                          imageUrl: clientInformation.avatar,
+                        },
+                      });
+                      break;
+                    default:
+                      console.log("default case");
+                      break;
                   }
                 })
-                .catch((error) => {
+                .catch((error: any) => {
                   console.error("Error adding document: ", error);
                   reject(error);
                 });

@@ -5,8 +5,16 @@ class LauncherLinkHelper {
 
   LauncherLinkHelper({
     required String url,
+    bool? isPhone,
   }) {
-    _uri = Uri.parse(url);
+    if (isPhone == true) {
+      _uri = Uri(
+        scheme: 'tel',
+        path: url,
+      );
+    } else {
+      _uri = Uri.parse(url);
+    }
   }
 
   Future<void> launchInBrowser() async {
@@ -62,11 +70,7 @@ class LauncherLinkHelper {
     }
   }
 
-  Future<void> makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-    await launchUrl(launchUri);
+  Future<void> makePhoneCall() async {
+    await launchUrl(_uri);
   }
 }

@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
+import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/drawer_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
@@ -45,7 +46,7 @@ class _OrderPageState extends State<OrderPage> {
           ),
           endDrawerEnableOpenDragGesture: true,
           appBar: AppBarWidget(
-            title: 'Order ${widget.abstractOrderEntity?.id}',
+            title: 'Orden ${orderController.abstractOrderEntity?.id}',
             actions: [
               IconButton(
                 tooltip: 'Compartir',
@@ -206,13 +207,34 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 ),
               ),
-              const Positioned(
+              Positioned(
                 bottom: 16,
                 left: 0,
                 right: 0,
                 child: SafeAreaWidget(
                   child: FractionallySizedBoxWidget(
-                    child: CallCardWidget(),
+                    child: CallCardWidget(
+                        avatarUrl:
+                            '${orderController.abstractOrderEntity?.driverAvatar}',
+                        name:
+                            '${orderController.abstractOrderEntity?.driverName}',
+                        carPhoto:
+                            '${orderController.abstractOrderEntity?.driverCarPhoto}',
+                        carModel:
+                            '${orderController.abstractOrderEntity?.driverCarModel}',
+                        carPlate:
+                            '${orderController.abstractOrderEntity?.driverCarPlate}',
+                        onPressed: () {
+                          print(
+                              'try calling ${orderController.abstractOrderEntity?.driverPhoneNumber}');
+                          LauncherLinkHelper launcherLinkHelper =
+                              LauncherLinkHelper(
+                            url:
+                                '${orderController.abstractOrderEntity?.driverPhoneNumber}',
+                            isPhone: true,
+                          );
+                          launcherLinkHelper.makePhoneCall();
+                        }),
                   ),
                 ),
               ),

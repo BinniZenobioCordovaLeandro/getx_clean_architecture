@@ -6,27 +6,41 @@ class NotificationMessageModel {
   String? body;
   String? link;
   String? isMessage;
+  String? imageUrl;
 
   NotificationMessageModel({
     this.title,
     this.body,
     this.link,
     this.isMessage,
+    this.imageUrl,
   });
 
   @override
   String toString() {
-    return 'NotificationMessageModel(title: $title, body: $body, link: $link, isMessage: $isMessage)';
+    return 'NotificationMessageModel(title: $title, body: $body, link: $link, isMessage: $isMessage, imageUrl: $imageUrl)';
   }
 
   factory NotificationMessageModel.fromRemoteMessage(
       RemoteMessage remoteMessage) {
-    return NotificationMessageModel(
+    NotificationMessageModel notificationMessageModel =
+        NotificationMessageModel(
       title: remoteMessage.notification?.title,
       body: remoteMessage.notification?.body,
       link: remoteMessage.data['link'] as String?,
       isMessage: remoteMessage.data['is_message'] as String?,
     );
+    if (remoteMessage.notification?.android?.imageUrl != null) {
+      return notificationMessageModel.copyWith(
+        imageUrl: remoteMessage.notification!.android!.imageUrl,
+      );
+    } else if (remoteMessage.notification?.apple?.imageUrl != null) {
+      return notificationMessageModel.copyWith(
+        imageUrl: remoteMessage.notification!.apple!.imageUrl,
+      );
+    }
+    return notificationMessageModel.copyWith(
+        imageUrl: remoteMessage.notification?.web?.image);
   }
 
   factory NotificationMessageModel.fromMap(Map<String, dynamic> data) {
@@ -35,6 +49,7 @@ class NotificationMessageModel {
       body: data['body'] as String?,
       link: data['link'] as String?,
       isMessage: data['is_message'] as String?,
+      imageUrl: data['image_url'] as String?,
     );
   }
 
@@ -43,6 +58,7 @@ class NotificationMessageModel {
         'body': body,
         'link': link,
         'is_message': isMessage,
+        'image_url': imageUrl,
       };
 
   /// `dart:convert`
@@ -63,12 +79,14 @@ class NotificationMessageModel {
     String? body,
     String? link,
     String? isMessage,
+    String? imageUrl,
   }) {
     return NotificationMessageModel(
       title: title ?? this.title,
       body: body ?? this.body,
       link: link ?? this.link,
       isMessage: isMessage ?? this.isMessage,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }

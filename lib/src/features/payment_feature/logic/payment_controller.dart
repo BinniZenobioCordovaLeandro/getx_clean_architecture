@@ -50,18 +50,6 @@ class PaymentController extends GetxController {
   final destinationLatLng = LatLng(0, 0).obs;
   final payMethod = 1.obs;
 
-  Future<bool>? sendNotification({
-    required AbstractOrderEntity abstractOrderEntity,
-  }) {
-    Future<bool>? futureBool = notificationProvider
-        ?.sendNotification(
-          title: 'ORDEN CREADA CON EXITO',
-          body: 'Su orden ha sido creada con exito',
-        )
-        .then((value) => value);
-    return futureBool;
-  }
-
   @override
   void onReady() {
     abstractOfferEntity = Get.arguments['abstractOfferEntity'];
@@ -144,7 +132,6 @@ class PaymentController extends GetxController {
             )
                 .then((AbstractOrderEntity abstractOrderEntity) {
               isLoading.value = false;
-              sendNotification(abstractOrderEntity: abstractOrderEntity);
               _updateSessionUsecase.call(
                 abstractSessionEntity:
                     (abstractSessionEntity as SessionModel).copyWith(

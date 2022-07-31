@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
+import 'package:pickpointer/src/core/models/notification_message_model.dart';
 import 'package:pickpointer/src/core/providers/firebase_config_provider.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
@@ -39,6 +40,14 @@ class _AppState extends State<App> {
     super.initState();
     firebaseNotificationProvider?.initialize();
     notificationProvider?.initialize();
+    firebaseNotificationProvider?.onMessage
+        .listen((NotificationMessageModel event) {
+      notificationProvider?.sendNotification(
+        title: event.title,
+        body: event.body,
+        bigPicture: event.imageUrl,
+      );
+    });
     validateVersion = false;
   }
 

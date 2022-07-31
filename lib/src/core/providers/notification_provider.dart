@@ -36,8 +36,9 @@ class NotificationProvider {
   }
 
   Future<bool> sendNotification({
-    required String title,
-    required String body,
+    String? title,
+    String? body,
+    String? bigPicture,
   }) async {
     if (!notificationEnabled) checkPermission();
     if (notificationEnabled) {
@@ -47,6 +48,8 @@ class NotificationProvider {
           channelKey: channelKey,
           title: title,
           body: body,
+          notificationLayout: NotificationLayout.BigPicture,
+          bigPicture: bigPicture,
         ),
       );
       return true;

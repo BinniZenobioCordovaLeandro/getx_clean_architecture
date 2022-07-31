@@ -7,10 +7,9 @@ final _pushController = StreamController<NotificationMessageModel>.broadcast();
 class FirebaseNotificationProvider {
   static FirebaseNotificationProvider? _instance;
 
-  static FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  static Stream<NotificationMessageModel> get onMessage =>
-      _pushController.stream;
+  Stream<NotificationMessageModel> get onMessage => _pushController.stream;
 
   static FirebaseNotificationProvider? getInstance() {
     _instance ??= FirebaseNotificationProvider();

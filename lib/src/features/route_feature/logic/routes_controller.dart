@@ -72,9 +72,11 @@ class RoutesController extends GetxController {
         .then((AbstractSessionEntity abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
-      if (abstractSessionEntity.isSigned!) {
+      if (abstractSessionEntity.isSigned! &&
+          abstractSessionEntity.tokenMessaging == null) {
         firebaseNotificationProvider?.getToken().then((String? tokenMessaging) {
           if (tokenMessaging != null) {
+            print('tokenMessaging : $tokenMessaging');
             SessionModel newabstractSessionEntity =
                 abstractSessionEntity as SessionModel;
             _updateSessionUsecase.call(

@@ -137,6 +137,7 @@ class _RoutesPageState extends State<RoutesPage> {
                           return PopupMarkerCardWidget(
                             abstractRouteEntity: abstractRouteEntity,
                             onTap: () {
+                              routesController.verifySession();
                               Get.to(
                                 () => RoutePage(
                                   abstractRouteEntity: abstractRouteEntity,

@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as uuid from "uuid";
+import {MessagingPayload} from "firebase-admin/lib/messaging/messaging-api";
 
 admin.initializeApp();
 
@@ -45,6 +46,8 @@ export const handler = (event: any) => {
           // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
             const newOfferCount = counter + requestQuantity;
             const newStatus = {state_id: "-1", status_description: "Esperando"};
+
+            console.log("newOfferCount == availableQuantity", newOfferCount, " == ", availableQuantity);
             if (newOfferCount == availableQuantity) {
               newStatus.state_id = "2";
               newStatus.status_description = "En Carretera";
@@ -102,20 +105,22 @@ export const handler = (event: any) => {
                   switch (newStatus.state_id) {
                     case "-1": // Esperando
                       console.log(
-                          "// TODO: send notification to user and driver, that the offer is \"en carretera\""
+                          "// TODO: send notification to user and driver, that the offer is \"Waiting\""
                       );
                       // message to client
                       console.log("orderRequest.user_token_messaging: ", orderRequest.user_token_messaging);
-                      admin.messaging().sendToDevice(orderRequest.user_token_messaging, {
-                        notification: {
-                          title: `¡Compraste ${requestQuantity} asiento${plural}!`,
-                          body: `Destino: ${orderRequest.route_to}`,
-                          imageUrl: orderRequest.driver_car_photo,
-                        },
-                      });
+                      sendNotificationMessage(
+                          orderRequest.user_token_messaging, {
+                            notification: {
+                              title: `¡Compraste ${requestQuantity} asiento${plural}!`,
+                              body: `Destino: ${orderRequest.route_to}`,
+                              imageUrl: orderRequest.driver_car_photo,
+                            },
+                          }
+                      );
                       // message to Driver
                       console.log("orderRequest.driver_token_messaging: ", orderRequest.driver_token_messaging);
-                      admin.messaging().sendToDevice(orderRequest.driver_token_messaging, {
+                      sendNotificationMessage(orderRequest.driver_token_messaging, {
                         notification: {
                           title: `¡${requestQuantity} asiento${plural} vendido${plural}!`,
                           body: `${clientInformation.fullName}, compro ${requestQuantity} asiento${plural}`,
@@ -124,11 +129,13 @@ export const handler = (event: any) => {
                       });
                       break;
                     case "2": // enCarretera
-                      console.log();
+                      console.log(
+                          "// TODO: send notification to user and driver, that the offer is \"On Road\""
+                      );
                       // message to clients, notify that the offer is in the way
                       console.log("clientsInformation: ", clientsInformation.map(
                           (clientInformation: any) => clientInformation.tokenMessaging));
-                      admin.messaging().sendToDevice(clientsInformation.map(
+                      sendNotificationMessage(clientsInformation.map(
                           (clientInformation: any) => clientInformation.tokenMessaging), {
                         notification: {
                           title: `¡El vehiculo está en ruta!, ${orderRequest.driver_car_plate}`,
@@ -138,7 +145,7 @@ export const handler = (event: any) => {
                       });
                       // message to driver, notify that the offer is in the way
                       console.log("orderRequest.driver_token_messaging: ", orderRequest.driver_token_messaging);
-                      admin.messaging().sendToDevice(orderRequest.driver_token_messaging, {
+                      sendNotificationMessage(orderRequest.driver_token_messaging, {
                         notification: {
                           title: "¡LISTO! Inicia la ruta",
                           body: `Los ${availableQuantity} asientos fueron vendidos,
@@ -160,5 +167,19 @@ export const handler = (event: any) => {
             reject(Error("Not enough quantity offer"));
           }
         });
+  });
+};
+
+const sendNotificationMessage = (token: string | string[], payload: MessagingPayload, options?: {priority: "high"}) => {
+  admin.messaging().sendToDevice(
+      token,
+      payload,
+      options,
+  ).then((response: any) => {
+    console.log("Successfully sent message: ", JSON.stringify(response));
+    console.log("token: ", token);
+  }).catch((error: any) => {
+    console.log("Error sending message: ", error);
+    console.log("token: ", token);
   });
 };

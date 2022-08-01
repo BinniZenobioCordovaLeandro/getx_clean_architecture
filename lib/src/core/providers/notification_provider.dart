@@ -48,7 +48,9 @@ class NotificationProvider {
           channelKey: channelKey,
           title: title,
           body: body,
-          notificationLayout: NotificationLayout.BigPicture,
+          notificationLayout: bigPicture != null
+              ? NotificationLayout.BigPicture
+              : NotificationLayout.Default,
           bigPicture: bigPicture,
         ),
       );

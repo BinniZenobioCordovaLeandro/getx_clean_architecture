@@ -204,7 +204,16 @@ class _OfferPageState extends State<OfferPage> {
                                   ? AcceptPassengerCardWidget(
                                       avatar: order['avatar'],
                                       fullName: order['fullName'],
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        offerController
+                                            .firebaseNotificationProvider
+                                            ?.sendMessage(
+                                          to: order['tokenMessaging'],
+                                          title: '¡Bienvenido a bordo!',
+                                          body:
+                                              'Procura usar mascarilla y saludar.',
+                                        );
+                                      },
                                     )
                                   : const SizedBox(),
                           ],

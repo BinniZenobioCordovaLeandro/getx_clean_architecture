@@ -60,7 +60,6 @@ export const handler = (event: any) => {
             const clientInformation = {
               userId: orderRequest.user_id,
               orderId: orderId,
-              userToken: "ASCASVAS1wewq122",
               fullName: orderRequest.user_name,
               avatar: orderRequest.user_avatar ||
                 "https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png",

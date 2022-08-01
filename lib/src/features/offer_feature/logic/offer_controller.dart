@@ -10,12 +10,15 @@ import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offe
 import 'package:pickpointer/packages/vehicle_package/data/datasources/vehicle_datasources/firebase_vehicle_datasource.dart';
 import 'package:pickpointer/packages/vehicle_package/data/models/vehicle_model.dart';
 import 'package:pickpointer/packages/vehicle_package/domain/usecases/update_vehicle_usecase.dart';
+import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
 
 class OfferController extends GetxController {
   static OfferController get instance => Get.put(OfferController());
 
+  final FirebaseNotificationProvider? firebaseNotificationProvider =
+      FirebaseNotificationProvider.getInstance();
   final MapController mapController = MapController();
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
@@ -27,6 +30,7 @@ class OfferController extends GetxController {
   );
 
   StreamSubscription<Position>? streamPosition;
+  AbstractOfferEntity? abstractOfferEntity;
 
   var isLoading = false.obs;
   var errorMessage = ''.obs;
@@ -72,23 +76,28 @@ class OfferController extends GetxController {
     return futureListLatLng;
   }
 
-  prepareStreamCurrentPosition() {
-    streamPosition =
-        geolocatorProvider!.streamPosition().listen((Position position) {
-      print('position: $position');
-      positionTaxi.value = LatLng(position.latitude, position.longitude);
-      mapController.move(positionTaxi.value, 15);
-      updateVehicleUsecase.call(
-          vehicle: VehicleModel(
-        id: '1',
-        lat: '${position.latitude}',
-        lng: '${position.longitude}',
-      ));
-    }, onError: (error) {
-      print('error: $error');
-    }, onDone: () {
-      print('done');
-    }, cancelOnError: true);
+  prepareStreamCurrentPosition(AbstractOfferEntity abstractOfferEntity) {
+    print('prepareStreamCurrentPosition');
+    streamPosition = geolocatorProvider!.streamPosition().listen(
+      (Position position) {
+        print('position: $position');
+        positionTaxi.value = LatLng(position.latitude, position.longitude);
+        mapController.move(positionTaxi.value, 15);
+        updateVehicleUsecase.call(
+            vehicle: VehicleModel(
+          id: '${abstractOfferEntity.userCarPlate}',
+          lat: '${position.latitude}',
+          lng: '${position.longitude}',
+        ));
+      },
+      onError: (error) {
+        print('error: $error');
+      },
+      onDone: () {
+        print('done');
+      },
+      cancelOnError: false,
+    );
   }
 
   showOfferPolylineMarkers(AbstractOfferEntity abstractOfferEntity) {
@@ -131,19 +140,12 @@ class OfferController extends GetxController {
   }
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   void onReady() {
-    prepareStreamCurrentPosition();
-    AbstractOfferEntity abstractOfferEntity =
-        Get.arguments['abstractOfferEntity'];
-    showOfferPolylineMarkers(abstractOfferEntity);
-    showDynamicsMarkers(abstractOfferEntity);
+    abstractOfferEntity = Get.arguments['abstractOfferEntity'];
+    prepareStreamCurrentPosition(abstractOfferEntity!);
+    showOfferPolylineMarkers(abstractOfferEntity!);
+    showDynamicsMarkers(abstractOfferEntity!);
     streamPosition!.resume();
-    moveToMyLocation();
     super.onReady();
   }
 

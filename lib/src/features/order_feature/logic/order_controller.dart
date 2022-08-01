@@ -81,10 +81,10 @@ class OrderController extends GetxController {
     return futureBool;
   }
 
-  streamCurrentTaxiPosition() {
+  streamCurrentTaxiPosition(AbstractOrderEntity abstractOrderEntity) {
     streamTaxiPosition = streamVehicleUsecase
         .call(
-      vehicleId: '1',
+      vehicleId: '${abstractOrderEntity.driverCarPlate}',
     )
         .listen((AbstractVehicleEntity abstractVehicleEntity) {
       print('abstractVehicleEntity');
@@ -95,7 +95,6 @@ class OrderController extends GetxController {
       );
       mapController.move(taxiPosition.value, 15);
     });
-    streamTaxiPosition!.resume();
   }
 
   streamCurrentPosition() {
@@ -104,7 +103,6 @@ class OrderController extends GetxController {
       print('position: $position');
       clientPosition.value = LatLng(position.latitude, position.longitude);
     });
-    streamPosition!.resume();
   }
 
   showOfferPolylineMarkers(AbstractOrderEntity abstractOrderEntity) {
@@ -160,6 +158,16 @@ class OrderController extends GetxController {
     );
     showOfferPolylineMarkers(abstractOrderEntity!);
     streamCurrentPosition();
-    streamCurrentTaxiPosition();
+    streamCurrentTaxiPosition(abstractOrderEntity!);
+    streamTaxiPosition!.resume();
+    streamPosition!.resume();
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    streamTaxiPosition!.cancel();
+    streamPosition!.cancel();
+    super.onClose();
   }
 }

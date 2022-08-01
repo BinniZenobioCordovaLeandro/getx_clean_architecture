@@ -63,6 +63,7 @@ class FirebaseNotificationProvider {
   }
 
   Future<bool> sendMessage({
+    required String? to,
     required String title,
     required String body,
     String? image,
@@ -70,7 +71,7 @@ class FirebaseNotificationProvider {
   }) async {
     if (!await checkPermission()) return false;
     messaging.sendMessage(
-      to: 'default_channel',
+      to: to,
       data: {
         'title': title,
         'body': body,

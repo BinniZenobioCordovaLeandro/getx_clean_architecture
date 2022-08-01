@@ -37,6 +37,7 @@ export const handler = (event: any) => {
           const requestQuantity = parseInt(orderRequest.count);
           const counter = parseInt(offerDocument!.count);
           const availableQuantity = parseInt(offerDocument!.max_count) - counter;
+          const maxCounter = parseInt(offerDocument!.max_count);
 
           // console.log("routeQuantity <= availableQuantity : ");
           // console.log(requestQuantity <= availableQuantity);
@@ -47,8 +48,8 @@ export const handler = (event: any) => {
             const newOfferCount = counter + requestQuantity;
             const newStatus = {state_id: "-1", status_description: "Esperando"};
 
-            console.log("newOfferCount == availableQuantity", newOfferCount, " == ", availableQuantity);
-            if (newOfferCount == availableQuantity) {
+            console.log("newOfferCount == max_counter", newOfferCount, " == ", maxCounter);
+            if (newOfferCount == maxCounter) {
               newStatus.state_id = "2";
               newStatus.status_description = "En Carretera";
             }
@@ -148,7 +149,7 @@ export const handler = (event: any) => {
                       sendNotificationMessage(orderRequest.driver_token_messaging, {
                         notification: {
                           title: "¡LISTO! Inicia la ruta",
-                          body: `Los ${availableQuantity} asientos fueron vendidos,
+                          body: `Los ${maxCounter} asientos fueron vendidos,
                             ponte en ruta con el vehiculo ${orderRequest.driver_car_plate}`,
                           imageUrl: clientInformation.avatar,
                         },

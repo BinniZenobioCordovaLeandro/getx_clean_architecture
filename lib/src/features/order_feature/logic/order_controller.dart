@@ -28,7 +28,7 @@ class OrderController extends GetxController {
   NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
 
-  GetOrderUsecase getOrderUsecase = GetOrderUsecase(
+  final GetOrderUsecase _getOrderUsecase = GetOrderUsecase(
     abstractOrderRepository: FirebaseOrderDatasource(),
   );
 
@@ -135,20 +135,27 @@ class OrderController extends GetxController {
     );
   }
 
-  @override
-  void onReady() {
-    abstractOrderEntity = Get.arguments['abstractOrderEntity'];
+  void refreshOrder() {
+    final String orderId = abstractOrderEntity!.id!;
+    _getOrderUsecase
+        .call(orderId: orderId)
+        ?.then((AbstractOrderEntity? abstractOrderEntity) {
+      initialize(abstractOrderEntity!);
+    });
+  }
+
+  void initialize(AbstractOrderEntity abstractOrderEntity) {
     LatLng origin = LatLng(
-      double.parse('${abstractOrderEntity!.routeStartLat}'),
-      double.parse('${abstractOrderEntity!.routeStartLng}'),
+      double.parse('${abstractOrderEntity.routeStartLat}'),
+      double.parse('${abstractOrderEntity.routeStartLng}'),
     );
     LatLng destination = LatLng(
-      double.parse('${abstractOrderEntity!.userPickPointLat}'),
-      double.parse('${abstractOrderEntity!.userPickPointLng}'),
+      double.parse('${abstractOrderEntity.userPickPointLat}'),
+      double.parse('${abstractOrderEntity.userPickPointLng}'),
     );
     pickPoint.value = LatLng(
-      double.parse('${abstractOrderEntity!.userPickPointLat}'),
-      double.parse('${abstractOrderEntity!.userPickPointLng}'),
+      double.parse('${abstractOrderEntity.userPickPointLat}'),
+      double.parse('${abstractOrderEntity.userPickPointLng}'),
     );
     latLngBounds.value = [origin, destination];
     polylineTaxiListLatLng.value = [origin, destination];
@@ -156,11 +163,26 @@ class OrderController extends GetxController {
       origin: origin,
       destination: destination,
     );
-    showOfferPolylineMarkers(abstractOrderEntity!);
+    showOfferPolylineMarkers(abstractOrderEntity);
     streamCurrentPosition();
-    streamCurrentTaxiPosition(abstractOrderEntity!);
+    streamCurrentTaxiPosition(abstractOrderEntity);
     streamTaxiPosition!.resume();
     streamPosition!.resume();
+  }
+
+  @override
+  void onReady() {
+    String? abstractOrderEntityId = Get.arguments['abstractOrderEntityId'];
+    if (abstractOrderEntityId != null) {
+      _getOrderUsecase
+          .call(orderId: abstractOrderEntityId)
+          ?.then((AbstractOrderEntity? abstractOrderEntity) {
+        initialize(abstractOrderEntity!);
+      });
+    } else {
+      abstractOrderEntity = Get.arguments['abstractOrderEntity'];
+      initialize(abstractOrderEntity!);
+    }
     super.onReady();
   }
 

@@ -6,7 +6,9 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
+import 'package:pickpointer/packages/offer_package/domain/usecases/get_offer_usecase.dart';
 import 'package:pickpointer/packages/vehicle_package/data/datasources/vehicle_datasources/firebase_vehicle_datasource.dart';
 import 'package:pickpointer/packages/vehicle_package/data/models/vehicle_model.dart';
 import 'package:pickpointer/packages/vehicle_package/domain/usecases/update_vehicle_usecase.dart';
@@ -25,8 +27,12 @@ class OfferController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
 
-  UpdateVehicleUsecase updateVehicleUsecase = UpdateVehicleUsecase(
+  final UpdateVehicleUsecase _updateVehicleUsecase = UpdateVehicleUsecase(
     abstractVehicleRepository: FirebaseVehicleDatasource(),
+  );
+
+  final GetOfferUsecase _getOfferUsecase = GetOfferUsecase(
+    abstractOfferRepository: FirebaseOfferDatasource(),
   );
 
   StreamSubscription<Position>? streamPosition;
@@ -83,7 +89,7 @@ class OfferController extends GetxController {
         print('position: $position');
         positionTaxi.value = LatLng(position.latitude, position.longitude);
         mapController.move(positionTaxi.value, 15);
-        updateVehicleUsecase.call(
+        _updateVehicleUsecase.call(
             vehicle: VehicleModel(
           id: '${abstractOfferEntity.userCarPlate}',
           lat: '${position.latitude}',
@@ -139,13 +145,36 @@ class OfferController extends GetxController {
     listOrders.value = localListOrders;
   }
 
+  void refreshOffer() {
+    final String offerId = abstractOfferEntity!.id!;
+    print('offerId, $offerId');
+    _getOfferUsecase
+        .call(offerId: offerId)
+        ?.then((AbstractOfferEntity? abstractOfferEntity) {
+      initialize(abstractOfferEntity!);
+    });
+  }
+
+  void initialize(AbstractOfferEntity abstractOfferEntity) {
+    prepareStreamCurrentPosition(abstractOfferEntity);
+    showOfferPolylineMarkers(abstractOfferEntity);
+    showDynamicsMarkers(abstractOfferEntity);
+    streamPosition!.resume();
+  }
+
   @override
   void onReady() {
-    abstractOfferEntity = Get.arguments['abstractOfferEntity'];
-    prepareStreamCurrentPosition(abstractOfferEntity!);
-    showOfferPolylineMarkers(abstractOfferEntity!);
-    showDynamicsMarkers(abstractOfferEntity!);
-    streamPosition!.resume();
+    String? abstractOfferEntityId = Get.arguments['abstractOfferEntityId'];
+    if (abstractOfferEntityId != null) {
+      _getOfferUsecase
+          .call(offerId: abstractOfferEntityId)
+          ?.then((AbstractOfferEntity? abstractOfferEntity) {
+        initialize(abstractOfferEntity!);
+      });
+    } else {
+      abstractOfferEntity = Get.arguments['abstractOfferEntity'];
+      initialize(abstractOfferEntity!);
+    }
     super.onReady();
   }
 

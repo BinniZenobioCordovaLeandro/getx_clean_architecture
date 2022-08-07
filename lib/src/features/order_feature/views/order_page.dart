@@ -49,6 +49,13 @@ class _OrderPageState extends State<OrderPage> {
             title: 'Orden ${orderController.abstractOrderEntity?.id}',
             actions: [
               IconButton(
+                tooltip: 'Refrescar',
+                icon: const Icon(
+                  Icons.refresh_rounded,
+                ),
+                onPressed: () => orderController.refreshOrder(),
+              ),
+              IconButton(
                 tooltip: 'Compartir',
                 icon: const Icon(
                   Icons.ios_share_rounded,
@@ -71,7 +78,8 @@ class _OrderPageState extends State<OrderPage> {
               SizedBox(
                 child: FlutterMapWidget(
                   mapController: orderController.mapController,
-                  bounds: orderController.latLngBounds != null
+                  bounds: (orderController.latLngBounds != null &&
+                          orderController.latLngBounds.isNotEmpty)
                       ? LatLngBounds(
                           orderController.latLngBounds[0],
                           orderController.latLngBounds[1],

@@ -32,8 +32,6 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
         .get()
         .then((snapshot) {
       List<AbstractOfferEntity> offers = [];
-      print('snapshot.docs');
-      print(snapshot.docs);
       for (DocumentSnapshot offer in snapshot.docs) {
         offers.add(OfferModel.fromMap(offer.data() as Map<String, dynamic>));
       }

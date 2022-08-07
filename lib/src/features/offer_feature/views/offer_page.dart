@@ -39,6 +39,13 @@ class _OfferPageState extends State<OfferPage> {
           title: 'On Road!',
           actions: [
             IconButton(
+              tooltip: 'Refrescar',
+              icon: const Icon(
+                Icons.refresh_rounded,
+              ),
+              onPressed: () => offerController.refreshOffer(),
+            ),
+            IconButton(
               tooltip: 'Compartir',
               icon: const Icon(
                 Icons.ios_share_rounded,
@@ -112,8 +119,8 @@ class _OfferPageState extends State<OfferPage> {
                             height: 50,
                             anchorPos: AnchorPos.align(AnchorAlign.top),
                             point: LatLng(
-                              double.parse(order["lat"]),
-                              double.parse(order["lng"]),
+                              double.parse(order["pickPointLat"]),
+                              double.parse(order["pickPointLng"]),
                             ),
                             builder: (BuildContext context) => Icon(
                               Icons.person_pin,
@@ -127,8 +134,8 @@ class _OfferPageState extends State<OfferPage> {
                             meters: offerController.distanceBetween(
                               start: offerController.positionTaxi.value,
                               end: LatLng(
-                                double.parse(order["lat"]),
-                                double.parse(order["lng"]),
+                                double.parse(order["pickPointLat"]),
+                                double.parse(order["pickPointLng"]),
                               ),
                             ),
                             urlSvgOrImage: order['avatar'],
@@ -196,8 +203,8 @@ class _OfferPageState extends State<OfferPage> {
                                         start:
                                             offerController.positionTaxi.value,
                                         end: LatLng(
-                                          double.parse(order["lat"]),
-                                          double.parse(order["lng"]),
+                                          double.parse(order["pickPointLat"]),
+                                          double.parse(order["pickPointLng"]),
                                         ),
                                       ) <
                                       150)

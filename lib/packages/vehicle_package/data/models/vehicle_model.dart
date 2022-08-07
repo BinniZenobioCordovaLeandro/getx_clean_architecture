@@ -21,15 +21,15 @@ class VehicleModel extends AbstractVehicleEntity {
 
   factory VehicleModel.fromMap(Map<String, dynamic> data) => VehicleModel(
         id: data['id'] as String?,
-        latitude: data['lat'] as String?,
-        longitude: data['lng'] as String?,
+        latitude: data['latitude'] as String?,
+        longitude: data['longitude'] as String?,
         offerId: data['offer_id'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'lat': latitude,
-        'lng': longitude,
+        'latitude': latitude,
+        'longitude': longitude,
         'offer_id': offerId,
       };
 

@@ -46,8 +46,15 @@ class _OrderPageState extends State<OrderPage> {
           ),
           endDrawerEnableOpenDragGesture: true,
           appBar: AppBarWidget(
-            title: 'Orden ${orderController.abstractOrderEntity?.id}',
+            title: 'Orden ${orderController.orderId.value}',
             actions: [
+              IconButton(
+                tooltip: 'Refrescar',
+                icon: const Icon(
+                  Icons.refresh_rounded,
+                ),
+                onPressed: () => orderController.refreshOrder(),
+              ),
               IconButton(
                 tooltip: 'Compartir',
                 icon: const Icon(
@@ -71,10 +78,11 @@ class _OrderPageState extends State<OrderPage> {
               SizedBox(
                 child: FlutterMapWidget(
                   mapController: orderController.mapController,
-                  bounds: orderController.latLngBounds != null
+                  bounds: (orderController.taxiPosition.value != null &&
+                          orderController.userPickPoint.value != null)
                       ? LatLngBounds(
-                          orderController.latLngBounds[0],
-                          orderController.latLngBounds[1],
+                          orderController.taxiPosition.value,
+                          orderController.userPickPoint.value,
                         )
                       : null,
                   children: [
@@ -83,10 +91,11 @@ class _OrderPageState extends State<OrderPage> {
                         polylines: [
                           Polyline(
                             points: <LatLng>[
-                              ...orderController.polylineTaxiListLatLng.value,
+                              orderController.taxiPosition.value,
+                              orderController.userPosition.value,
                             ],
                             strokeWidth: 5,
-                            color: Colors.blue,
+                            color: Colors.purple,
                             isDotted: true,
                           ),
                         ],
@@ -144,7 +153,7 @@ class _OrderPageState extends State<OrderPage> {
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
-                            point: orderController.clientPosition.value,
+                            point: orderController.userPosition.value,
                             builder: (BuildContext context) => const Icon(
                               Icons.adjust_rounded,
                               color: Colors.blue,
@@ -170,7 +179,7 @@ class _OrderPageState extends State<OrderPage> {
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
-                            point: orderController.pickPoint.value,
+                            point: orderController.userPickPoint.value,
                             builder: (BuildContext context) => const Icon(
                               Icons.person_pin_circle_sharp,
                               color: Colors.blue,
@@ -202,7 +211,10 @@ class _OrderPageState extends State<OrderPage> {
                 child: SafeAreaWidget(
                   child: FractionallySizedBoxWidget(
                     child: OrderCardWidget(
-                      abstractOrderEntity: widget.abstractOrderEntity,
+                      routeTo: orderController.routeTo.value,
+                      routeFrom: orderController.routeFrom.value,
+                      userPickPointLat: orderController.userPickPointLat.value,
+                      userPickPointLng: orderController.userPickPointLng.value,
                     ),
                   ),
                 ),
@@ -214,23 +226,15 @@ class _OrderPageState extends State<OrderPage> {
                 child: SafeAreaWidget(
                   child: FractionallySizedBoxWidget(
                     child: CallCardWidget(
-                        avatarUrl:
-                            '${orderController.abstractOrderEntity?.driverAvatar}',
-                        name:
-                            '${orderController.abstractOrderEntity?.driverName}',
-                        carPhoto:
-                            '${orderController.abstractOrderEntity?.driverCarPhoto}',
-                        carModel:
-                            '${orderController.abstractOrderEntity?.driverCarModel}',
-                        carPlate:
-                            '${orderController.abstractOrderEntity?.driverCarPlate}',
+                        avatarUrl: orderController.driverAvatar.value,
+                        name: orderController.driverName.value,
+                        carPhoto: orderController.driverCarPhoto.value,
+                        carModel: orderController.driverCarModel.value,
+                        carPlate: orderController.driverCarPlate.value,
                         onPressed: () {
-                          print(
-                              'try calling ${orderController.abstractOrderEntity?.driverPhoneNumber}');
                           LauncherLinkHelper launcherLinkHelper =
                               LauncherLinkHelper(
-                            url:
-                                '${orderController.abstractOrderEntity?.driverPhoneNumber}',
+                            url: orderController.driverPhoneNumber.value,
                             isPhone: true,
                           );
                           launcherLinkHelper.makePhoneCall();

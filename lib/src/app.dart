@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/models/notification_message_model.dart';
@@ -12,6 +16,8 @@ import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
+import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class App extends StatefulWidget {
@@ -33,7 +39,12 @@ class _AppState extends State<App> {
   final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
 
+  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
+  );
+
   bool validateVersion = false;
+  bool validateOnWay = false;
 
   @override
   void initState() {
@@ -107,12 +118,44 @@ class _AppState extends State<App> {
     }
   }
 
+  verifyIsOnTheWay() {
+    _verifySessionUsecase
+        .call()
+        .then((AbstractSessionEntity abstractSessionEntity) {
+      if (abstractSessionEntity.currentOrderId != null) {
+        Get.to(
+          () => OrderPage(
+            abstractOrderEntityId: abstractSessionEntity.currentOrderId,
+          ),
+          arguments: {
+            'abstractOrderEntityId': abstractSessionEntity.currentOrderId,
+          },
+        );
+      } else if (abstractSessionEntity.currentOfferId != null) {
+        Get.to(
+          () => OfferPage(
+            abstractOfferEntityId: abstractSessionEntity.currentOfferId,
+          ),
+          arguments: {
+            'abstractOfferEntityId': abstractSessionEntity.currentOfferId,
+          },
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!validateVersion) {
       verifyMinimalVersion(context);
       setState(() {
         validateVersion = true;
+      });
+    }
+    if (!validateOnWay) {
+      verifyIsOnTheWay();
+      setState(() {
+        validateOnWay = true;
       });
     }
     return const RoutesPage();

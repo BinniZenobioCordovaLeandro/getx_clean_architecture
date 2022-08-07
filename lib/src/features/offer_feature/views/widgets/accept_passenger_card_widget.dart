@@ -43,16 +43,17 @@ class AcceptPassengerCardWidget extends StatelessWidget {
                   const SizedBox(
                     width: 8,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TextWidget(
-                        fullName,
-                        style: Theme.of(context).textTheme.headline6,
-                        maxLines: 2,
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextWidget(
+                          fullName,
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -2,14 +2,14 @@ import 'package:equatable/equatable.dart';
 
 abstract class AbstractVehicleEntity extends Equatable {
   final String? id;
-  final String? lat;
-  final String? lng;
+  final String? latitude;
+  final String? longitude;
   final String? offerId;
 
   const AbstractVehicleEntity({
     this.id,
-    this.lat,
-    this.lng,
+    this.latitude,
+    this.longitude,
     this.offerId,
   });
 }

@@ -1,176 +1,42 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/repositories/abstract_order_repository.dart';
 
 class FirebaseOrderDatasource implements AbstractOrderRepository {
-  FirebaseOrderDatasource();
+  CollectionReference? orders;
+
+  FirebaseOrderDatasource() {
+    orders = FirebaseFirestore.instance.collection('c_orders');
+  }
 
   @override
   Future<List<AbstractOrderEntity>>? getOrders() {
-    return Future.value(<AbstractOrderEntity>[
-      OrderModel(
-        id: '1',
-        orderId: '123456789',
-        price: 6.00,
-        count: 2,
-        total: 12.00,
-        stateId: '-1',
-        stateDescription: 'Pending',
-        userId: '1',
-        userName: 'John Doe',
-        userEmail: 'john@gmaill.com',
-        userPhone: '+1 123 456 7890',
-        userPickPointLat: '-12.118871',
-        userPickPointLng: '-12.118871',
-        userDropPointLat: '-12.118871',
-        userDropPointLng: '-12.118871',
-        offerId: '1',
-        offerCount: 2,
-        offerMaxCount: 6,
-        offerPrice: 6.00,
-        offerStartLat: '-12.118871',
-        offerStartLng: '-12.118871',
-        offerEndLat: '-12.118871',
-        offerEndLng: '-12.118871',
-        offerWayPoints: '[]',
-        offerOrders: '[]',
-        routeId: '1',
-        routeTitle: 'Ruta 1',
-        routeDescription: 'Ruta 1',
-        routePrice: 6.00,
-        routeFrom: 'Manchay',
-        routeTo: 'Ovalo Santa Anita',
-        routeStartLat: '-12.123276353363956',
-        routeStartLng: '-76.87233782753958',
-        routeEndLat: '-12.0552257792263',
-        routeEndLng: '-76.96429734159008',
-        driverId: '1',
-        driverName: 'John Doe',
-        driverEmail: 'driver@gmail.com',
-        driverAvatar: 'https://i.pravatar.cc/300',
-        driverCarPlate: 'ABC123',
-        driverCarPhoto: 'https://i.pravatar.cc/300',
-        driverCarModel: 'Toyota',
-        driverCarColor: '#000000',
-        driverPhoneNumber: '+1 123 456 7890',
-        driverRank: '5',
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        updatedAt: DateTime.now().millisecondsSinceEpoch,
-      ),
-      OrderModel(
-        id: '2',
-        orderId: '123456789',
-        price: 6.00,
-        count: 2,
-        total: 12.00,
-        stateId: '-1',
-        stateDescription: 'Pending',
-        userId: '1',
-        userName: 'John Doe',
-        userEmail: 'john@gmaill.com',
-        userPhone: '+1 123 456 7890',
-        userPickPointLat: '-12.118871',
-        userPickPointLng: '-12.118871',
-        userDropPointLat: '-12.118871',
-        userDropPointLng: '-12.118871',
-        offerId: '1',
-        offerCount: 2,
-        offerMaxCount: 6,
-        offerPrice: 6.00,
-        offerStartLat: '-12.118871',
-        offerStartLng: '-12.118871',
-        offerEndLat: '-12.118871',
-        offerEndLng: '-12.118871',
-        offerWayPoints: '[]',
-        offerOrders: '[]',
-        routeId: '1',
-        routeTitle: 'Ruta 1',
-        routeDescription: 'Ruta 1',
-        routePrice: 6.00,
-        routeFrom: 'Manchay',
-        routeTo: 'Ovalo Santa Anita',
-        routeStartLat: '-12.123276353363956',
-        routeStartLng: '-76.87233782753958',
-        routeEndLat: '-12.0552257792263',
-        routeEndLng: '-76.96429734159008',
-        driverId: '1',
-        driverName: 'John Doe',
-        driverEmail: 'driver@gmail.com',
-        driverAvatar: 'https://i.pravatar.cc/300',
-        driverCarPlate: 'ABC123',
-        driverCarPhoto: 'https://i.pravatar.cc/300',
-        driverCarModel: 'Toyota',
-        driverCarColor: '#000000',
-        driverPhoneNumber: '+1 123 456 7890',
-        driverRank: '5',
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        updatedAt: DateTime.now().millisecondsSinceEpoch,
-      ),
-    ]);
+    return orders?.get().then((snapshot) {
+      List<AbstractOrderEntity> orders = [];
+      for (DocumentSnapshot order in snapshot.docs) {
+        orders.add(OrderModel.fromMap(order.data() as Map<String, dynamic>));
+      }
+      return orders;
+    });
   }
 
   @override
   Future<AbstractOrderEntity>? getOrder({
     required String orderId,
   }) {
-    return Future.value(
-      OrderModel(
-        id: '1',
-        orderId: '123456789',
-        price: 6.00,
-        count: 2,
-        total: 12.00,
-        stateId: '-1',
-        stateDescription: 'Pending',
-        userId: '1',
-        userName: 'John Doe',
-        userEmail: 'john@gmaill.com',
-        userPhone: '+1 123 456 7890',
-        userPickPointLat: '-12.118871',
-        userPickPointLng: '-12.118871',
-        userDropPointLat: '-12.118871',
-        userDropPointLng: '-12.118871',
-        offerId: '1',
-        offerCount: 2,
-        offerMaxCount: 6,
-        offerPrice: 6.00,
-        offerStartLat: '-12.118871',
-        offerStartLng: '-12.118871',
-        offerEndLat: '-12.118871',
-        offerEndLng: '-12.118871',
-        offerWayPoints: '[]',
-        offerOrders: '[]',
-        routeId: '1',
-        routeTitle: 'Ruta 1',
-        routeDescription: 'Ruta 1',
-        routePrice: 6.00,
-        routeFrom: 'Manchay',
-        routeTo: 'Ovalo Santa Anita',
-        routeStartLat: '-12.123276353363956',
-        routeStartLng: '-76.87233782753958',
-        routeEndLat: '-12.0552257792263',
-        routeEndLng: '-76.96429734159008',
-        driverId: '1',
-        driverName: 'John Doe',
-        driverEmail: 'driver@gmail.com',
-        driverAvatar: 'https://i.pravatar.cc/300',
-        driverCarPlate: 'ABC123',
-        driverCarPhoto: 'https://i.pravatar.cc/300',
-        driverCarModel: 'Toyota',
-        driverCarColor: '#000000',
-        driverPhoneNumber: '+1 123 456 7890',
-        driverRank: '5',
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        updatedAt: DateTime.now().millisecondsSinceEpoch,
-      ),
-    );
+    return orders?.doc(orderId).get().then((snapshot) {
+      return OrderModel.fromMap(snapshot.data() as Map<String, dynamic>);
+    });
   }
 
   @override
   Future<AbstractOrderEntity> addOrder({
     required AbstractOrderEntity order,
   }) {
-    return Future.value(order);
+    OrderModel orderModel = order as OrderModel;
+    orders?.doc(orderModel.id).set(orderModel.toMap());
+    return Future.value(orderModel);
   }
 
   @override

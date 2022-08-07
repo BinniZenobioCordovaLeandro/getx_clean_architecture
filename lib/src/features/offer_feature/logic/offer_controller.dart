@@ -92,8 +92,8 @@ class OfferController extends GetxController {
         _updateVehicleUsecase.call(
             vehicle: VehicleModel(
           id: '${abstractOfferEntity.userCarPlate}',
-          lat: '${position.latitude}',
-          lng: '${position.longitude}',
+          latitude: '${position.latitude}',
+          longitude: '${position.longitude}',
         ));
       },
       onError: (error) {

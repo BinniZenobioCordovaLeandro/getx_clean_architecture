@@ -43,14 +43,27 @@ class OrderController extends GetxController {
 
   var isLoading = false.obs;
   var errorMessage = ''.obs;
+  var userPickPoint = LatLng(-12.0, -76.0).obs;
+  var userDropPoint = LatLng(-12.0, -76.0).obs;
   var polylineListLatLng = <LatLng>[].obs;
   var listWayPoints = <LatLng>[].obs;
-  var polylineTaxiListLatLng = <LatLng>[].obs;
   var distanceTaxi = 0.0.obs;
-  var clientPosition = LatLng(-12.0, -76.0).obs;
+  var userPosition = LatLng(-12.0, -76.0).obs;
   var taxiPosition = LatLng(-12.0, -76.0).obs;
-  var pickPoint = LatLng(-12.0, -76.0).obs;
-  var latLngBounds = <LatLng>[].obs;
+
+  var orderId = ''.obs;
+
+  var routeTo = ''.obs;
+  var routeFrom = ''.obs;
+  var userPickPointLat = ''.obs;
+  var userPickPointLng = ''.obs;
+
+  var driverAvatar = ''.obs;
+  var driverName = ''.obs;
+  var driverCarPhoto = ''.obs;
+  var driverCarModel = ''.obs;
+  var driverCarPlate = ''.obs;
+  var driverPhoneNumber = ''.obs;
 
   Future<List<LatLng>> getPolylineBetweenCoordinates({
     required LatLng origin,
@@ -87,11 +100,15 @@ class OrderController extends GetxController {
       vehicleId: '${abstractOrderEntity.driverCarPlate}',
     )
         .listen((AbstractVehicleEntity abstractVehicleEntity) {
-      print('abstractVehicleEntity');
-      print(abstractVehicleEntity);
+      print(
+          'taxiPosition: ${abstractVehicleEntity.latitude}, ${abstractVehicleEntity.longitude}');
       taxiPosition.value = LatLng(
-        double.parse(abstractVehicleEntity.lat!),
-        double.parse(abstractVehicleEntity.lng!),
+        double.parse(abstractVehicleEntity.latitude!),
+        double.parse(abstractVehicleEntity.longitude!),
+      );
+      distanceTaxi.value = geolocatorProvider!.getDistanceBetweenPoints(
+        origin: taxiPosition.value,
+        destination: userPosition.value,
       );
       mapController.move(taxiPosition.value, 15);
     });
@@ -100,8 +117,8 @@ class OrderController extends GetxController {
   streamCurrentPosition() {
     streamPosition =
         geolocatorProvider!.streamPosition().listen((Position position) {
-      print('position: $position');
-      clientPosition.value = LatLng(position.latitude, position.longitude);
+      print('userPosition: ${position.latitude}, ${position.longitude}');
+      userPosition.value = LatLng(position.latitude, position.longitude);
     });
   }
 
@@ -145,24 +162,29 @@ class OrderController extends GetxController {
   }
 
   void initialize(AbstractOrderEntity abstractOrderEntity) {
-    LatLng origin = LatLng(
-      double.parse('${abstractOrderEntity.routeStartLat}'),
-      double.parse('${abstractOrderEntity.routeStartLng}'),
+    userDropPoint.value = LatLng(
+      double.parse('${abstractOrderEntity.userDropPointLat}'),
+      double.parse('${abstractOrderEntity.userDropPointLng}'),
     );
-    LatLng destination = LatLng(
+    userPickPoint.value = LatLng(
       double.parse('${abstractOrderEntity.userPickPointLat}'),
       double.parse('${abstractOrderEntity.userPickPointLng}'),
     );
-    pickPoint.value = LatLng(
-      double.parse('${abstractOrderEntity.userPickPointLat}'),
-      double.parse('${abstractOrderEntity.userPickPointLng}'),
-    );
-    latLngBounds.value = [origin, destination];
-    polylineTaxiListLatLng.value = [origin, destination];
-    distanceTaxi.value = geolocatorProvider!.getDistanceBetweenPoints(
-      origin: origin,
-      destination: destination,
-    );
+
+    orderId.value = abstractOrderEntity.id!;
+    routeTo.value = abstractOrderEntity.routeTo!;
+    routeFrom.value = abstractOrderEntity.routeFrom!;
+
+    userPickPointLat.value = abstractOrderEntity.userPickPointLat!;
+    userPickPointLng.value = abstractOrderEntity.userPickPointLng!;
+
+    driverAvatar.value = abstractOrderEntity.driverAvatar!;
+    driverName.value = abstractOrderEntity.driverName!;
+    driverCarPhoto.value = abstractOrderEntity.driverCarPhoto!;
+    driverCarModel.value = abstractOrderEntity.driverCarModel!;
+    driverCarPlate.value = abstractOrderEntity.driverCarPlate!;
+    driverPhoneNumber.value = abstractOrderEntity.driverPhoneNumber!;
+
     showOfferPolylineMarkers(abstractOrderEntity);
     streamCurrentPosition();
     streamCurrentTaxiPosition(abstractOrderEntity);

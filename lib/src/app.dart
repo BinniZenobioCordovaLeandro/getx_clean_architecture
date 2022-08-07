@@ -6,6 +6,7 @@ import 'package:pickpointer/packages/session_package/domain/usecases/verify_sess
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/models/notification_message_model.dart';
+import 'package:pickpointer/src/core/providers/analytics_provider.dart';
 import 'package:pickpointer/src/core/providers/firebase_config_provider.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
@@ -39,6 +40,8 @@ class _AppState extends State<App> {
   final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
 
+  final AnalyticsProvider? analyticsProvider = AnalyticsProvider.getInstance();
+
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
@@ -51,6 +54,7 @@ class _AppState extends State<App> {
     super.initState();
     firebaseNotificationProvider?.initialize();
     notificationProvider?.initialize();
+    analyticsProvider?.initialize();
     firebaseNotificationProvider?.onMessage
         .listen((NotificationMessageModel event) {
       notificationProvider?.sendNotification(

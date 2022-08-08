@@ -129,16 +129,14 @@ class _OrderPageState extends State<OrderPage> {
                           for (var wayPoint
                               in orderController.listWayPoints.value)
                             Marker(
-                              width: 20,
-                              height: 20,
-                              anchorPos: AnchorPos.align(
-                                AnchorAlign.top,
-                              ),
+                              width: 10,
+                              height: 10,
+                              anchorPos: AnchorPos.align(AnchorAlign.center),
                               point: wayPoint,
                               builder: (BuildContext context) => Icon(
-                                Icons.person_pin,
+                                Icons.circle,
                                 color: Theme.of(context).primaryColor,
-                                size: 20,
+                                size: 10,
                               ),
                             ),
                         ],
@@ -150,9 +148,7 @@ class _OrderPageState extends State<OrderPage> {
                           Marker(
                             width: 30,
                             height: 30,
-                            anchorPos: AnchorPos.align(
-                              AnchorAlign.top,
-                            ),
+                            anchorPos: AnchorPos.align(AnchorAlign.center),
                             point: orderController.userPosition.value,
                             builder: (BuildContext context) => const Icon(
                               Icons.adjust_rounded,

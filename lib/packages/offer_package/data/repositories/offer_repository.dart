@@ -49,4 +49,13 @@ class OfferRepository implements AbstractOfferRepository {
       abstractOfferEntity: abstractOfferEntity,
     );
   }
+
+  @override
+  Future<AbstractOfferEntity>? updateOffer({
+    required AbstractOfferEntity abstractOfferEntity,
+  }) {
+    return _abstractOfferRepository!.updateOffer(
+      abstractOfferEntity: abstractOfferEntity,
+    );
+  }
 }

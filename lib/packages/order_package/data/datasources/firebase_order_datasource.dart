@@ -43,6 +43,15 @@ class FirebaseOrderDatasource implements AbstractOrderRepository {
   Future<AbstractOrderEntity> updateOrder({
     required AbstractOrderEntity order,
   }) {
-    return Future.value(order);
+    OrderModel orderModel = order as OrderModel;
+    Map<String, dynamic> mapStringDynamic = orderModel.toMap();
+    Map<String, dynamic> newMapStringDynamic = {};
+    mapStringDynamic.forEach((key, value) {
+      if (value != null) {
+        newMapStringDynamic.putIfAbsent(key, () => value);
+      }
+    });
+    orders?.doc(orderModel.id).update(newMapStringDynamic);
+    return Future.value(orderModel);
   }
 }

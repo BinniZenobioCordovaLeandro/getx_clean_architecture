@@ -7,14 +7,26 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
+import 'package:pickpointer/packages/offer_package/data/models/offer_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offer_usecase.dart';
+import 'package:pickpointer/packages/offer_package/domain/usecases/update_offer_usecase.dart';
+import 'package:pickpointer/packages/order_package/data/datasources/firebase_order_datasource.dart';
+import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
+import 'package:pickpointer/packages/order_package/domain/usecases/update_order_usecase.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
+import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/packages/vehicle_package/data/datasources/vehicle_datasources/firebase_vehicle_datasource.dart';
 import 'package:pickpointer/packages/vehicle_package/data/models/vehicle_model.dart';
+import 'package:pickpointer/packages/vehicle_package/domain/usecases/delete_vehicle_usecase.dart';
 import 'package:pickpointer/packages/vehicle_package/domain/usecases/update_vehicle_usecase.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 
 class OfferController extends GetxController {
   static OfferController get instance => Get.put(OfferController());
@@ -31,8 +43,28 @@ class OfferController extends GetxController {
     abstractVehicleRepository: FirebaseVehicleDatasource(),
   );
 
+  final DeleteVehicleUsecase _deleteVehicleUsecase = DeleteVehicleUsecase(
+    abstractVehicleRepository: FirebaseVehicleDatasource(),
+  );
+
+  final UpdateOfferUsecase _updateOfferUsecase = UpdateOfferUsecase(
+    abstractOfferRepository: FirebaseOfferDatasource(),
+  );
+
+  final UpdateOrderUsecase _updateOrderUsecase = UpdateOrderUsecase(
+    abstractOrderRepository: FirebaseOrderDatasource(),
+  );
+
   final GetOfferUsecase _getOfferUsecase = GetOfferUsecase(
     abstractOfferRepository: FirebaseOfferDatasource(),
+  );
+
+  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
+  );
+
+  final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
   StreamSubscription<Position>? streamPosition;
@@ -41,9 +73,13 @@ class OfferController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var positionTaxi = LatLng(-12.0, -76.0).obs;
+  var userCarPlate = ''.obs;
+  var offerEnd = LatLng(0, 0).obs;
   var listWayPoints = <LatLng>[].obs;
   var listOrders = [].obs;
   var polylineListLatLng = <LatLng>[].obs;
+
+  var offerId = ''.obs;
 
   double distanceBetween({
     required LatLng start,
@@ -145,6 +181,48 @@ class OfferController extends GetxController {
     listOrders.value = localListOrders;
   }
 
+  Future<bool> finishTrip() async {
+    isLoading.value = true;
+    for (var order in listOrders.value) {
+      _updateOrderUsecase.call(
+        order: OrderModel(
+          id: '${order['orderId']}',
+          stateId: '1',
+          stateDescription: 'Completado',
+        ),
+      );
+    }
+    await _updateOfferUsecase.call(
+        abstractOfferEntity: OfferModel(
+      id: '${offerId.value}',
+      stateId: '1',
+      stateDescription: 'Completado',
+    ));
+    await _deleteVehicleUsecase.call(vehicleId: userCarPlate.value);
+    await cleanOnRoadSession();
+    isLoading.value = false;
+    return Future.value(true);
+  }
+
+  cleanOnRoadSession() async {
+    AbstractSessionEntity abstractSessionEntity =
+        await _verifySessionUsecase.call();
+    if (abstractSessionEntity.isSigned!) {
+      await _updateSessionUsecase.call(
+        abstractSessionEntity: SessionModel(
+          isSigned: abstractSessionEntity.isSigned,
+          isDriver: abstractSessionEntity.isDriver,
+          idSessions: abstractSessionEntity.idSessions,
+          idUsers: abstractSessionEntity.idUsers,
+          onRoad: false,
+          currentOfferId: null,
+          currentOrderId: null,
+          tokenMessaging: abstractSessionEntity.tokenMessaging,
+        ),
+      );
+    }
+  }
+
   void refreshOffer() {
     final String offerId = abstractOfferEntity!.id!;
     print('offerId, $offerId');
@@ -156,6 +234,12 @@ class OfferController extends GetxController {
   }
 
   void initialize(AbstractOfferEntity abstractOfferEntity) {
+    offerId.value = abstractOfferEntity.id!;
+    userCarPlate.value = abstractOfferEntity.userCarPlate!;
+    offerEnd.value = LatLng(
+      double.parse('${abstractOfferEntity.endLat}'),
+      double.parse('${abstractOfferEntity.endLng}'),
+    );
     prepareStreamCurrentPosition(abstractOfferEntity);
     showOfferPolylineMarkers(abstractOfferEntity);
     showDynamicsMarkers(abstractOfferEntity);

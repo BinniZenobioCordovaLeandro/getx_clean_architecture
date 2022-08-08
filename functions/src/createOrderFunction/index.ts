@@ -46,12 +46,12 @@ export const handler = (event: any) => {
           // STATUS
           // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
             const newOfferCount = counter + requestQuantity;
-            const newStatus = {state_id: "-1", status_description: "Esperando"};
+            const newStatus = {state_id: "-1", state_description: "Esperando"};
 
             console.log("newOfferCount == max_counter", newOfferCount, " == ", maxCounter);
             if (newOfferCount == maxCounter) {
               newStatus.state_id = "2";
-              newStatus.status_description = "En Carretera";
+              newStatus.state_description = "En Carretera";
             }
 
             // Update offer

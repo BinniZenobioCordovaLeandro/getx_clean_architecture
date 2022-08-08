@@ -35,7 +35,7 @@ class PopupMarkerTaxiWidget extends StatelessWidget {
                   ),
             ),
             TextWidget(
-              '${meters > 1000 ? "Kilometros" : "metros"} de tu posicion actual',
+              meters > 1000 ? "Kilometros" : "metros",
             ),
           ],
         ),

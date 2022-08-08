@@ -153,7 +153,7 @@ class PaymentController extends GetxController {
                   currentOrderId: abstractOrderEntity.id,
                 ),
               );
-              Get.to(
+              Get.offAll(
                 () => OrderPage(
                   abstractOrderEntity: abstractOrderEntity,
                 ),

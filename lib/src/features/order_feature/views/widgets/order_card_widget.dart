@@ -47,12 +47,27 @@ class OrderCardWidget extends StatelessWidget {
                   textAlign: TextAlign.justify,
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: TextWidget(
-                  'Punto de encuentro: $userPickPointLat, $userPickPointLng',
-                  textAlign: TextAlign.justify,
-                ),
+              Flex(
+                direction: Axis.horizontal,
+                children: [
+                  const Icon(
+                    Icons.person_pin_circle_sharp,
+                    color: Colors.blue,
+                  ),
+                  VerticalDivider(
+                    color: Theme.of(context).primaryColor,
+                    thickness: 2.00,
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: TextWidget(
+                        'Punto de encuentro: $userPickPointLat, $userPickPointLng',
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

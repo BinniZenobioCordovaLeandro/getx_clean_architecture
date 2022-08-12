@@ -271,10 +271,10 @@ class _OfferPageState extends State<OfferPage> {
                                         offerController
                                             .firebaseNotificationProvider
                                             ?.sendMessage(
-                                          to: order['tokenMessaging'],
+                                          to: [order['tokenMessaging']],
                                           title: '¡Bienvenido a bordo!',
                                           body:
-                                              'Procura usar mascarilla y saludar.',
+                                              'Procura usar mascarilla y saludar, ${order['fullName']}',
                                         );
                                       },
                                     )

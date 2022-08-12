@@ -1,13 +1,11 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as uuid from "uuid";
-import {MessagingPayload} from "firebase-admin/lib/messaging/messaging-api";
-
-admin.initializeApp();
+import {sendNotificationMessage} from "../../common/functions/sendNotificationMessage";
 
 export const handler = (event: any) => {
   return new Promise((resolve, reject) => {
-    functions.logger.info("createOrderFunction>");
+    functions.logger.info("createOrderFunction");
     const firebaseFirestore = admin.firestore();
 
     const offersCollection = firebaseFirestore.collection("c_offers");
@@ -170,16 +168,4 @@ export const handler = (event: any) => {
   });
 };
 
-const sendNotificationMessage = (token: string | string[], payload: MessagingPayload, options?: {priority: "high"}) => {
-  admin.messaging().sendToDevice(
-      token,
-      payload,
-      options,
-  ).then((response: any) => {
-    console.log("Successfully sent message: ", JSON.stringify(response));
-    console.log("token: ", token);
-  }).catch((error: any) => {
-    console.log("Error sending message: ", error);
-    console.log("token: ", token);
-  });
-};
+

@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pickpointer/src/core/models/notification_message_model.dart';
+import 'package:http/http.dart' as http;
 
 final _pushController = StreamController<NotificationMessageModel>.broadcast();
 
@@ -63,22 +66,46 @@ class FirebaseNotificationProvider {
   }
 
   Future<bool> sendMessage({
-    required String? to,
+    required List<String>? to,
     required String title,
     required String body,
     String? image,
-    String? name,
+    Map<String, dynamic>? data,
   }) async {
     if (!await checkPermission()) return false;
-    messaging.sendMessage(
-      to: to,
-      data: {
-        'title': title,
-        'body': body,
-        'image': '$image',
-        'name': '$name',
+    const decoder = JsonEncoder();
+    const String url =
+        'https://us-central1-pickpointer.cloudfunctions.net/sendNotification';
+    http.Response response = await http.post(
+      Uri.parse(url),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: {
+        'token': decoder.convert(to),
+        'payload': {
+          'notification': {
+            'title': title,
+            'body': body,
+            'image': image,
+            'android': {
+              'imageUrl': image,
+            },
+            'apple': {
+              'imageUrl': image,
+            },
+            'web': {
+              'image': image,
+            }
+          },
+          'data': decoder.convert(data),
+        },
+        'options': {
+          'priority': "high",
+        }
       },
     );
+    print('response.body: ${response.body}');
     return true;
   }
 }

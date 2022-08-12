@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pickpointer/src/core/models/notification_message_model.dart';
 import 'package:http/http.dart' as http;
@@ -66,44 +65,36 @@ class FirebaseNotificationProvider {
   }
 
   Future<bool> sendMessage({
-    required List<String>? to,
+    required List<String> to,
     required String title,
     required String body,
     String? image,
     Map<String, dynamic>? data,
   }) async {
     if (!await checkPermission()) return false;
-    const decoder = JsonEncoder();
-    const String url =
-        'https://us-central1-pickpointer.cloudfunctions.net/sendNotification';
+    print('token');
+    print(to.length == 1 ? to[0] : to);
     http.Response response = await http.post(
-      Uri.parse(url),
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-      body: {
-        'token': decoder.convert(to),
+      Uri.parse(
+          'https://us-central1-pickpointer.cloudfunctions.net/sendNotification'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'token': to.length == 1 ? to[0] : to,
         'payload': {
+          'data': {
+            'link': '',
+            'is_message': '',
+          },
           'notification': {
             'title': title,
             'body': body,
-            'image': image,
-            'android': {
-              'imageUrl': image,
-            },
-            'apple': {
-              'imageUrl': image,
-            },
-            'web': {
-              'image': image,
-            }
+            'imageUrl': image ?? '',
           },
-          'data': decoder.convert(data),
         },
         'options': {
           'priority': "high",
         }
-      },
+      }),
     );
     print('response.body: ${response.body}');
     return true;

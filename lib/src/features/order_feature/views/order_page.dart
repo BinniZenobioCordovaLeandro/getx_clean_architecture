@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
+import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/drawer_widget.dart';
+import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_widget.dart';
+import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/order_feature/logic/order_controller.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/call_card_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/messages_box_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/order_card_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/popup_marker_taxi_widget.dart';
+import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 
 class OrderPage extends StatefulWidget {
   final String? abstractOrderEntityId;
@@ -69,6 +74,52 @@ class _OrderPageState extends State<OrderPage> {
                 ),
                 onPressed: () {
                   orderController.scaffoldKey.currentState!.openEndDrawer();
+                },
+              ),
+              PopupMenuButton(
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem<int>(
+                      value: 0,
+                      child: Text("Salir a VER RUTAS"),
+                    ),
+                  ];
+                },
+                onSelected: (value) {
+                  if (value == 0) {
+                    ModalBottomSheetHelper(
+                      context: context,
+                      title: 'Salir a VER RUTAS',
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: FractionallySizedBoxWidget(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: WrapWidget(
+                              children: [
+                                TextWidget(
+                                  '¿Estás seguro de que deseas salir del viaje actual?',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                                TextWidget(
+                                  'Si sales el viaje continuará en curso hasta que el conductor llegue al destino.\n Ademas no podras volver a esta vista.',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                ElevatedButtonWidget(
+                                  title: 'Confirmar',
+                                  onPressed: () {
+                                    Get.offAll(
+                                      () => RoutesController(),
+                                    );
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
             ],

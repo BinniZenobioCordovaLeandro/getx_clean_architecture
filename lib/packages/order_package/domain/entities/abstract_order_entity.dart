@@ -6,7 +6,8 @@ abstract class AbstractOrderEntity extends Equatable {
   final double? price;
   final int? count;
   final double? total;
-  final String? stateId;
+  final String?
+      stateId; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
   final String? stateDescription;
   final String? userId;
   final String? userName;

@@ -14,6 +14,7 @@ import 'package:pickpointer/packages/vehicle_package/domain/usecases/stream_vehi
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 
 class OrderController extends GetxController {
   static OrderController get instance => Get.put(OrderController());
@@ -162,34 +163,41 @@ class OrderController extends GetxController {
   }
 
   void initialize(AbstractOrderEntity abstractOrderEntity) {
-    userDropPoint.value = LatLng(
-      double.parse('${abstractOrderEntity.userDropPointLat}'),
-      double.parse('${abstractOrderEntity.userDropPointLng}'),
-    );
-    userPickPoint.value = LatLng(
-      double.parse('${abstractOrderEntity.userPickPointLat}'),
-      double.parse('${abstractOrderEntity.userPickPointLng}'),
-    );
+    if (abstractOrderEntity.stateId == '1' ||
+        abstractOrderEntity.stateId == '0') {
+      Get.offAll(
+        () => RoutesController(),
+      );
+    } else {
+      userDropPoint.value = LatLng(
+        double.parse('${abstractOrderEntity.userDropPointLat}'),
+        double.parse('${abstractOrderEntity.userDropPointLng}'),
+      );
+      userPickPoint.value = LatLng(
+        double.parse('${abstractOrderEntity.userPickPointLat}'),
+        double.parse('${abstractOrderEntity.userPickPointLng}'),
+      );
 
-    orderId.value = abstractOrderEntity.id!;
-    routeTo.value = abstractOrderEntity.routeTo!;
-    routeFrom.value = abstractOrderEntity.routeFrom!;
+      orderId.value = abstractOrderEntity.id!;
+      routeTo.value = abstractOrderEntity.routeTo!;
+      routeFrom.value = abstractOrderEntity.routeFrom!;
 
-    userPickPointLat.value = abstractOrderEntity.userPickPointLat!;
-    userPickPointLng.value = abstractOrderEntity.userPickPointLng!;
+      userPickPointLat.value = abstractOrderEntity.userPickPointLat!;
+      userPickPointLng.value = abstractOrderEntity.userPickPointLng!;
 
-    driverAvatar.value = abstractOrderEntity.driverAvatar!;
-    driverName.value = abstractOrderEntity.driverName!;
-    driverCarPhoto.value = abstractOrderEntity.driverCarPhoto!;
-    driverCarModel.value = abstractOrderEntity.driverCarModel!;
-    driverCarPlate.value = abstractOrderEntity.driverCarPlate!;
-    driverPhoneNumber.value = abstractOrderEntity.driverPhoneNumber!;
+      driverAvatar.value = abstractOrderEntity.driverAvatar!;
+      driverName.value = abstractOrderEntity.driverName!;
+      driverCarPhoto.value = abstractOrderEntity.driverCarPhoto!;
+      driverCarModel.value = abstractOrderEntity.driverCarModel!;
+      driverCarPlate.value = abstractOrderEntity.driverCarPlate!;
+      driverPhoneNumber.value = abstractOrderEntity.driverPhoneNumber!;
 
-    showOfferPolylineMarkers(abstractOrderEntity);
-    streamCurrentPosition();
-    streamCurrentTaxiPosition(abstractOrderEntity);
-    streamTaxiPosition!.resume();
-    streamPosition!.resume();
+      showOfferPolylineMarkers(abstractOrderEntity);
+      streamCurrentPosition();
+      streamCurrentTaxiPosition(abstractOrderEntity);
+      streamTaxiPosition!.resume();
+      streamPosition!.resume();
+    }
   }
 
   @override

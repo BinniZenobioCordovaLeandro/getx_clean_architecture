@@ -4,6 +4,8 @@ import {sendNotificationMessage} from "../../common/functions/sendNotificationMe
 export const handler = (event: any) => {
   return new Promise((resolve, reject) => {
     functions.logger.info("sendNotificationFunction");
-    sendNotificationMessage(event.token, event.payload, event.options);
+    sendNotificationMessage(event.token, event.payload, event.options)
+        .then((response) => resolve(response))
+        .catch((error) => reject(error));
   });
 };

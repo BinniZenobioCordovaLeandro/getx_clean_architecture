@@ -15,6 +15,7 @@ import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
+import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OrderController extends GetxController {
   static OrderController get instance => Get.put(OrderController());
@@ -166,7 +167,7 @@ class OrderController extends GetxController {
     if (abstractOrderEntity.stateId == '1' ||
         abstractOrderEntity.stateId == '0') {
       Get.offAll(
-        () => RoutesController(),
+        () => const RoutesPage(),
       );
     } else {
       userDropPoint.value = LatLng(

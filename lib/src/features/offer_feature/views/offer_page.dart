@@ -17,7 +17,7 @@ import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offe
 import 'package:pickpointer/src/features/offer_feature/views/widgets/accept_passenger_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
-import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
+import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {
@@ -100,7 +100,8 @@ class _OfferPageState extends State<OfferPage> {
                                       .then((bool boolean) {
                                     if (boolean == true) {
                                       Get.offAll(
-                                        () => RoutesController(),
+                                        () => const RoutesPage(),
+                                        arguments: {},
                                       );
                                     }
                                   });
@@ -292,7 +293,8 @@ class _OfferPageState extends State<OfferPage> {
                                       .then((bool boolean) {
                                     if (boolean == true) {
                                       Get.offAll(
-                                        () => RoutesController(),
+                                        () => const RoutesPage(),
+                                        arguments: {},
                                       );
                                     }
                                   });

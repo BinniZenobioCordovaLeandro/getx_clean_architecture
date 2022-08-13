@@ -8,19 +8,23 @@ import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/order_package/data/datasources/firebase_order_datasource.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/usecases/get_order_usecase.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
+import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/packages/vehicle_package/data/datasources/vehicle_datasources/firebase_vehicle_datasource.dart';
 import 'package:pickpointer/packages/vehicle_package/domain/entities/abstract_vehicle_entity.dart';
 import 'package:pickpointer/packages/vehicle_package/domain/usecases/stream_vehicle_usecase.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
-import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OrderController extends GetxController {
   static OrderController get instance => Get.put(OrderController());
 
-  final MapController mapController = MapController();
+  MapController mapController = MapController();
 
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,6 +36,14 @@ class OrderController extends GetxController {
 
   final GetOrderUsecase _getOrderUsecase = GetOrderUsecase(
     abstractOrderRepository: FirebaseOrderDatasource(),
+  );
+
+  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
+  );
+
+  final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
   StreamVehicleUsecase streamVehicleUsecase = StreamVehicleUsecase(
@@ -201,8 +213,32 @@ class OrderController extends GetxController {
     }
   }
 
+  Future<bool> finishTrip() async {
+    Future<bool> futureBool = _verifySessionUsecase
+        .call()
+        .then((AbstractSessionEntity abstractSessionEntity) async {
+      if (abstractSessionEntity.isSigned!) {
+        await _updateSessionUsecase.call(
+            abstractSessionEntity: SessionModel(
+          isSigned: abstractSessionEntity.isSigned,
+          isDriver: abstractSessionEntity.isDriver,
+          idSessions: abstractSessionEntity.idSessions,
+          idUsers: abstractSessionEntity.idUsers,
+          onRoad: false,
+          currentOfferId: null,
+          currentOrderId: null,
+          tokenMessaging: abstractSessionEntity.tokenMessaging,
+        ));
+        return true;
+      }
+      return false;
+    });
+    return futureBool;
+  }
+
   @override
   void onReady() {
+    mapController = MapController();
     String? abstractOrderEntityId = Get.arguments['abstractOrderEntityId'];
     if (abstractOrderEntityId != null) {
       _getOrderUsecase

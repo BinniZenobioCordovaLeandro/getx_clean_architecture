@@ -22,21 +22,15 @@ import 'package:pickpointer/src/features/route_feature/views/widgets/search_dest
 import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
 import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
 
-class RoutesPage extends StatefulWidget {
+class RoutesPage extends StatelessWidget {
   const RoutesPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<RoutesPage> createState() => _RoutesPageState();
-}
-
-class _RoutesPageState extends State<RoutesPage> {
-  final RoutesController routesController = RoutesController.instance;
-  final Debouncer debouncer = Debouncer();
-
-  @override
   Widget build(BuildContext context) {
+    final RoutesController routesController = RoutesController.instance;
+    final Debouncer debouncer = Debouncer();
     return Obx(() {
       return Scaffold(
         appBar: AppBarWidget(

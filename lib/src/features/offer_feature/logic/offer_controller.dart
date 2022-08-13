@@ -26,17 +26,18 @@ import 'package:pickpointer/packages/vehicle_package/domain/usecases/update_vehi
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
-import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 
 class OfferController extends GetxController {
   static OfferController get instance => Get.put(OfferController());
 
   final FirebaseNotificationProvider? firebaseNotificationProvider =
       FirebaseNotificationProvider.getInstance();
-  final MapController mapController = MapController();
+
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
 
   final UpdateVehicleUsecase _updateVehicleUsecase = UpdateVehicleUsecase(
@@ -66,6 +67,8 @@ class OfferController extends GetxController {
   final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
+
+  MapController mapController = MapController();
 
   StreamSubscription<Position>? streamPosition;
   AbstractOfferEntity? abstractOfferEntity;
@@ -248,6 +251,7 @@ class OfferController extends GetxController {
 
   @override
   void onReady() {
+    mapController = MapController();
     String? abstractOfferEntityId = Get.arguments['abstractOfferEntityId'];
     if (abstractOfferEntityId != null) {
       _getOfferUsecase

@@ -49,7 +49,7 @@ class SearchLocationCardWidget extends StatefulWidget {
 }
 
 class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
-  final MapController mapController = MapController();
+  MapController mapController = MapController();
 
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
@@ -132,6 +132,7 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
 
   @override
   void initState() {
+    mapController = MapController();
     if (widget.initialValue != null) {
       boolean = widget.initialValue!;
     }

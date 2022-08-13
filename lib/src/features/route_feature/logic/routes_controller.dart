@@ -23,7 +23,7 @@ import 'package:pickpointer/src/core/providers/places_provider.dart';
 class RoutesController extends GetxController {
   static RoutesController get instance => Get.put(RoutesController());
 
-  final MapController mapController = MapController();
+  MapController mapController = MapController();
   final FirebaseNotificationProvider? firebaseNotificationProvider =
       FirebaseNotificationProvider.getInstance();
 
@@ -135,8 +135,47 @@ class RoutesController extends GetxController {
     });
   }
 
+  getPredictions(String string) {
+    placesProvider?.getPredictions(string).then(
+      (List<Prediction> listPrediction) {
+        errorMessage.value = '';
+        if (listPrediction.length > 3) {
+          predictions.value = listPrediction.sublist(0, 3);
+        } else {
+          predictions.value = listPrediction;
+        }
+      },
+      onError: (dynamic error) {
+        errorMessage.value = error.toString();
+      },
+    );
+  }
+
+  Future<LatLng>? getPlaceDetail(String placeId) {
+    Future<LatLng>? futureLatLng =
+        placesProvider?.getPlaceDetails(placeId).then(
+      (PlacesDetailsResponse placeDetailsResponse) {
+        errorMessage.value = '';
+        LatLng latLng = LatLng(
+          placeDetailsResponse.result.geometry!.location.lat,
+          placeDetailsResponse.result.geometry!.location.lng,
+        );
+        return latLng;
+      },
+      onError: (dynamic error) {
+        errorMessage.value = error.toString();
+      },
+    );
+    return futureLatLng;
+  }
+
+  cleanPredictions() {
+    predictions.value = <Prediction>[];
+  }
+
   @override
   void onReady() {
+    mapController = MapController();
     isLoading.value = true;
 
     notificationProvider?.checkPermission();
@@ -228,41 +267,9 @@ class RoutesController extends GetxController {
     super.onReady();
   }
 
-  getPredictions(String string) {
-    placesProvider?.getPredictions(string).then(
-      (List<Prediction> listPrediction) {
-        errorMessage.value = '';
-        if (listPrediction.length > 3) {
-          predictions.value = listPrediction.sublist(0, 3);
-        } else {
-          predictions.value = listPrediction;
-        }
-      },
-      onError: (dynamic error) {
-        errorMessage.value = error.toString();
-      },
-    );
-  }
-
-  Future<LatLng>? getPlaceDetail(String placeId) {
-    Future<LatLng>? futureLatLng =
-        placesProvider?.getPlaceDetails(placeId).then(
-      (PlacesDetailsResponse placeDetailsResponse) {
-        errorMessage.value = '';
-        LatLng latLng = LatLng(
-          placeDetailsResponse.result.geometry!.location.lat,
-          placeDetailsResponse.result.geometry!.location.lng,
-        );
-        return latLng;
-      },
-      onError: (dynamic error) {
-        errorMessage.value = error.toString();
-      },
-    );
-    return futureLatLng;
-  }
-
-  cleanPredictions() {
-    predictions.value = <Prediction>[];
+  @override
+  void onClose() {
+    streamPosition?.cancel();
+    super.onClose();
   }
 }

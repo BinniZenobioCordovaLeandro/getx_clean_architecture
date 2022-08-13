@@ -15,6 +15,10 @@ abstract class AbstractVehicleRepository {
     required AbstractVehicleEntity vehicle,
   });
 
+  Future<bool> deleteVehicle({
+    required String vehicleId,
+  });
+
   Future<AbstractVehicleEntity> updateVehicle({
     required AbstractVehicleEntity vehicle,
   });

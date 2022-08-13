@@ -24,4 +24,9 @@ class HttpOfferDatasource implements AbstractOfferRepository {
   Future<AbstractOfferEntity>? addOffer({
     required AbstractOfferEntity abstractOfferEntity,
   }) {}
+
+  @override
+  Future<AbstractOfferEntity>? updateOffer({
+    required AbstractOfferEntity abstractOfferEntity,
+  }) {}
 }

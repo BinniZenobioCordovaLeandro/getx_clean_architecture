@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
@@ -32,6 +33,8 @@ class RouteController extends GetxController {
       GetOffersByRouteUsecase(
     abstractOfferRepository: FirebaseOfferDatasource(),
   );
+
+  MapController mapController = MapController();
 
   Future<List<LatLng>> getPolylineBetweenCoordinates({
     required LatLng origin,
@@ -76,6 +79,7 @@ class RouteController extends GetxController {
 
   @override
   void onReady() {
+    mapController = MapController();
     AbstractRouteEntity _abstractRouteEntity =
         Get.arguments['abstractRouteEntity'];
     getPolylineBetweenCoordinates(

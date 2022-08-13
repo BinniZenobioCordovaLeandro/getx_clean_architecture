@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/logic/offer_controller.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/accept_passenger_card_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
+import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
+import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {
   final String? abstractOfferEntityId;
@@ -36,7 +42,7 @@ class _OfferPageState extends State<OfferPage> {
     return Obx(() {
       return Scaffold(
         appBar: AppBarWidget(
-          title: 'On Road!',
+          title: 'Offer ${offerController.offerId.value}',
           actions: [
             IconButton(
               tooltip: 'Refrescar',
@@ -46,19 +52,68 @@ class _OfferPageState extends State<OfferPage> {
               onPressed: () => offerController.refreshOffer(),
             ),
             IconButton(
-              tooltip: 'Compartir',
-              icon: const Icon(
-                Icons.ios_share_rounded,
-              ),
-              onPressed: () {},
-            ),
-            IconButton(
               tooltip: 'Mensajes',
               icon: const Icon(
                 Icons.message_rounded,
               ),
               onPressed: () {
                 offerController.scaffoldKey.currentState!.openEndDrawer();
+              },
+            ),
+            PopupMenuButton(
+              itemBuilder: (context) {
+                return [
+                  const PopupMenuItem<int>(
+                    value: 0,
+                    child: Text("Finalizar viaje"),
+                  ),
+                ];
+              },
+              onSelected: (value) {
+                if (value == 0) {
+                  ModalBottomSheetHelper(
+                    context: context,
+                    title: 'Finalizar viaje',
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: FractionallySizedBoxWidget(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: WrapWidget(
+                            children: [
+                              TextWidget(
+                                '¿Estás seguro de que deseas finalizar el viaje?',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              TextWidget(
+                                'Si finalizas el viaje, no podrás volver a acceder a él. \nAdemas, si finalizas sin haber completado el viaje llegaras a afectar tu calificación. \n\nSolo hazlo si estás seguro de no tener pasajeros en el viaje o a la espera.',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              ProgressStateButtonWidget(
+                                state: offerController.isLoading.value
+                                    ? ButtonState.loading
+                                    : ButtonState.success,
+                                success: 'Finalizar',
+                                onPressed: () {
+                                  offerController
+                                      .finishTrip()
+                                      .then((bool boolean) {
+                                    if (boolean == true) {
+                                      Get.offAll(
+                                        () => const RoutesPage(),
+                                        arguments: {},
+                                      );
+                                    }
+                                  });
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
               },
             ),
           ],
@@ -138,7 +193,8 @@ class _OfferPageState extends State<OfferPage> {
                                 double.parse(order["pickPointLng"]),
                               ),
                             ),
-                            urlSvgOrImage: order['avatar'],
+                            avatar: order['avatar'],
+                            fullName: order['fullName'],
                           );
                         },
                       ),
@@ -160,9 +216,10 @@ class _OfferPageState extends State<OfferPage> {
                       ],
                       popupBuilder: (BuildContext context, Marker marker) {
                         return const PopupMarkerPassengerWidget(
-                          meters: 200,
-                          urlSvgOrImage:
+                          meters: 0,
+                          avatar:
                               'https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png',
+                          fullName: 'Driver position',
                         );
                       },
                     ),
@@ -215,14 +272,34 @@ class _OfferPageState extends State<OfferPage> {
                                         offerController
                                             .firebaseNotificationProvider
                                             ?.sendMessage(
-                                          to: order['tokenMessaging'],
+                                          to: [order['tokenMessaging']],
                                           title: '¡Bienvenido a bordo!',
                                           body:
-                                              'Procura usar mascarilla y saludar.',
+                                              'Procura usar mascarilla y saludar, ${order['fullName']}',
                                         );
                                       },
                                     )
                                   : const SizedBox(),
+                            if (offerController.distanceBetween(
+                                  start: offerController.positionTaxi.value,
+                                  end: offerController.offerEnd.value,
+                                ) <
+                                2000)
+                              FinishTripCardWidget(
+                                isLoading: offerController.isLoading.value,
+                                onPressed: () {
+                                  offerController
+                                      .finishTrip()
+                                      .then((bool boolean) {
+                                    if (boolean == true) {
+                                      Get.offAll(
+                                        () => const RoutesPage(),
+                                        arguments: {},
+                                      );
+                                    }
+                                  });
+                                },
+                              ),
                           ],
                         ),
                       ),

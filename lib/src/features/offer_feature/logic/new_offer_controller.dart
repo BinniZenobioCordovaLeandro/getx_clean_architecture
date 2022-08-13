@@ -127,7 +127,7 @@ class NewOfferController extends GetxController {
                     currentOfferId: abstractOfferEntity.id,
                   ),
                 );
-                Get.to(
+                Get.offAll(
                   () => OfferPage(
                     abstractOfferEntity: abstractOfferEntity,
                   ),

@@ -127,7 +127,7 @@ class _AppState extends State<App> {
         .call()
         .then((AbstractSessionEntity abstractSessionEntity) {
       if (abstractSessionEntity.currentOrderId != null) {
-        Get.to(
+        Get.offAll(
           () => OrderPage(
             abstractOrderEntityId: abstractSessionEntity.currentOrderId,
           ),
@@ -136,7 +136,7 @@ class _AppState extends State<App> {
           },
         );
       } else if (abstractSessionEntity.currentOfferId != null) {
-        Get.to(
+        Get.offAll(
           () => OfferPage(
             abstractOfferEntityId: abstractSessionEntity.currentOfferId,
           ),

@@ -4,7 +4,6 @@ import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
-import 'package:pickpointer/src/app.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
@@ -21,7 +20,6 @@ import 'package:pickpointer/src/features/order_feature/views/widgets/call_card_w
 import 'package:pickpointer/src/features/order_feature/views/widgets/messages_box_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/order_card_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/popup_marker_taxi_widget.dart';
-import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OrderPage extends StatefulWidget {

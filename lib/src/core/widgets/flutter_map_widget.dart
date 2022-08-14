@@ -9,6 +9,7 @@ class FlutterMapWidget extends StatelessWidget {
   final List<Widget> children;
   final int? interactiveFlags;
   final void Function(MapPosition, bool)? onPositionChanged;
+  final void Function(MapController)? onMapCreated;
 
   const FlutterMapWidget({
     Key? key,
@@ -18,6 +19,7 @@ class FlutterMapWidget extends StatelessWidget {
     this.children = const [],
     this.interactiveFlags = InteractiveFlag.pinchZoom | InteractiveFlag.drag,
     this.onPositionChanged,
+    this.onMapCreated,
   }) : super(key: key);
 
   @override
@@ -25,6 +27,7 @@ class FlutterMapWidget extends StatelessWidget {
     return FlutterMap(
       mapController: mapController,
       options: MapOptions(
+        onMapCreated: onMapCreated,
         maxZoom: 18.3,
         zoom: 13.0,
         center: center,

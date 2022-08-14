@@ -278,8 +278,13 @@ class OfferController extends GetxController {
   }
 
   @override
-  void onReady() {
+  void onInit() {
     mapController = MapController();
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
     String? abstractOfferEntityId = Get.arguments['abstractOfferEntityId'];
     if (abstractOfferEntityId != null) {
       _getOfferUsecase

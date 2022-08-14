@@ -81,4 +81,14 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
     offers?.doc(offerModel.id).update(newMapStringDynamic);
     return Future.value(offerModel);
   }
+
+  @override
+  Future<AbstractOfferEntity>? startOffer({
+    required String offerId,
+  }) {}
+
+  @override
+  Future<AbstractOfferEntity>? finishOffer({
+    required String offerId,
+  }) {}
 }

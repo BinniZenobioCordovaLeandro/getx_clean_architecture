@@ -17,6 +17,7 @@ import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offe
 import 'package:pickpointer/src/features/offer_feature/views/widgets/accept_passenger_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/widgets/start_trip_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 import 'package:progress_state_button/progress_button.dart';
 
@@ -296,6 +297,24 @@ class _OfferPageState extends State<OfferPage> {
                                         () => const RoutesPage(),
                                         arguments: {},
                                       );
+                                    }
+                                  });
+                                },
+                              ),
+                            if (offerController.offerStateId.value == '-1')
+                              StartTripCardWidget(
+                                isLoading: offerController.isLoading.value,
+                                customersAvatar: [
+                                  for (var order
+                                      in offerController.listOrders.value)
+                                    order['avatar'],
+                                ],
+                                onPressed: () {
+                                  offerController
+                                      .startTrip()
+                                      .then((bool boolean) {
+                                    if (boolean == true) {
+                                      offerController.refreshOffer();
                                     }
                                   });
                                 },

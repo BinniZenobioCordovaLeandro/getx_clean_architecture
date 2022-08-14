@@ -7,9 +7,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
+import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/http_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/data/models/offer_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offer_usecase.dart';
+import 'package:pickpointer/packages/offer_package/domain/usecases/start_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/update_offer_usecase.dart';
 import 'package:pickpointer/packages/order_package/data/datasources/firebase_order_datasource.dart';
 import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
@@ -52,6 +54,10 @@ class OfferController extends GetxController {
     abstractOfferRepository: FirebaseOfferDatasource(),
   );
 
+  final StartOfferUsecase _startOfferUsecase = StartOfferUsecase(
+    abstractOfferRepository: HttpOfferDatasource(),
+  );
+
   final UpdateOrderUsecase _updateOrderUsecase = UpdateOrderUsecase(
     abstractOrderRepository: FirebaseOrderDatasource(),
   );
@@ -71,7 +77,6 @@ class OfferController extends GetxController {
   MapController mapController = MapController();
 
   StreamSubscription<Position>? streamPosition;
-  AbstractOfferEntity? abstractOfferEntity;
 
   var isLoading = false.obs;
   var errorMessage = ''.obs;
@@ -83,6 +88,8 @@ class OfferController extends GetxController {
   var polylineListLatLng = <LatLng>[].obs;
 
   var offerId = ''.obs;
+  var offerStateId =
+      ''.obs; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
 
   double distanceBetween({
     required LatLng start,
@@ -184,6 +191,27 @@ class OfferController extends GetxController {
     listOrders.value = localListOrders;
   }
 
+  Future<bool> startTrip() async {
+    isLoading.value = true;
+    Future<bool>? futureBool = _startOfferUsecase
+        .call(
+      offerId: offerId.value,
+    )
+        ?.then((AbstractOfferEntity abstractOfferEntity) {
+      isLoading.value = false;
+      if (abstractOfferEntity.stateId == '2') {
+        initialize(abstractOfferEntity);
+        return true;
+      }
+      return false;
+    }).catchError((onError) {
+      isLoading.value = false;
+      errorMessage.value = onError.toString();
+      return false;
+    });
+    return futureBool!;
+  }
+
   Future<bool> finishTrip() async {
     isLoading.value = true;
     for (var order in listOrders.value) {
@@ -227,10 +255,9 @@ class OfferController extends GetxController {
   }
 
   void refreshOffer() {
-    final String offerId = abstractOfferEntity!.id!;
     print('offerId, $offerId');
     _getOfferUsecase
-        .call(offerId: offerId)
+        .call(offerId: offerId.value)
         ?.then((AbstractOfferEntity? abstractOfferEntity) {
       initialize(abstractOfferEntity!);
     });
@@ -238,6 +265,7 @@ class OfferController extends GetxController {
 
   void initialize(AbstractOfferEntity abstractOfferEntity) {
     offerId.value = abstractOfferEntity.id!;
+    offerStateId.value = abstractOfferEntity.stateId!;
     userCarPlate.value = abstractOfferEntity.userCarPlate!;
     offerEnd.value = LatLng(
       double.parse('${abstractOfferEntity.endLat}'),
@@ -260,8 +288,9 @@ class OfferController extends GetxController {
         initialize(abstractOfferEntity!);
       });
     } else {
-      abstractOfferEntity = Get.arguments['abstractOfferEntity'];
-      initialize(abstractOfferEntity!);
+      AbstractOfferEntity abstractOfferEntity =
+          Get.arguments['abstractOfferEntity'];
+      initialize(abstractOfferEntity);
     }
     super.onReady();
   }

@@ -176,6 +176,7 @@ class OrderController extends GetxController {
   }
 
   void initialize(AbstractOrderEntity abstractOrderEntity) {
+    abstractOrderEntity = abstractOrderEntity;
     if (abstractOrderEntity.stateId == '1' ||
         abstractOrderEntity.stateId == '0') {
       Get.offAll(

@@ -109,7 +109,7 @@ class _OrderPageState extends State<OrderPage> {
                                   title: 'Confirmar',
                                   onPressed: () {
                                     orderController
-                                        .finishTrip()
+                                        .cleanSession()
                                         .then((bool value) {
                                       if (value) {
                                         Get.offAll(

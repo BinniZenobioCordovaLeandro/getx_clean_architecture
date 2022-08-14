@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:pickpointer/packages/vehicle_package/data/models/vehicle_model.dart';
 import 'package:pickpointer/packages/vehicle_package/domain/entities/abstract_vehicle_entity.dart';
 import 'package:pickpointer/packages/vehicle_package/domain/repositories/abstract_vehicle_repository.dart';

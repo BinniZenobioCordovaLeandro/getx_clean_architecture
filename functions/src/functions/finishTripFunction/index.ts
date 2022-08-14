@@ -2,9 +2,10 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {sendNotificationMessage} from "../../common/functions/sendNotificationMessage";
 
+
 export const handler = (event: any) => {
   return new Promise((resolve, reject) => {
-    functions.logger.info("startTripFunction");
+    functions.logger.info("finishTripFunction");
     const firebaseFirestore = admin.firestore();
 
     const offersCollection = firebaseFirestore.collection("c_offers");
@@ -13,19 +14,19 @@ export const handler = (event: any) => {
     const offerId = event.offer_id;
 
     functions.logger.info("firebaseFirestore");
+
     offersCollection.doc(offerId).get().then(async (doc: any) => {
       const currentDate = Date.now();
       const offerDocument = doc.data();
       if (!offerDocument) reject(Error("offer not found"));
 
       // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
-      const newStatus = {state_id: "2", state_description: "En Carretera"};
-      const newData = {updated_at: currentDate, max_count: offerDocument.count};
+      const newStatus = {state_id: "1", state_description: "Completado"};
+      const newData = {updated_at: currentDate};
 
-      // let orders = [];
       const clientsInformation = JSON.parse(offerDocument!.orders);
 
-      if (offerDocument.state_id === "-1") {
+      if (offerDocument.state_id === "2") {
         clientsInformation.forEach((client: any) => {
           const orderId = client.orderId;
           const tokenMessaging = client.tokenMessaging;
@@ -38,8 +39,8 @@ export const handler = (event: any) => {
 
           sendNotificationMessage(tokenMessaging, {
             notification: {
-              title: `¡Vehiculo en ruta!, ${offerDocument.user_car_plate}`,
-              body: `Por favor, espere en el punto de encuentro seleccionado, ${fullName}`,
+              title: "¡Gracias por usar PICKPOINTER!",
+              body: `Gracias por viajar, te esperamos nuevamente, ${fullName}`,
               imageUrl: offerDocument.user_car_photo,
             },
           })
@@ -53,15 +54,20 @@ export const handler = (event: any) => {
         }).then(() => {
           sendNotificationMessage(offerDocument.user_token_messaging, {
             notification: {
-              title: "¡INICIASTE LA RUTA!",
-              body: `Los ${clientsInformation.length} pasajeros fueron notificados,
-                            ponte en ruta con el vehiculo ${offerDocument.user_car_plate}`,
+              title: `¡RUTA COMPLETA!, ${offerDocument.user_car_plate}`,
+              body: `Gracias por usar PICKPOINTER, ${offerDocument.user_name}`,
               imageUrl: offerDocument.user_car_photo,
             },
           }).then(() => {
-            functions.logger.info(`Driver notified ${offerDocument.user_car_plate}`);
+            functions.logger.info("Driver notified");
           }).catch(() => {
-            functions.logger.warn(`error notifying Driver ${offerDocument.user_car_plate}`);
+            functions.logger.warn(`error notifying Driver ${offerDocument.user_token_messaging}`);
+          });
+
+          admin.database().ref(`c_vehicles/${offerDocument.user_car_plate}`).remove().then(() => {
+            functions.logger.info(`Vehicle removed ${offerDocument.user_car_plate}`);
+          }).catch(() => {
+            functions.logger.warn(`error removing Vehicle ${offerDocument.user_car_plate}`);
           });
 
           resolve({
@@ -74,7 +80,7 @@ export const handler = (event: any) => {
           reject(error);
         });
       } else {
-        reject(Error("offer not available to start trip"));
+        reject(Error("offer not in progress to finish"));
       }
     });
   });

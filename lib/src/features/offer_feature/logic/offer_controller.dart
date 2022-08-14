@@ -10,6 +10,7 @@ import 'package:pickpointer/packages/offer_package/data/datasources/offer_dataso
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/http_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/data/models/offer_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
+import 'package:pickpointer/packages/offer_package/domain/usecases/finish_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/start_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/update_offer_usecase.dart';
@@ -28,6 +29,7 @@ import 'package:pickpointer/packages/vehicle_package/domain/usecases/update_vehi
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OfferController extends GetxController {
   static OfferController get instance => Get.put(OfferController());
@@ -55,6 +57,10 @@ class OfferController extends GetxController {
   );
 
   final StartOfferUsecase _startOfferUsecase = StartOfferUsecase(
+    abstractOfferRepository: HttpOfferDatasource(),
+  );
+
+  final FinishOfferUsecase _finishOfferUsecase = FinishOfferUsecase(
     abstractOfferRepository: HttpOfferDatasource(),
   );
 
@@ -214,33 +220,32 @@ class OfferController extends GetxController {
 
   Future<bool> finishTrip() async {
     isLoading.value = true;
-    for (var order in listOrders.value) {
-      _updateOrderUsecase.call(
-        order: OrderModel(
-          id: '${order['orderId']}',
-          stateId: '1',
-          stateDescription: 'Completado',
-        ),
-      );
-    }
-    await _updateOfferUsecase.call(
-        abstractOfferEntity: OfferModel(
-      id: '${offerId.value}',
-      stateId: '1',
-      stateDescription: 'Completado',
-    ));
-    await _deleteVehicleUsecase.call(vehicleId: userCarPlate.value);
-    await cleanOnRoadSession();
-    isLoading.value = false;
-    return Future.value(true);
+    Future<bool>? futureBool = _finishOfferUsecase
+        .call(
+      offerId: offerId.value,
+    )
+        ?.then((AbstractOfferEntity abstractOfferEntity) {
+      isLoading.value = false;
+      if (abstractOfferEntity.stateId == '1') {
+        initialize(abstractOfferEntity);
+        return true;
+      }
+      return false;
+    }).catchError((onError) {
+      isLoading.value = false;
+      errorMessage.value = onError.toString();
+      return false;
+    });
+    return futureBool!;
   }
 
-  cleanOnRoadSession() async {
-    AbstractSessionEntity abstractSessionEntity =
-        await _verifySessionUsecase.call();
-    if (abstractSessionEntity.isSigned!) {
-      await _updateSessionUsecase.call(
-        abstractSessionEntity: SessionModel(
+  Future<bool> cleanSession() {
+    Future<bool> futureBool = _verifySessionUsecase
+        .call()
+        .then((AbstractSessionEntity abstractSessionEntity) async {
+      if (abstractSessionEntity.isSigned!) {
+        await _updateSessionUsecase.call(
+            abstractSessionEntity: SessionModel(
           isSigned: abstractSessionEntity.isSigned,
           isDriver: abstractSessionEntity.isDriver,
           idSessions: abstractSessionEntity.idSessions,
@@ -249,9 +254,12 @@ class OfferController extends GetxController {
           currentOfferId: null,
           currentOrderId: null,
           tokenMessaging: abstractSessionEntity.tokenMessaging,
-        ),
-      );
-    }
+        ));
+        return true;
+      }
+      return false;
+    });
+    return futureBool;
   }
 
   void refreshOffer() {
@@ -267,14 +275,25 @@ class OfferController extends GetxController {
     offerId.value = abstractOfferEntity.id!;
     offerStateId.value = abstractOfferEntity.stateId!;
     userCarPlate.value = abstractOfferEntity.userCarPlate!;
-    offerEnd.value = LatLng(
-      double.parse('${abstractOfferEntity.endLat}'),
-      double.parse('${abstractOfferEntity.endLng}'),
-    );
-    prepareStreamCurrentPosition(abstractOfferEntity);
-    showOfferPolylineMarkers(abstractOfferEntity);
-    showDynamicsMarkers(abstractOfferEntity);
-    streamPosition!.resume();
+    if (abstractOfferEntity.stateId == '1' ||
+        abstractOfferEntity.stateId == '0') {
+      cleanSession().then((bool boolean) {
+        if (boolean) {
+          Get.offAll(
+            () => const RoutesPage(),
+          );
+        }
+      });
+    } else {
+      offerEnd.value = LatLng(
+        double.parse('${abstractOfferEntity.endLat}'),
+        double.parse('${abstractOfferEntity.endLng}'),
+      );
+      prepareStreamCurrentPosition(abstractOfferEntity);
+      showOfferPolylineMarkers(abstractOfferEntity);
+      showDynamicsMarkers(abstractOfferEntity);
+      streamPosition!.resume();
+    }
   }
 
   @override

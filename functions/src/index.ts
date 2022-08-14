@@ -3,6 +3,7 @@ import * as admin from "firebase-admin";
 import * as createOrderPackage from "./functions/createOrderFunction";
 import * as sendNotificationPackage from "./functions/sendNotificationFunction";
 import * as startTripPackage from "./functions/startTripFunction";
+import * as finishTripPackage from "./functions/finishTripFunction";
 
 admin.initializeApp();
 
@@ -34,6 +35,15 @@ export const sendNotification = functions.https.onRequest((request, response) =>
 export const startTrip = functions.https.onRequest((request, response) => {
   functions.logger.info("startTrip logs!", {structuredData: true});
   startTripPackage.handler(request.body).then((result: any) => {
+    response.status(200).send(result);
+  }).catch((err: any) => {
+    response.status(500).send(err);
+  });
+});
+
+export const finishTrip = functions.https.onRequest((request, response) => {
+  functions.logger.info("finishTrip logs!", {structuredData: true});
+  finishTripPackage.handler(request.body).then((result: any) => {
     response.status(200).send(result);
   }).catch((err: any) => {
     response.status(500).send(err);

@@ -181,7 +181,7 @@ class OrderController extends GetxController {
     abstractOrderEntity = abstractOrderEntity;
     if (abstractOrderEntity.stateId == '1' ||
         abstractOrderEntity.stateId == '0') {
-      finishTrip().then((bool boolean) {
+      cleanSession().then((bool boolean) {
         if (boolean) {
           Get.offAll(
             () => const RoutesPage(),
@@ -220,7 +220,7 @@ class OrderController extends GetxController {
     }
   }
 
-  Future<bool> finishTrip() async {
+  Future<bool> cleanSession() {
     Future<bool> futureBool = _verifySessionUsecase
         .call()
         .then((AbstractSessionEntity abstractSessionEntity) async {

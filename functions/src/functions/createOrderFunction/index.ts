@@ -148,7 +148,7 @@ export const handler = (event: any) => {
                           title: "¡LISTO! Inicia la ruta",
                           body: `Los ${maxCounter} asientos fueron vendidos,
                             ponte en ruta con el vehiculo ${orderRequest.driver_car_plate}`,
-                          imageUrl: clientInformation.avatar,
+                          imageUrl: orderRequest.driver_car_photo,
                         },
                       });
                       break;
@@ -158,7 +158,7 @@ export const handler = (event: any) => {
                   }
                 })
                 .catch((error: any) => {
-                  console.error("Error adding document: ", error);
+                  functions.logger.error("Error updating order ", error);
                   reject(error);
                 });
           } else {

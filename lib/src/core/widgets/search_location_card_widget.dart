@@ -276,30 +276,36 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                             width: 20.0,
                             height: 20.0,
                             point: myLatLng,
-                            anchorPos: AnchorPos.align(
-                              AnchorAlign.top,
-                            ),
+                            anchorPos: AnchorPos.align(AnchorAlign.top),
                             builder: (BuildContext context) => IconButton(
                               tooltip: 'Mi ubicacion actual',
-                              icon: Icon(
-                                Icons.person_pin_circle_sharp,
-                                color: Theme.of(context).primaryColor,
-                                size: 20.0,
+                              icon: Center(
+                                child: Icon(
+                                  Icons.person_pin_circle_sharp,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 20.0,
+                                ),
                               ),
                               onPressed: () {},
                             ),
                           ),
                           Marker(
-                            width: 50.0,
-                            height: 50.0,
+                            width: 0,
+                            height: 0,
                             point: latLng,
-                            anchorPos: AnchorPos.align(
-                              AnchorAlign.top,
+                            anchorPos: AnchorPos.align(AnchorAlign.center),
+                            builder: (BuildContext context) => const Icon(
+                              Icons.circle,
+                              size: 5,
                             ),
-                            builder: (BuildContext context) => IconButton(
-                              iconSize: 50.0,
-                              icon: widget.iconMarker,
-                              onPressed: () {},
+                          ),
+                          Marker(
+                            width: 45.0,
+                            height: 45.0,
+                            point: latLng,
+                            anchorPos: AnchorPos.align(AnchorAlign.top),
+                            builder: (BuildContext context) => Center(
+                              child: widget.iconMarker,
                             ),
                           ),
                         ],

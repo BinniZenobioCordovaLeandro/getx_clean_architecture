@@ -96,16 +96,7 @@ class _OfferPageState extends State<OfferPage> {
                                     : ButtonState.success,
                                 success: 'Finalizar',
                                 onPressed: () {
-                                  offerController
-                                      .finishTrip()
-                                      .then((bool boolean) {
-                                    if (boolean == true) {
-                                      Get.offAll(
-                                        () => const RoutesPage(),
-                                        arguments: {},
-                                      );
-                                    }
-                                  });
+                                  offerController.finishTrip();
                                 },
                               )
                             ],
@@ -289,16 +280,7 @@ class _OfferPageState extends State<OfferPage> {
                               FinishTripCardWidget(
                                 isLoading: offerController.isLoading.value,
                                 onPressed: () {
-                                  offerController
-                                      .finishTrip()
-                                      .then((bool boolean) {
-                                    if (boolean == true) {
-                                      Get.offAll(
-                                        () => const RoutesPage(),
-                                        arguments: {},
-                                      );
-                                    }
-                                  });
+                                  offerController.finishTrip();
                                 },
                               ),
                             if (offerController.offerStateId.value == '-1')

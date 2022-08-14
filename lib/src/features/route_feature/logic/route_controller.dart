@@ -78,8 +78,13 @@ class RouteController extends GetxController {
   }
 
   @override
-  void onReady() {
+  void onInit() {
     mapController = MapController();
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
     AbstractRouteEntity _abstractRouteEntity =
         Get.arguments['abstractRouteEntity'];
     getPolylineBetweenCoordinates(

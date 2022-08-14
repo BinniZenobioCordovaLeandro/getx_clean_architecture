@@ -78,7 +78,9 @@ class RoutesPage extends StatelessWidget {
           children: [
             SizedBox(
               child: FlutterMapWidget(
-                mapController: routesController.mapController,
+                onMapCreated: (MapController controller) {
+                  routesController.mapController = controller;
+                },
                 center: routesController.position.value,
                 children: [
                   MarkerLayerWidget(
@@ -190,14 +192,13 @@ class RoutesPage extends StatelessWidget {
               child: SafeAreaWidget(
                 child: FractionallySizedBoxWidget(
                   child: SearchDestinationCardWidget(
-                    // ignore: invalid_use_of_protected_member
                     predictions: routesController.predictions.value,
                     onTapPrediction: (Prediction prediction) {
                       routesController
                           .getPlaceDetail('${prediction.placeId}')
                           ?.then((LatLng latLng) => routesController
                               .mapController
-                              .move(latLng, 15.0));
+                              ?.move(latLng, 15.0));
                       routesController.cleanPredictions();
                     },
                     onChanged: (String string) {

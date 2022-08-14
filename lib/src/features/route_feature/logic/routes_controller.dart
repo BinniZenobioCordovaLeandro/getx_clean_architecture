@@ -23,7 +23,7 @@ import 'package:pickpointer/src/core/providers/places_provider.dart';
 class RoutesController extends GetxController {
   static RoutesController get instance => Get.put(RoutesController());
 
-  MapController mapController = MapController();
+  MapController? mapController;
   final FirebaseNotificationProvider? firebaseNotificationProvider =
       FirebaseNotificationProvider.getInstance();
 
@@ -62,7 +62,7 @@ class RoutesController extends GetxController {
 
   moveToMyLocation() {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-      mapController.move(position.value, 15.0);
+      mapController?.move(position.value, 15.0);
     });
   }
 
@@ -175,7 +175,6 @@ class RoutesController extends GetxController {
 
   @override
   void onReady() {
-    mapController = MapController();
     isLoading.value = true;
 
     notificationProvider?.checkPermission();

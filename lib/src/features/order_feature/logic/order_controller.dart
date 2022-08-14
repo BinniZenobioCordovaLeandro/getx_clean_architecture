@@ -66,6 +66,7 @@ class OrderController extends GetxController {
   var taxiPosition = LatLng(-12.0, -76.0).obs;
 
   var orderId = ''.obs;
+  var orderStateId = ''.obs;
 
   var routeTo = ''.obs;
   var routeFrom = ''.obs;
@@ -167,21 +168,26 @@ class OrderController extends GetxController {
   }
 
   void refreshOrder() {
-    final String orderId = abstractOrderEntity!.id!;
     _getOrderUsecase
-        .call(orderId: orderId)
+        .call(orderId: orderId.value)
         ?.then((AbstractOrderEntity? abstractOrderEntity) {
       initialize(abstractOrderEntity!);
     });
   }
 
   void initialize(AbstractOrderEntity abstractOrderEntity) {
+    orderId.value = abstractOrderEntity.id!;
+    orderStateId.value = abstractOrderEntity.stateId!;
     abstractOrderEntity = abstractOrderEntity;
     if (abstractOrderEntity.stateId == '1' ||
         abstractOrderEntity.stateId == '0') {
-      Get.offAll(
-        () => const RoutesPage(),
-      );
+      finishTrip().then((bool boolean) {
+        if (boolean) {
+          Get.offAll(
+            () => const RoutesPage(),
+          );
+        }
+      });
     } else {
       userDropPoint.value = LatLng(
         double.parse('${abstractOrderEntity.userDropPointLat}'),
@@ -238,8 +244,13 @@ class OrderController extends GetxController {
   }
 
   @override
-  void onReady() {
+  void onInit() {
     mapController = MapController();
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
     String? abstractOrderEntityId = Get.arguments['abstractOrderEntityId'];
     if (abstractOrderEntityId != null) {
       _getOrderUsecase

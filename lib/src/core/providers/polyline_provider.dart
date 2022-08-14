@@ -33,6 +33,8 @@ class PolylineProvider {
                   location: '${wayPoint.latitude},${wayPoint.longitude}');
             }).toList()
           : [],
+      optimizeWaypoints: true,
+      travelMode: TravelMode.driving,
     )
         .then((PolylineResult polylineResult) {
       if (polylineResult.errorMessage?.isNotEmpty == true) {

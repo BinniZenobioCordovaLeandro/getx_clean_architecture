@@ -304,7 +304,8 @@ class OfferController extends GetxController {
 
   @override
   void onReady() {
-    String? abstractOfferEntityId = Get.arguments['abstractOfferEntityId'];
+    String? abstractOfferEntityId = Get.parameters['abstractOfferEntityId'] ??
+        Get.arguments['abstractOfferEntityId'];
     if (abstractOfferEntityId != null) {
       _getOfferUsecase
           .call(offerId: abstractOfferEntityId)

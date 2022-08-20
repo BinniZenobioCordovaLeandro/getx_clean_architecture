@@ -87,3 +87,31 @@ References: `https://youtu.be/WPEsnJgW99M`
 
 Use GITHUB Actions to run the tests.
 Use GITHUB Actions to build and deploy to firebase.
+
+## Deep Link
+
+Use Deep Link to navigate to a `Order` or a `Offer`.
+
+`Android`
+
+```zsh
+adb shell am start -a android.intent.action.VIEW \
+    -c android.intent.category.BROWSABLE \
+    -d "pickpointer://pickpointer.com/order/276f8420-1dd6-11ed-9f3b-ebfbcfdb7f7c"
+```
+
+```zsh
+adb shell am start -a android.intent.action.VIEW \
+    -c android.intent.category.BROWSABLE \
+    -d "pickpointer://pickpointer.com/offer/292190b0-f5a4-11ec-aa53-69e3b9da4a7e"
+```
+
+`iOS`
+
+```zsh
+xcrun simctl openurl booted pickpointer://pickpointer.com/order/276f8420-1dd6-11ed-9f3b-ebfbcfdb7f7c
+```
+
+```zsh
+xcrun simctl openurl booted pickpointer://pickpointer.com/offer/292190b0-f5a4-11ec-aa53-69e3b9da4a7e
+```

@@ -43,6 +43,10 @@ export const handler = (event: any) => {
               body: `Gracias por viajar, te esperamos nuevamente, ${fullName}`,
               imageUrl: offerDocument.user_car_photo,
             },
+            data: {
+              is_message: "true",
+              link: `/order/${orderId}`,
+            },
           })
               .then(() => functions.logger.info(`User notified ${orderId}`))
               .catch(() => functions.logger.warn(`error notifying User ${orderId} ${tokenMessaging}`));

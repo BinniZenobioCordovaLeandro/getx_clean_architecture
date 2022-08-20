@@ -251,7 +251,8 @@ class OrderController extends GetxController {
 
   @override
   void onReady() {
-    String? abstractOrderEntityId = Get.arguments['abstractOrderEntityId'];
+    String? abstractOrderEntityId = Get.parameters['abstractOrderEntityId'] ??
+        Get.arguments['abstractOrderEntityId'];
     if (abstractOrderEntityId != null) {
       _getOrderUsecase
           .call(orderId: abstractOrderEntityId)

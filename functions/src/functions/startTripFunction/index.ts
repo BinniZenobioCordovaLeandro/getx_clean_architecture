@@ -42,6 +42,10 @@ export const handler = (event: any) => {
               body: `Por favor, espere en el punto de encuentro seleccionado, ${fullName}`,
               imageUrl: offerDocument.user_car_photo,
             },
+            data: {
+              is_message: "true",
+              link: `/order/${orderId}`,
+            },
           })
               .then(() => functions.logger.info(`User notified ${orderId}`))
               .catch(() => functions.logger.warn(`error notifying User ${orderId} ${tokenMessaging}`));
@@ -57,6 +61,10 @@ export const handler = (event: any) => {
               body: `Los ${clientsInformation.length} pasajeros fueron notificados,
                             ponte en ruta con el vehiculo ${offerDocument.user_car_plate}`,
               imageUrl: offerDocument.user_car_photo,
+            },
+            data: {
+              is_message: "true",
+              link: `/offer/${offerDocument.id}`,
             },
           }).then(() => {
             functions.logger.info(`Driver notified ${offerDocument.user_car_plate}`);

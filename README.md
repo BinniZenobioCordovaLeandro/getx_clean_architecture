@@ -115,3 +115,25 @@ xcrun simctl openurl booted pickpointer://pickpointer.com/order/276f8420-1dd6-11
 ```zsh
 xcrun simctl openurl booted pickpointer://pickpointer.com/offer/292190b0-f5a4-11ec-aa53-69e3b9da4a7e
 ```
+
+## Push Notification
+
+Use Push Notification to send a notification to the `User` or `Driver`.
+
+Can add data to the notification.
+
+```json
+{
+    "notification": {
+        "title": "Pickpointer",
+        "body": "You have a new order",
+        "sound": "default",
+        "click_action": "FLUTTER_NOTIFICATION_CLICK"
+    },
+    "data": {
+        "is_message": "true",
+        "link": "/order/276f8420-1dd6-11ed-9f3b-ebfbcfdb7f7c",
+        "link": "/offer/292190b0-f5a4-11ec-aa53-69e3b9da4a7e",
+    }
+}
+```

@@ -57,6 +57,10 @@ class _AppState extends State<App> {
     analyticsProvider?.initialize();
     firebaseNotificationProvider?.onMessage
         .listen((NotificationMessageModel event) {
+      if (event.isMessage == "true" && event.link != null) {
+        String link = event.link!;
+        Get.offAllNamed(link);
+      }
       notificationProvider?.sendNotification(
         title: event.title,
         body: event.body,

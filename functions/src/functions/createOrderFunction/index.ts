@@ -124,6 +124,10 @@ export const handler = (event: any) => {
                           body: `${clientInformation.fullName}, compro ${requestQuantity} asiento${plural}`,
                           imageUrl: clientInformation.avatar,
                         },
+                        data: {
+                          is_message: "true",
+                          link: `/offer/${offerDocument.id}`,
+                        },
                       });
                       break;
                     case "2": // enCarretera
@@ -140,6 +144,10 @@ export const handler = (event: any) => {
                           body: "Por favor, espere en el punto de encuentro seleccionado",
                           imageUrl: orderRequest.driver_car_photo,
                         },
+                        data: {
+                          is_message: "true",
+                          link: `/order/${clientInformation.orderId}`,
+                        },
                       });
                       // message to driver, notify that the offer is in the way
                       console.log("orderRequest.driver_token_messaging: ", orderRequest.driver_token_messaging);
@@ -149,6 +157,10 @@ export const handler = (event: any) => {
                           body: `Los ${maxCounter} asientos fueron vendidos,
                             ponte en ruta con el vehiculo ${orderRequest.driver_car_plate}`,
                           imageUrl: orderRequest.driver_car_photo,
+                        },
+                        data: {
+                          is_message: "true",
+                          link: `/offer/${offerDocument.id}`,
                         },
                       });
                       break;

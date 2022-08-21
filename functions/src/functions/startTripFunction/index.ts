@@ -26,6 +26,7 @@ export const handler = (event: any) => {
       const clientsInformation = JSON.parse(offerDocument!.orders);
 
       if (offerDocument.state_id === "-1") {
+        // message to clients, notify that the offer is in the way
         clientsInformation.forEach((client: any) => {
           const orderId = client.orderId;
           const tokenMessaging = client.tokenMessaging;
@@ -55,6 +56,7 @@ export const handler = (event: any) => {
           ...newData,
           ...newStatus,
         }).then(() => {
+          // message to driver, notify that the offer is in the way
           sendNotificationMessage(offerDocument.user_token_messaging, {
             notification: {
               title: "¡INICIASTE LA RUTA!",
@@ -66,11 +68,11 @@ export const handler = (event: any) => {
               is_message: "true",
               link: `/offer/${offerDocument.id}`,
             },
-          }).then(() => {
-            functions.logger.info(`Driver notified ${offerDocument.user_car_plate}`);
-          }).catch(() => {
-            functions.logger.warn(`error notifying Driver ${offerDocument.user_car_plate}`);
-          });
+          }).then(() =>
+            functions.logger.info(`Driver notified ${offerDocument.user_car_plate}`)
+          ).catch(() =>
+            functions.logger.warn(`error notifying Driver ${offerDocument.user_car_plate}`)
+          );
 
           resolve({
             ...offerDocument,

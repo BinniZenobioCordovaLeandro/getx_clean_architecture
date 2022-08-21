@@ -135,19 +135,24 @@ export const handler = (event: any) => {
                           "// TODO: send notification to user and driver, that the offer is \"On Road\""
                       );
                       // message to clients, notify that the offer is in the way
-                      console.log("clientsInformation: ", clientsInformation.map(
-                          (clientInformation: any) => clientInformation.tokenMessaging));
-                      sendNotificationMessage(clientsInformation.map(
-                          (clientInformation: any) => clientInformation.tokenMessaging), {
-                        notification: {
-                          title: `¡El vehiculo está en ruta!, ${orderRequest.driver_car_plate}`,
-                          body: "Por favor, espere en el punto de encuentro seleccionado",
-                          imageUrl: orderRequest.driver_car_photo,
-                        },
-                        data: {
-                          is_message: "true",
-                          link: `/order/${clientInformation.orderId}`,
-                        },
+                      clientsInformation.forEach((client: any) => {
+                        const orderId = client.orderId;
+                        const tokenMessaging = client.tokenMessaging;
+                        const fullName = client.fullName;
+
+                        sendNotificationMessage(tokenMessaging, {
+                          notification: {
+                            title: `¡El vehiculo está en ruta!, ${orderRequest.driver_car_plate}`,
+                            body: `Por favor, espere en el punto de encuentro seleccionado, ${fullName}`,
+                            imageUrl: orderRequest.driver_car_photo,
+                          },
+                          data: {
+                            is_message: "true",
+                            link: `/order/${orderId}`,
+                          },
+                        })
+                            .then(() => functions.logger.info(`User notified ${orderId}`))
+                            .catch(() => functions.logger.warn(`error notifying User ${orderId} ${tokenMessaging}`));
                       });
                       // message to driver, notify that the offer is in the way
                       console.log("orderRequest.driver_token_messaging: ", orderRequest.driver_token_messaging);
@@ -162,7 +167,11 @@ export const handler = (event: any) => {
                           is_message: "true",
                           link: `/offer/${offerDocument.id}`,
                         },
-                      });
+                      }).then(() =>
+                        functions.logger.info(`Driver notified ${offerDocument.user_car_plate}`)
+                      ).catch(() =>
+                        functions.logger.warn(`error notifying Driver ${offerDocument.user_car_plate}`)
+                      );
                       break;
                     default:
                       console.log("default case");

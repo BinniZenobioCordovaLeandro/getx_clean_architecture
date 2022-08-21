@@ -67,6 +67,13 @@ class _AppState extends State<App> {
         bigPicture: event.imageUrl,
       );
     });
+    firebaseNotificationProvider?.onMessageOpened
+        .listen((NotificationMessageModel event) {
+      if (event.isMessage == "true" && event.link != null) {
+        String link = event.link!;
+        Get.offAllNamed(link);
+      }
+    });
     validateVersion = false;
   }
 

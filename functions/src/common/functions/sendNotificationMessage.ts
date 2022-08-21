@@ -1,15 +1,16 @@
 import * as admin from "firebase-admin";
-import {MessagingPayload} from "firebase-admin/lib/messaging/messaging-api";
+import {MessagingOptions, MessagingPayload} from "firebase-admin/lib/messaging/messaging-api";
 
 export const sendNotificationMessage = (
     token: string | string[],
-    payload: MessagingPayload, options?: {priority: "high"},
+    payload: MessagingPayload,
+    options?: MessagingOptions | undefined,
 ) => {
   return new Promise((resolve, reject) => {
     admin.messaging().sendToDevice(
         token,
         payload,
-        options,
+        options ?? {priority: "high"},
     ).then((response: any) => {
       console.log("Successfully sent message: ", JSON.stringify(response));
       console.log("token: ", token);

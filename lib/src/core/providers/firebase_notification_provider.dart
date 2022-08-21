@@ -4,14 +4,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pickpointer/src/core/models/notification_message_model.dart';
 import 'package:http/http.dart' as http;
 
-final _pushController = StreamController<NotificationMessageModel>.broadcast();
+final _streamOnMessage = StreamController<NotificationMessageModel>.broadcast();
+final _streamOnMessageOpened =
+    StreamController<NotificationMessageModel>.broadcast();
 
 class FirebaseNotificationProvider {
   static FirebaseNotificationProvider? _instance;
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  Stream<NotificationMessageModel> get onMessage => _pushController.stream;
+  Stream<NotificationMessageModel> get onMessage => _streamOnMessage.stream;
+  Stream<NotificationMessageModel> get onMessageOpened =>
+      _streamOnMessageOpened.stream;
 
   static FirebaseNotificationProvider? getInstance() {
     _instance ??= FirebaseNotificationProvider();
@@ -28,8 +32,8 @@ class FirebaseNotificationProvider {
     messaging.setAutoInitEnabled(true);
     messaging.getInitialMessage().then(handlerMessage);
     FirebaseMessaging.onBackgroundMessage(handlerMessage);
-    FirebaseMessaging.onMessageOpenedApp.listen(handlerMessage);
     FirebaseMessaging.onMessage.listen(handlerMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(handlerMessageOpened);
 
     return Future.value(true);
   }
@@ -38,7 +42,15 @@ class FirebaseNotificationProvider {
     if (message != null) {
       NotificationMessageModel notificationMessageModel =
           NotificationMessageModel.fromRemoteMessage(message);
-      _pushController.sink.add(notificationMessageModel);
+      _streamOnMessage.sink.add(notificationMessageModel);
+    }
+  }
+
+  Future<void> handlerMessageOpened(RemoteMessage? message) async {
+    if (message != null) {
+      NotificationMessageModel notificationMessageModel =
+          NotificationMessageModel.fromRemoteMessage(message);
+      _streamOnMessageOpened.sink.add(notificationMessageModel);
     }
   }
 

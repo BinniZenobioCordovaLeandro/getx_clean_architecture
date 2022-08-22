@@ -18,7 +18,6 @@ import 'package:pickpointer/src/features/offer_feature/views/widgets/accept_pass
 import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/start_trip_card_widget.dart';
-import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {
@@ -114,7 +113,9 @@ class _OfferPageState extends State<OfferPage> {
           children: [
             SizedBox(
               child: FlutterMapWidget(
-                mapController: offerController.mapController,
+                onMapCreated: (MapController mapController) {
+                  offerController.mapController = mapController;
+                },
                 children: [
                   PolylineLayerWidget(
                     options: PolylineLayerOptions(
@@ -224,7 +225,9 @@ class _OfferPageState extends State<OfferPage> {
                 top: 0.0,
                 right: 0.0,
                 child: IconButton(
-                  onPressed: () => offerController.moveToMyLocation(),
+                  onPressed: () {
+                    offerController.move(offerController.positionTaxi.value);
+                  },
                   tooltip: 'Ir a mi ubicación',
                   icon: const Icon(
                     Icons.my_location,
@@ -268,6 +271,8 @@ class _OfferPageState extends State<OfferPage> {
                                           title: '¡Bienvenido a bordo!',
                                           body:
                                               'Procura usar mascarilla y saludar, ${order['fullName']}',
+                                          isMessage: true,
+                                          link: '/order/${order["orderId"]}',
                                         );
                                       },
                                     )

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,15 +7,10 @@ import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/http_offer_datasource.dart';
-import 'package:pickpointer/packages/offer_package/data/models/offer_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/finish_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/start_offer_usecase.dart';
-import 'package:pickpointer/packages/offer_package/domain/usecases/update_offer_usecase.dart';
-import 'package:pickpointer/packages/order_package/data/datasources/firebase_order_datasource.dart';
-import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
-import 'package:pickpointer/packages/order_package/domain/usecases/update_order_usecase.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
@@ -24,7 +18,7 @@ import 'package:pickpointer/packages/session_package/domain/usecases/update_sess
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/packages/vehicle_package/data/datasources/vehicle_datasources/firebase_vehicle_datasource.dart';
 import 'package:pickpointer/packages/vehicle_package/data/models/vehicle_model.dart';
-import 'package:pickpointer/packages/vehicle_package/domain/usecases/delete_vehicle_usecase.dart';
+import 'package:pickpointer/packages/vehicle_package/domain/entities/abstract_vehicle_entity.dart';
 import 'package:pickpointer/packages/vehicle_package/domain/usecases/update_vehicle_usecase.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
@@ -48,24 +42,12 @@ class OfferController extends GetxController {
     abstractVehicleRepository: FirebaseVehicleDatasource(),
   );
 
-  final DeleteVehicleUsecase _deleteVehicleUsecase = DeleteVehicleUsecase(
-    abstractVehicleRepository: FirebaseVehicleDatasource(),
-  );
-
-  final UpdateOfferUsecase _updateOfferUsecase = UpdateOfferUsecase(
-    abstractOfferRepository: FirebaseOfferDatasource(),
-  );
-
   final StartOfferUsecase _startOfferUsecase = StartOfferUsecase(
     abstractOfferRepository: HttpOfferDatasource(),
   );
 
   final FinishOfferUsecase _finishOfferUsecase = FinishOfferUsecase(
     abstractOfferRepository: HttpOfferDatasource(),
-  );
-
-  final UpdateOrderUsecase _updateOrderUsecase = UpdateOrderUsecase(
-    abstractOrderRepository: FirebaseOrderDatasource(),
   );
 
   final GetOfferUsecase _getOfferUsecase = GetOfferUsecase(
@@ -80,7 +62,7 @@ class OfferController extends GetxController {
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
-  MapController mapController = MapController();
+  MapController? mapController;
 
   StreamSubscription<Position>? streamPosition;
 
@@ -109,9 +91,9 @@ class OfferController extends GetxController {
     );
   }
 
-  moveToMyLocation() {
+  move(LatLng latLng) {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-      mapController.move(positionTaxi.value, 15.0);
+      mapController!.move(latLng, 15.0);
     });
   }
 
@@ -140,13 +122,19 @@ class OfferController extends GetxController {
       (Position position) {
         print('position: $position');
         positionTaxi.value = LatLng(position.latitude, position.longitude);
-        mapController.move(positionTaxi.value, 15);
-        _updateVehicleUsecase.call(
-            vehicle: VehicleModel(
+        move(positionTaxi.value);
+        _updateVehicleUsecase
+            .call(
+                vehicle: VehicleModel(
           id: '${abstractOfferEntity.userCarPlate}',
           latitude: '${position.latitude}',
           longitude: '${position.longitude}',
-        ));
+        ))
+            .then((AbstractVehicleEntity abstractVehicleEntity) {
+          print('value: ${abstractVehicleEntity.latitude}');
+        }).catchError((error) {
+          print('error: $error');
+        });
       },
       onError: (error) {
         print('error: $error');
@@ -292,37 +280,32 @@ class OfferController extends GetxController {
       prepareStreamCurrentPosition(abstractOfferEntity);
       showOfferPolylineMarkers(abstractOfferEntity);
       showDynamicsMarkers(abstractOfferEntity);
-      streamPosition!.resume();
+      streamPosition?.resume();
     }
-  }
-
-  @override
-  void onInit() {
-    mapController = MapController();
-    super.onInit();
   }
 
   @override
   void onReady() {
-    String? abstractOfferEntityId = Get.parameters['abstractOfferEntityId'] ??
-        Get.arguments['abstractOfferEntityId'];
-    if (abstractOfferEntityId != null) {
-      _getOfferUsecase
-          .call(offerId: abstractOfferEntityId)
-          ?.then((AbstractOfferEntity? abstractOfferEntity) {
-        initialize(abstractOfferEntity!);
-      });
+    String? abstractOfferEntityId;
+    if (Get.arguments != null && Get.arguments['abstractOfferEntity'] != null) {
+      initialize(Get.arguments['abstractOfferEntity']);
+    } else if (Get.arguments != null &&
+        Get.arguments['abstractOfferEntityId'] != null) {
+      abstractOfferEntityId = Get.arguments['abstractOfferEntityId'];
     } else {
-      AbstractOfferEntity abstractOfferEntity =
-          Get.arguments['abstractOfferEntity'];
-      initialize(abstractOfferEntity);
+      abstractOfferEntityId = Get.parameters['abstractOfferEntityId'];
     }
+    _getOfferUsecase
+        .call(offerId: abstractOfferEntityId!)
+        ?.then((AbstractOfferEntity? abstractOfferEntity) {
+      initialize(abstractOfferEntity!);
+    });
     super.onReady();
   }
 
   @override
   void onClose() {
-    streamPosition!.cancel();
+    streamPosition?.cancel();
     super.onClose();
   }
 }

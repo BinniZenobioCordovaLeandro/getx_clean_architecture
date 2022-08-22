@@ -120,21 +120,28 @@ class NewOfferController extends GetxController {
                 sendNotification(
                   abstractRouteEntity: abstractRouteEntity,
                 );
-                _updateSessionUsecase.call(
+                _updateSessionUsecase
+                    .call(
                   abstractSessionEntity:
                       (abstractSessionEntity as SessionModel).copyWith(
                     onRoad: true,
                     currentOfferId: abstractOfferEntity.id,
                   ),
-                );
-                Get.offAll(
-                  () => OfferPage(
-                    abstractOfferEntity: abstractOfferEntity,
-                  ),
-                  arguments: {
-                    'abstractOfferEntity': abstractOfferEntity,
-                  },
-                );
+                )
+                    .then((AbstractSessionEntity savedAbstractSessionEntity) {
+                  if (savedAbstractSessionEntity.onRoad == true) {
+                    Get.offAll(
+                      () => OfferPage(
+                        abstractOfferEntity: abstractOfferEntity,
+                      ),
+                      arguments: {
+                        'abstractOfferEntity': abstractOfferEntity,
+                      },
+                    );
+                  } else {
+                    isLoading.value = false;
+                  }
+                });
               });
             }
           });

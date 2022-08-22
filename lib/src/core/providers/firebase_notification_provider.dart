@@ -80,8 +80,9 @@ class FirebaseNotificationProvider {
     required List<String> to,
     required String title,
     required String body,
-    String? image,
-    Map<String, dynamic>? data,
+    String? image = '',
+    bool? isMessage = false,
+    String? link = '',
   }) async {
     if (!await checkPermission()) return false;
     print('token');
@@ -94,13 +95,13 @@ class FirebaseNotificationProvider {
         'token': to.length == 1 ? to[0] : to,
         'payload': {
           'data': {
-            'link': '',
-            'is_message': '',
+            'link': link,
+            'is_message': '$isMessage',
           },
           'notification': {
             'title': title,
             'body': body,
-            'imageUrl': image ?? '',
+            'imageUrl': image,
           },
         },
         'options': {

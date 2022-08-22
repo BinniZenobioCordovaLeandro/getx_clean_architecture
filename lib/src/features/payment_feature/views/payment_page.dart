@@ -58,10 +58,10 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
                 helperText:
                     'El punto de recojo, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
-                initialLatLng: LatLng(
-                  double.parse('${widget.abstractOfferEntity!.startLat}'),
-                  double.parse('${widget.abstractOfferEntity!.startLng}'),
-                ),
+                // initialLatLng: LatLng(
+                //   double.parse('${widget.abstractOfferEntity!.startLat}'),
+                //   double.parse('${widget.abstractOfferEntity!.startLng}'),
+                // ),
                 validator: (value) {
                   if (value == null) {
                     return 'Debe seleccionar un punto de recojo';

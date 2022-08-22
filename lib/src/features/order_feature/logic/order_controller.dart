@@ -24,7 +24,7 @@ import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 class OrderController extends GetxController {
   static OrderController get instance => Get.put(OrderController());
 
-  MapController mapController = MapController();
+  MapController? mapController;
 
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -125,7 +125,7 @@ class OrderController extends GetxController {
         origin: taxiPosition.value,
         destination: userPosition.value,
       );
-      mapController.move(taxiPosition.value, 15);
+      mapController?.move(taxiPosition.value, 15);
     });
   }
 
@@ -244,25 +244,21 @@ class OrderController extends GetxController {
   }
 
   @override
-  void onInit() {
-    mapController = MapController();
-    super.onInit();
-  }
-
-  @override
   void onReady() {
-    String? abstractOrderEntityId = Get.parameters['abstractOrderEntityId'] ??
-        Get.arguments['abstractOrderEntityId'];
-    if (abstractOrderEntityId != null) {
-      _getOrderUsecase
-          .call(orderId: abstractOrderEntityId)
-          ?.then((AbstractOrderEntity? abstractOrderEntity) {
-        initialize(abstractOrderEntity!);
-      });
+    String? abstractOrderEntityId;
+    if (Get.arguments != null && Get.arguments['abstractOrderEntity'] != null) {
+      initialize(Get.arguments['abstractOrderEntity']);
+    } else if (Get.arguments != null &&
+        Get.arguments['abstractOrderEntityId'] != null) {
+      abstractOrderEntityId = Get.arguments['abstractOrderEntityId'];
     } else {
-      abstractOrderEntity = Get.arguments['abstractOrderEntity'];
-      initialize(abstractOrderEntity!);
+      abstractOrderEntityId = Get.parameters['abstractOrderEntityId'];
     }
+    _getOrderUsecase
+        .call(orderId: abstractOrderEntityId!)
+        ?.then((AbstractOrderEntity? abstractOrderEntity) {
+      initialize(abstractOrderEntity!);
+    });
     super.onReady();
   }
 

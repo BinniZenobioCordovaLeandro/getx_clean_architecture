@@ -119,6 +119,12 @@ class _UserPageState extends State<UserPage> {
                 initialValue: userController.carPhoto.value,
                 onChanged: (value) => userController.carPhoto.value = value,
               ),
+            AspectRatio(
+              aspectRatio: 3 / 1,
+              child: SvgOrImageWidget(
+                urlSvgOrImage: userController.carPhoto.value,
+              ),
+            ),
             if (userController.isDriver.value)
               TextFieldWidget(
                 labelText: 'Modelo de Carro',

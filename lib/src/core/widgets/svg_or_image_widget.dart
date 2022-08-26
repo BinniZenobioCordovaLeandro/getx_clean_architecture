@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pickpointer/src/core/widgets/cached_network_image_widget.dart';
@@ -22,9 +24,10 @@ class SvgOrImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Theme.of(context).platform != TargetPlatform.iOS &&
+    RegExp regExpHttp = RegExp('^http');
+    if (Theme.of(context).platform != TargetPlatform.iOS ||
         Theme.of(context).platform != TargetPlatform.android) {
-      if (urlSvgOrImage != null) {
+      if (urlSvgOrImage != null && regExpHttp.hasMatch(urlSvgOrImage!)) {
         return Container(
           key: Key('$urlSvgOrImage'),
           alignment: alignment,
@@ -32,6 +35,18 @@ class SvgOrImageWidget extends StatelessWidget {
           height: height,
           child: Image.network(
             '$urlSvgOrImage',
+            alignment: alignment ?? Alignment.center,
+            fit: fit,
+          ),
+        );
+      } else if (urlSvgOrImage != null) {
+        return Container(
+          key: Key('$urlSvgOrImage'),
+          alignment: alignment,
+          width: width,
+          height: height,
+          child: Image.file(
+            File('$urlSvgOrImage'),
             alignment: alignment ?? Alignment.center,
             fit: fit,
           ),

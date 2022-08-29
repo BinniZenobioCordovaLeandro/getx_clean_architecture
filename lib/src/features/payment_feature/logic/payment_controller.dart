@@ -158,7 +158,7 @@ class PaymentController extends GetxController {
                   'Perfecto!, compraste ${abstractOrderEntity.count} asiento(s)';
               if (abstractOrderEntity.offerCount != null &&
                   abstractOrderEntity.offerMaxCount != null &&
-                  abstractOrderEntity.offerCount! <
+                  abstractOrderEntity.offerCount! + abstractOrderEntity.count! <
                       abstractOrderEntity.offerMaxCount!) {
                 int pendingComplete = abstractOrderEntity.offerMaxCount! -
                     abstractOrderEntity.offerCount! -

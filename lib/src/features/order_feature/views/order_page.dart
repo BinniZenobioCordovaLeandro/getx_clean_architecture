@@ -6,6 +6,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
+import 'package:pickpointer/src/core/providers/share_provider.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/drawer_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
@@ -66,7 +67,12 @@ class _OrderPageState extends State<OrderPage> {
                 icon: const Icon(
                   Icons.ios_share_rounded,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  ShareProvider().string(
+                    'pickpointer://pickpointer.com/order/${orderController.orderId.value}',
+                    subject: 'Por seguridad comparte a alguien confiable.',
+                  );
+                },
               ),
               IconButton(
                 tooltip: 'Mensajes',

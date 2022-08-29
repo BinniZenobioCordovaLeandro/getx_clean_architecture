@@ -11,6 +11,7 @@ import 'package:pickpointer/src/core/widgets/drawer_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
@@ -112,6 +113,11 @@ class _OrderPageState extends State<OrderPage> {
                                         .cleanSession()
                                         .then((bool value) {
                                       if (value) {
+                                        GetxSnackbarWidget(
+                                          title: 'Saliste del Viaje',
+                                          subtitle:
+                                              'Ahora puedes tomar otro viaje.',
+                                        );
                                         Get.offAll(
                                           () => const RoutesPage(),
                                         );

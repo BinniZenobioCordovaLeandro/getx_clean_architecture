@@ -23,6 +23,7 @@ import 'package:pickpointer/packages/vehicle_package/domain/usecases/update_vehi
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OfferController extends GetxController {
@@ -194,6 +195,11 @@ class OfferController extends GetxController {
         ?.then((AbstractOfferEntity abstractOfferEntity) {
       isLoading.value = false;
       if (abstractOfferEntity.stateId == '2') {
+        GetxSnackbarWidget(
+          title: 'INICIO MANUAL',
+          subtitle:
+              'Recoge a todos los pasajeros, ellos ya fueron notificados.',
+        );
         initialize(abstractOfferEntity);
         return true;
       }
@@ -267,6 +273,12 @@ class OfferController extends GetxController {
         abstractOfferEntity.stateId == '0') {
       cleanSession().then((bool boolean) {
         if (boolean) {
+          if (abstractOfferEntity.stateId == '1') {
+            GetxSnackbarWidget(
+              title: 'MAGNIFICO!',
+              subtitle: 'Estas listo para ofrecer otro viaje?!',
+            );
+          }
           Get.offAll(
             () => const RoutesPage(),
           );

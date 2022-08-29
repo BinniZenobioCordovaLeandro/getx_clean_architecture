@@ -259,7 +259,7 @@ class _OfferPageState extends State<OfferPage> {
                                           double.parse(order["pickPointLng"]),
                                         ),
                                       ) <
-                                      150)
+                                      500)
                                   ? AcceptPassengerCardWidget(
                                       avatar: order['avatar'],
                                       fullName: order['fullName'],

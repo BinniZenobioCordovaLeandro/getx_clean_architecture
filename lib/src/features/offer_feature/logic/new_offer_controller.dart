@@ -15,6 +15,7 @@ import 'package:pickpointer/packages/user_package/data/datasources/user_datasour
 import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
 import 'package:uuid/uuid.dart';
 
@@ -130,6 +131,12 @@ class NewOfferController extends GetxController {
                 )
                     .then((AbstractSessionEntity savedAbstractSessionEntity) {
                   if (savedAbstractSessionEntity.onRoad == true) {
+                    GetxSnackbarWidget(
+                      title: 'TU OFERTA ES AHORA VISIBLE!',
+                      subtitle:
+                          'Espera a completar los ${abstractOfferEntity.maxCount} pasajeros, o inicia manualmente con los que tengas.',
+                      duration: const Duration(seconds: 15),
+                    );
                     Get.offAll(
                       () => OfferPage(
                         abstractOfferEntity: abstractOfferEntity,

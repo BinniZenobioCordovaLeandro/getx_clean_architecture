@@ -15,6 +15,55 @@ class PopupMarkerCardWidget extends StatelessWidget {
     this.onTap,
   }) : super(key: key);
 
+  child(BuildContext context) {
+    return CardWidget(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: FractionallySizedBoxWidget(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8,
+            ),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  width: double.infinity,
+                  child: TextWidget(
+                    'Desde: S/. ${abstractRouteEntity?.price}',
+                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontStyle: FontStyle.italic,
+                        ),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextWidget(
+                    'Destino: ${abstractRouteEntity?.to}',
+                    style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextWidget(
+                    'Origen: ${abstractRouteEntity?.from}',
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -23,98 +72,9 @@ class PopupMarkerCardWidget extends StatelessWidget {
       child: Stack(
         children: [
           BlurWidget(
-            child: CardWidget(
-              color: Colors.transparent,
-              child: FractionallySizedBoxWidget(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextWidget(
-                          'Aprox. S/. ${abstractRouteEntity?.price}',
-                          style:
-                              Theme.of(context).textTheme.subtitle1?.copyWith(
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextWidget(
-                          'Destino: ${abstractRouteEntity?.to}',
-                          style:
-                              Theme.of(context).textTheme.subtitle2?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextWidget(
-                          'Origen: ${abstractRouteEntity?.from}',
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            child: child(context),
           ),
-          CardWidget(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              child: FractionallySizedBoxWidget(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextWidget(
-                          'Aprox. S/. ${abstractRouteEntity?.price}',
-                          style:
-                              Theme.of(context).textTheme.subtitle1?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextWidget(
-                          'Destino: ${abstractRouteEntity?.to}',
-                          style:
-                              Theme.of(context).textTheme.subtitle2?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextWidget(
-                          'Origen: ${abstractRouteEntity?.from}',
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          child(context),
         ],
       ),
     );

@@ -8,6 +8,8 @@ import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_
 import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/update_user_usecase.dart';
 import 'package:pickpointer/src/core/providers/storage_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
+import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class UserController extends GetxController {
   static UserController get instance => Get.put(UserController());
@@ -118,18 +120,20 @@ class UserController extends GetxController {
                   ? '2'
                   : '0', // TODO: only can set 1 (isDriver) from DataBase
         );
-        print('_userModel');
         _updateUserUsecase
             .call(abstractUserEntity: _userModel)!
             .then((AbstractUserEntity abstractUserEntity) {
-          Get.snackbar('Actualizado!',
-              'Estamos revizando la informacion.'); // TODO: Create a component for the SNACK
+          GetxSnackbarWidget(
+            title: 'Actualizado!',
+            subtitle: 'Estamos revizando la informacion.',
+          );
           isLoadingSave.value = false;
+          Get.offAll(
+            () => const RoutesPage(),
+          );
         });
       }
     } catch (e) {
-      print('error');
-      print(e);
       isLoadingSave.value = false;
     }
   }

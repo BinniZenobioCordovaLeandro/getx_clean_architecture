@@ -16,6 +16,7 @@ import 'package:pickpointer/packages/user_package/data/datasources/user_datasour
 import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
 
 class PaymentController extends GetxController {
@@ -152,6 +153,23 @@ class PaymentController extends GetxController {
                   currentOfferId: abstractOfferEntity.id,
                   currentOrderId: abstractOrderEntity.id,
                 ),
+              );
+              var message =
+                  'Perfecto!, compraste ${abstractOrderEntity.count} asiento(s)';
+              if (abstractOrderEntity.offerCount != null &&
+                  abstractOrderEntity.offerMaxCount != null &&
+                  abstractOrderEntity.offerCount! <
+                      abstractOrderEntity.offerMaxCount!) {
+                int pendingComplete = abstractOrderEntity.offerMaxCount! -
+                    abstractOrderEntity.offerCount! -
+                    abstractOrderEntity.count!;
+                message +=
+                    '\nEspera un poco, estamos trabajando en completar los $pendingComplete pasajero(s) restantes';
+              }
+              GetxSnackbarWidget(
+                title: 'ORDEN CREADA!',
+                subtitle: message,
+                duration: const Duration(seconds: 15),
               );
               Get.offAll(
                 () => OrderPage(

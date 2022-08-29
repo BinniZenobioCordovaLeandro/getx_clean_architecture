@@ -19,6 +19,7 @@ import 'package:pickpointer/packages/vehicle_package/domain/usecases/stream_vehi
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OrderController extends GetxController {
@@ -183,6 +184,10 @@ class OrderController extends GetxController {
         abstractOrderEntity.stateId == '0') {
       cleanSession().then((bool boolean) {
         if (boolean) {
+          GetxSnackbarWidget(
+            title: 'Gracias por viajar usando PICKPOINTER!',
+            subtitle: 'Toma tu siguiente viaje pronto ;)',
+          );
           Get.offAll(
             () => const RoutesPage(),
           );

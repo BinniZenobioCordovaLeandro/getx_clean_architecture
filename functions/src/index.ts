@@ -4,6 +4,7 @@ import * as createOrderPackage from "./functions/createOrderFunction";
 import * as sendNotificationPackage from "./functions/sendNotificationFunction";
 import * as startTripPackage from "./functions/startTripFunction";
 import * as finishTripPackage from "./functions/finishTripFunction";
+import * as triggers from "./triggers";
 
 admin.initializeApp();
 
@@ -49,3 +50,14 @@ export const finishTrip = functions.https.onRequest((request, response) => {
     response.status(500).send(err);
   });
 });
+
+
+// // Start writing Firebase Triggers
+// // https://firebase.google.com/docs/functions/firestore-events
+//
+
+export const triggerOnUpdate = functions.firestore.document("{collection}/{id}").onUpdate((change, context) =>{
+  functions.logger.info("TRIGGER onUpdate");
+  triggers.handler(change, context);
+}
+);

@@ -32,6 +32,7 @@ dependencies:
   cached_network_image: ^3.2.0
   cloud_firestore: ^3.0.0
   cloud_firestore_platform_interface: ^5.5.2
+  cloud_firestore_web: ^2.8.6
   cupertino_icons: ^1.0.2
   equatable: ^2.0.3
   firebase_analytics: ^9.3.0

@@ -132,7 +132,7 @@ class OrderController extends GetxController {
 
   streamCurrentPosition() {
     streamPosition =
-        geolocatorProvider!.streamPosition().listen((Position position) {
+        geolocatorProvider!.onPositionChanged.listen((Position position) {
       print('userPosition: ${position.latitude}, ${position.longitude}');
       userPosition.value = LatLng(position.latitude, position.longitude);
     });

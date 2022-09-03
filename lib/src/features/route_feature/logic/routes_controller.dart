@@ -90,15 +90,11 @@ class RoutesController extends GetxController {
 
   prepareStreamCurrentPosition() {
     streamPosition =
-        geolocatorProvider!.streamPosition().listen((Position streamPosition) {
+        geolocatorProvider!.onPositionChanged.listen((Position streamPosition) {
       print('position: $streamPosition');
       position.value =
           LatLng(streamPosition.latitude, streamPosition.longitude);
-    }, onError: (error) {
-      print('error: $error');
-    }, onDone: () {
-      print('done');
-    }, cancelOnError: true);
+    });
   }
 
   getCurrentPosition() {

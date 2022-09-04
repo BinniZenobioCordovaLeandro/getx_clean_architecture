@@ -119,32 +119,24 @@ class OfferController extends GetxController {
 
   prepareStreamCurrentPosition(AbstractOfferEntity abstractOfferEntity) {
     print('prepareStreamCurrentPosition');
-    streamPosition = geolocatorProvider!.streamPosition().listen(
-      (Position position) {
-        print('position: $position');
-        positionTaxi.value = LatLng(position.latitude, position.longitude);
-        move(positionTaxi.value);
-        _updateVehicleUsecase
-            .call(
-                vehicle: VehicleModel(
-          id: '${abstractOfferEntity.userCarPlate}',
-          latitude: '${position.latitude}',
-          longitude: '${position.longitude}',
-        ))
-            .then((AbstractVehicleEntity abstractVehicleEntity) {
-          print('value: ${abstractVehicleEntity.latitude}');
-        }).catchError((error) {
-          print('error: $error');
-        });
-      },
-      onError: (error) {
+    streamPosition =
+        geolocatorProvider!.onPositionChanged.listen((Position position) {
+      print('position: $position');
+      positionTaxi.value = LatLng(position.latitude, position.longitude);
+      move(positionTaxi.value);
+      _updateVehicleUsecase
+          .call(
+              vehicle: VehicleModel(
+        id: '${abstractOfferEntity.userCarPlate}',
+        latitude: '${position.latitude}',
+        longitude: '${position.longitude}',
+      ))
+          .then((AbstractVehicleEntity abstractVehicleEntity) {
+        print('value: ${abstractVehicleEntity.latitude}');
+      }).catchError((error) {
         print('error: $error');
-      },
-      onDone: () {
-        print('done');
-      },
-      cancelOnError: false,
-    );
+      });
+    });
   }
 
   showOfferPolylineMarkers(AbstractOfferEntity abstractOfferEntity) {

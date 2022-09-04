@@ -9,6 +9,7 @@ import 'package:pickpointer/src/core/models/notification_message_model.dart';
 import 'package:pickpointer/src/core/providers/analytics_provider.dart';
 import 'package:pickpointer/src/core/providers/firebase_config_provider.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
+import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/platform_provider.dart';
 import 'package:pickpointer/src/core/util/version_util.dart';
@@ -42,6 +43,9 @@ class _AppState extends State<App> {
 
   final AnalyticsProvider? analyticsProvider = AnalyticsProvider.getInstance();
 
+  final GeolocatorProvider? geolocatorProvider =
+      GeolocatorProvider.getInstance();
+
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
@@ -55,6 +59,7 @@ class _AppState extends State<App> {
     firebaseNotificationProvider?.initialize();
     notificationProvider?.initialize();
     analyticsProvider?.initialize();
+    geolocatorProvider?.initialize();
     firebaseNotificationProvider?.onMessage
         .listen((NotificationMessageModel event) {
       if (event.isMessage == "true" && event.link != null) {

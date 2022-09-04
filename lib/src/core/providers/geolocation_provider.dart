@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+
+final _streamOnPositionChanged = StreamController<Position>.broadcast();
 
 class GeolocatorProvider {
   static GeolocatorProvider? _instance;
@@ -7,9 +11,37 @@ class GeolocatorProvider {
   bool isLocationServiceEnabled = false;
   GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
+  Stream<Position> get onPositionChanged => _streamOnPositionChanged.stream;
+
   static GeolocatorProvider? getInstance() {
     _instance ??= GeolocatorProvider();
     return _instance;
+  }
+
+  initialize() {
+    checkPermission().then((bool isReady) {
+      if (isReady) configure();
+    });
+  }
+
+  Future<bool> configure() {
+    _geolocatorPlatform.getServiceStatusStream().listen((event) {
+      if (event == ServiceStatus.disabled) {
+        isLocationServiceEnabled = false;
+        initialize();
+      }
+    });
+    _geolocatorPlatform
+        .getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 1,
+      ),
+    )
+        .listen(handlerOnPositionChanged, onError: (err) {
+      print('ERROR STREAM POSITION!');
+    });
+    return Future.value(true);
   }
 
   Future<bool> checkPermission() async {
@@ -50,22 +82,10 @@ class GeolocatorProvider {
     });
   }
 
-  Stream<Position> streamPosition() {
-    if (!isLocationServiceEnabled) {
-      throw Exception('Location service is not enabled');
+  handlerOnPositionChanged(Position streamPosition) {
+    if (isLocationServiceEnabled) {
+      _streamOnPositionChanged.sink.add(streamPosition);
     }
-    _geolocatorPlatform.getServiceStatusStream().listen((event) {
-      if (event == ServiceStatus.disabled) {
-        isLocationServiceEnabled = false;
-      }
-    });
-    Stream<Position> streamPosition = _geolocatorPlatform.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 1,
-      ),
-    );
-    return streamPosition;
   }
 
   double distanceBetween(

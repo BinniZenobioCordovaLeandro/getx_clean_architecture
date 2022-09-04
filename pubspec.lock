@@ -333,6 +333,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_inappwebview:
+    dependency: transitive
+    description:
+      name: flutter_inappwebview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.4.3+7"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -1149,6 +1156,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.1"
+  youtube_player_iframe:
+    dependency: "direct main"
+    description:
+      name: youtube_player_iframe
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.2"
 sdks:
   dart: ">=2.16.0 <3.0.0"
   flutter: ">=2.10.0"

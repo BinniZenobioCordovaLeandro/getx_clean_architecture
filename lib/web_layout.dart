@@ -7,6 +7,8 @@ import 'package:pickpointer/src/core/widgets/scaffold_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/svg_or_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
+import 'package:pickpointer/src/core/widgets/video_player_widget.dart';
+import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class WebLayout extends StatelessWidget {
   const WebLayout({Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class WebLayout extends StatelessWidget {
   Widget rowPresentation({
     Widget? child,
     String? urlSvgOrImage,
+    String? idYoutuveVideo,
     double? verticalPadding = 100.0,
     String? background,
   }) {
@@ -35,7 +38,8 @@ class WebLayout extends StatelessWidget {
             vertical: verticalPadding!,
             horizontal: 32,
           ),
-          child: Row(
+          child: Flex(
+            direction: Axis.horizontal,
             children: [
               Expanded(
                 flex: 2,
@@ -53,20 +57,49 @@ class WebLayout extends StatelessWidget {
                   ),
                 ),
               ),
-              if (urlSvgOrImage != null)
+              if (urlSvgOrImage != null || idYoutuveVideo != null)
                 const VerticalDivider(
                   width: 16,
                 ),
               if (urlSvgOrImage != null)
                 Flexible(
                   flex: 3,
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: SvgOrImageWidget(
-                        urlSvgOrImage: urlSvgOrImage,
-                        fit: BoxFit.cover,
+                  child: Center(
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxHeight: 400,
+                        minHeight: 200,
+                      ),
+                      child: AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: SvgOrImageWidget(
+                            urlSvgOrImage: urlSvgOrImage,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              if (idYoutuveVideo != null)
+                Flexible(
+                  flex: 3,
+                  child: Center(
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxHeight: 400,
+                        minHeight: 200,
+                      ),
+                      child: AspectRatio(
+                        aspectRatio: 9 / 16,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: VideoPlayerWidget(
+                            initialVideoId: idYoutuveVideo,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -220,7 +253,7 @@ class WebLayout extends StatelessWidget {
               ),
             ),
             rowPresentation(
-              verticalPadding: 20,
+              verticalPadding: 30,
               child: Column(
                 children: [
                   TextWidget(
@@ -278,11 +311,69 @@ class WebLayout extends StatelessWidget {
               ),
             ),
             rowPresentation(
+              verticalPadding: 20,
+              idYoutuveVideo: 'w_Qn07zg-Kk',
               child: Column(
                 children: [
                   TextWidget(
-                    '¿Como funciona la APP?',
+                    'Conductor PICKPOINTER',
                     style: Theme.of(context).textTheme.headline6,
+                  ),
+                ],
+              ),
+            ),
+            rowPresentation(
+              verticalPadding: 20,
+              idYoutuveVideo: 'b6F7M6Puxdg',
+              child: Column(
+                children: [
+                  TextWidget(
+                    'Pasajero PICKPOINTER',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                ],
+              ),
+            ),
+            rowPresentation(
+              child: Column(
+                children: [
+                  TextWidget(
+                    'Siguenos en',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  const Divider(),
+                  Flex(
+                    direction: Axis.horizontal,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () => LauncherLinkHelper(
+                          url:
+                              "https://www.facebook.com/profile.php?id=100085260664181",
+                        ).launchInBrowser(),
+                        child: const SvgOrImageWidget(
+                          height: 50,
+                          width: 50,
+                          urlSvgOrImage:
+                              "https://d13xymm0hzzbsd.cloudfront.net/1/20220816/16606907003177.webp",
+                        ),
+                      ),
+                      const VerticalDivider(),
+                      InkWell(
+                        onTap: () => LauncherLinkHelper(
+                          url:
+                              "https://www.youtube.com/channel/UCNhVUpNu3gOuhyG7R-sjxNw",
+                        ).launchInBrowser(),
+                        child: const SvgOrImageWidget(
+                          height: 50,
+                          width: 50,
+                          urlSvgOrImage:
+                              "https://d13xymm0hzzbsd.cloudfront.net/1/20220816/16606907006301.webp",
+                        ),
+                      ),
+                      const VerticalDivider(),
+                    ],
                   ),
                 ],
               ),

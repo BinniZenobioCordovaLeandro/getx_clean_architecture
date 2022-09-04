@@ -51,17 +51,11 @@ class MyApp extends StatelessWidget {
           ),
         ],
         home: Row(
-          children: [
-            const Expanded(
+          children: const [
+            Expanded(
               flex: 1,
               child: WebLayout(),
             ),
-            Container(
-              constraints: const BoxConstraints(
-                maxWidth: 500,
-              ),
-              child: const App(),
-            )
           ],
         ),
       );

@@ -13,6 +13,9 @@ class LightTheme {
       primaryColorDark: colorBrand,
       scaffoldBackgroundColor: const Color(0xFFF2F2F7),
       backgroundColor: const Color(0xFFFFFFFF),
+      snackBarTheme: const SnackBarThemeData(
+        backgroundColor: Color(0xFFF2F2F7),
+      ),
       iconTheme: const IconThemeData(
         color: colorBrand,
       ),

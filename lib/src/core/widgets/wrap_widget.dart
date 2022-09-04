@@ -9,7 +9,7 @@ class WrapWidget extends StatelessWidget {
     Key? key,
     required this.children,
     this.spacing = 8,
-    this.runSpacing = 8,
+    this.runSpacing = 16,
   }) : super(key: key);
 
   @override

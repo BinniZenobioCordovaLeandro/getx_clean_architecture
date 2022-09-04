@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
+import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
+import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
+import 'package:pickpointer/src/core/providers/share_provider.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/drawer_widget.dart';
+import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_widget.dart';
+import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/order_feature/logic/order_controller.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/call_card_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/messages_box_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/order_card_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/popup_marker_taxi_widget.dart';
+import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OrderPage extends StatefulWidget {
   final String? abstractOrderEntityId;
@@ -45,14 +53,26 @@ class _OrderPageState extends State<OrderPage> {
           ),
           endDrawerEnableOpenDragGesture: true,
           appBar: AppBarWidget(
-            title: 'Order ${widget.abstractOrderEntity?.id}',
+            title: 'Orden ${orderController.orderId.value}',
             actions: [
+              IconButton(
+                tooltip: 'Refrescar',
+                icon: const Icon(
+                  Icons.refresh_rounded,
+                ),
+                onPressed: () => orderController.refreshOrder(),
+              ),
               IconButton(
                 tooltip: 'Compartir',
                 icon: const Icon(
                   Icons.ios_share_rounded,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  ShareProvider().string(
+                    'pickpointer://pickpointer.com/order/${orderController.orderId.value}',
+                    subject: 'Por seguridad comparte a alguien confiable.',
+                  );
+                },
               ),
               IconButton(
                 tooltip: 'Mensajes',
@@ -63,6 +83,63 @@ class _OrderPageState extends State<OrderPage> {
                   orderController.scaffoldKey.currentState!.openEndDrawer();
                 },
               ),
+              PopupMenuButton(
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem<int>(
+                      value: 0,
+                      child: Text("Salir a VER RUTAS"),
+                    ),
+                  ];
+                },
+                onSelected: (value) {
+                  if (value == 0) {
+                    ModalBottomSheetHelper(
+                      context: context,
+                      title: 'Salir a VER RUTAS',
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: FractionallySizedBoxWidget(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: WrapWidget(
+                              children: [
+                                TextWidget(
+                                  '¿Estás seguro de que deseas salir del viaje actual?',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                                TextWidget(
+                                  'Si sales el viaje continuará en curso hasta que el conductor llegue al destino.\n Ademas no podras volver a esta vista.',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                ElevatedButtonWidget(
+                                  title: 'Confirmar',
+                                  onPressed: () {
+                                    orderController
+                                        .cleanSession()
+                                        .then((bool value) {
+                                      if (value) {
+                                        GetxSnackbarWidget(
+                                          title: 'Saliste del Viaje',
+                                          subtitle:
+                                              'Ahora puedes tomar otro viaje.',
+                                        );
+                                        Get.offAll(
+                                          () => const RoutesPage(),
+                                        );
+                                      }
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
             ],
           ),
           body: Stack(
@@ -70,10 +147,14 @@ class _OrderPageState extends State<OrderPage> {
               SizedBox(
                 child: FlutterMapWidget(
                   mapController: orderController.mapController,
-                  bounds: orderController.latLngBounds != null
+                  onMapCreated: (MapController controller) {
+                    orderController.mapController = controller;
+                  },
+                  bounds: (orderController.taxiPosition.value != null &&
+                          orderController.userPickPoint.value != null)
                       ? LatLngBounds(
-                          orderController.latLngBounds[0],
-                          orderController.latLngBounds[1],
+                          orderController.taxiPosition.value,
+                          orderController.userPickPoint.value,
                         )
                       : null,
                   children: [
@@ -82,10 +163,11 @@ class _OrderPageState extends State<OrderPage> {
                         polylines: [
                           Polyline(
                             points: <LatLng>[
-                              ...orderController.polylineTaxiListLatLng.value,
+                              orderController.taxiPosition.value,
+                              orderController.userPosition.value,
                             ],
                             strokeWidth: 5,
-                            color: Colors.blue,
+                            color: Colors.purple,
                             isDotted: true,
                           ),
                         ],
@@ -119,16 +201,14 @@ class _OrderPageState extends State<OrderPage> {
                           for (var wayPoint
                               in orderController.listWayPoints.value)
                             Marker(
-                              width: 20,
-                              height: 20,
-                              anchorPos: AnchorPos.align(
-                                AnchorAlign.top,
-                              ),
+                              width: 10,
+                              height: 10,
+                              anchorPos: AnchorPos.align(AnchorAlign.center),
                               point: wayPoint,
                               builder: (BuildContext context) => Icon(
-                                Icons.person_pin,
+                                Icons.circle,
                                 color: Theme.of(context).primaryColor,
-                                size: 20,
+                                size: 10,
                               ),
                             ),
                         ],
@@ -140,10 +220,8 @@ class _OrderPageState extends State<OrderPage> {
                           Marker(
                             width: 30,
                             height: 30,
-                            anchorPos: AnchorPos.align(
-                              AnchorAlign.top,
-                            ),
-                            point: orderController.clientPosition.value,
+                            anchorPos: AnchorPos.align(AnchorAlign.center),
+                            point: orderController.userPosition.value,
                             builder: (BuildContext context) => const Icon(
                               Icons.adjust_rounded,
                               color: Colors.blue,
@@ -169,7 +247,7 @@ class _OrderPageState extends State<OrderPage> {
                             anchorPos: AnchorPos.align(
                               AnchorAlign.top,
                             ),
-                            point: orderController.pickPoint.value,
+                            point: orderController.userPickPoint.value,
                             builder: (BuildContext context) => const Icon(
                               Icons.person_pin_circle_sharp,
                               color: Colors.blue,
@@ -201,18 +279,34 @@ class _OrderPageState extends State<OrderPage> {
                 child: SafeAreaWidget(
                   child: FractionallySizedBoxWidget(
                     child: OrderCardWidget(
-                      abstractOrderEntity: widget.abstractOrderEntity,
+                      routeTo: orderController.routeTo.value,
+                      routeFrom: orderController.routeFrom.value,
+                      userPickPointLat: orderController.userPickPointLat.value,
+                      userPickPointLng: orderController.userPickPointLng.value,
                     ),
                   ),
                 ),
               ),
-              const Positioned(
+              Positioned(
                 bottom: 16,
                 left: 0,
                 right: 0,
                 child: SafeAreaWidget(
                   child: FractionallySizedBoxWidget(
-                    child: CallCardWidget(),
+                    child: CallCardWidget(
+                        avatarUrl: orderController.driverAvatar.value,
+                        name: orderController.driverName.value,
+                        carPhoto: orderController.driverCarPhoto.value,
+                        carModel: orderController.driverCarModel.value,
+                        carPlate: orderController.driverCarPlate.value,
+                        onPressed: () {
+                          LauncherLinkHelper launcherLinkHelper =
+                              LauncherLinkHelper(
+                            url: orderController.driverPhoneNumber.value,
+                            isPhone: true,
+                          );
+                          launcherLinkHelper.makePhoneCall();
+                        }),
                   ),
                 ),
               ),

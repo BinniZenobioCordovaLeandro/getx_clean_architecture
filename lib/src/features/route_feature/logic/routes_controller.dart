@@ -10,8 +10,12 @@ import 'package:pickpointer/packages/route_package/data/datasources/route_dataso
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/usecases/get_routes_usecase.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
+import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/package_info_provider.dart';
@@ -20,7 +24,9 @@ import 'package:pickpointer/src/core/providers/places_provider.dart';
 class RoutesController extends GetxController {
   static RoutesController get instance => Get.put(RoutesController());
 
-  final MapController mapController = MapController();
+  MapController? mapController;
+  final FirebaseNotificationProvider? firebaseNotificationProvider =
+      FirebaseNotificationProvider.getInstance();
 
   var isSigned = false.obs;
   var isDriver = false.obs;
@@ -40,6 +46,10 @@ class RoutesController extends GetxController {
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
+  final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
+    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+  );
+
   final GetRoutesUsecase _getRoutesUsecase = GetRoutesUsecase(
     abstractRouteRepository: FirebaseRouteDatasource(),
   );
@@ -53,7 +63,7 @@ class RoutesController extends GetxController {
 
   moveToMyLocation() {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-      mapController.move(position.value, 15.0);
+      mapController?.move(position.value, 15.0);
     });
   }
 
@@ -63,6 +73,7 @@ class RoutesController extends GetxController {
         .then((AbstractSessionEntity abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
+      _updateSessionUsecase.call(abstractSessionEntity: abstractSessionEntity);
       return isSigned.value;
     });
     return futureBool;
@@ -79,15 +90,11 @@ class RoutesController extends GetxController {
 
   prepareStreamCurrentPosition() {
     streamPosition =
-        geolocatorProvider!.streamPosition().listen((Position streamPosition) {
+        geolocatorProvider!.onPositionChanged.listen((Position streamPosition) {
       print('position: $streamPosition');
       position.value =
           LatLng(streamPosition.latitude, streamPosition.longitude);
-    }, onError: (error) {
-      print('error: $error');
-    }, onDone: () {
-      print('done');
-    }, cancelOnError: true);
+    });
   }
 
   getCurrentPosition() {
@@ -110,6 +117,44 @@ class RoutesController extends GetxController {
     }, onError: (dynamic error) {
       errorMessage.value = error.toString();
     });
+  }
+
+  getPredictions(String string) {
+    placesProvider?.getPredictions(string).then(
+      (List<Prediction> listPrediction) {
+        errorMessage.value = '';
+        if (listPrediction.length > 3) {
+          predictions.value = listPrediction.sublist(0, 3);
+        } else {
+          predictions.value = listPrediction;
+        }
+      },
+      onError: (dynamic error) {
+        errorMessage.value = error.toString();
+      },
+    );
+  }
+
+  Future<LatLng>? getPlaceDetail(String placeId) {
+    Future<LatLng>? futureLatLng =
+        placesProvider?.getPlaceDetails(placeId).then(
+      (PlacesDetailsResponse placeDetailsResponse) {
+        errorMessage.value = '';
+        LatLng latLng = LatLng(
+          placeDetailsResponse.result.geometry!.location.lat,
+          placeDetailsResponse.result.geometry!.location.lng,
+        );
+        return latLng;
+      },
+      onError: (dynamic error) {
+        errorMessage.value = error.toString();
+      },
+    );
+    return futureLatLng;
+  }
+
+  cleanPredictions() {
+    predictions.value = <Prediction>[];
   }
 
   @override
@@ -205,41 +250,9 @@ class RoutesController extends GetxController {
     super.onReady();
   }
 
-  getPredictions(String string) {
-    placesProvider?.getPredictions(string).then(
-      (List<Prediction> listPrediction) {
-        errorMessage.value = '';
-        if (listPrediction.length > 3) {
-          predictions.value = listPrediction.sublist(0, 3);
-        } else {
-          predictions.value = listPrediction;
-        }
-      },
-      onError: (dynamic error) {
-        errorMessage.value = error.toString();
-      },
-    );
-  }
-
-  Future<LatLng>? getPlaceDetail(String placeId) {
-    Future<LatLng>? futureLatLng =
-        placesProvider?.getPlaceDetails(placeId).then(
-      (PlacesDetailsResponse placeDetailsResponse) {
-        errorMessage.value = '';
-        LatLng latLng = LatLng(
-          placeDetailsResponse.result.geometry!.location.lat,
-          placeDetailsResponse.result.geometry!.location.lng,
-        );
-        return latLng;
-      },
-      onError: (dynamic error) {
-        errorMessage.value = error.toString();
-      },
-    );
-    return futureLatLng;
-  }
-
-  cleanPredictions() {
-    predictions.value = <Prediction>[];
+  @override
+  void onClose() {
+    streamPosition?.cancel();
+    super.onClose();
   }
 }

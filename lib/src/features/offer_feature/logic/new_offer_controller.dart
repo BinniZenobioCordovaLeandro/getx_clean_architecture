@@ -15,6 +15,7 @@ import 'package:pickpointer/packages/user_package/data/datasources/user_datasour
 import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
 import 'package:uuid/uuid.dart';
 
@@ -83,13 +84,11 @@ class NewOfferController extends GetxController {
                 startLng: abstractRouteEntity.startLng,
                 endLat: abstractRouteEntity.endLat,
                 endLng: abstractRouteEntity.endLng,
-                wayPoints:
-                    '["-12.114398419240583, -76.87099057482455", "-12.100091477862088, -76.86953248267001", "-12.084886779107038, -76.8750718551892"]',
-                orders:
-                    '[{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Abel Rocksnamas","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.114398419240583","lng":"-76.87099057482455"},{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Borrir Docs Gamers","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.100091477862088","lng":"-76.86953248267001"},{"userId":"3cacsAS21312321","orderId":"ascasASCSVAS23312","userToken":"ASCASVAS1wewq122","fullName":"Donkey Kong","avatar":"https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png","lat":"-12.084886779107038","lng":"-76.8750718551892"}]',
+                wayPoints: '[]',
+                orders: '[]',
                 stateId: '-1',
                 stateDescription:
-                    'Esperando', // Esperando -1, enCarretera 0 , Completado 1, Cancelado 2
+                    'Esperando', // STATUS // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
                 userId: abstractSessionEntity.idUsers,
                 userName: abstractUserEntity.name,
                 userEmail: abstractUserEntity.email,
@@ -100,6 +99,7 @@ class NewOfferController extends GetxController {
                 userCarColor: abstractUserEntity.carColor,
                 userPhoneNumber: abstractUserEntity.phoneNumber,
                 userRank: abstractUserEntity.rank,
+                userTokenMessaging: abstractSessionEntity.tokenMessaging,
                 routeId: abstractRouteEntity.id,
                 routeTitle: abstractRouteEntity.title,
                 routeDescription: abstractRouteEntity.description,
@@ -121,21 +121,34 @@ class NewOfferController extends GetxController {
                 sendNotification(
                   abstractRouteEntity: abstractRouteEntity,
                 );
-                _updateSessionUsecase.call(
+                _updateSessionUsecase
+                    .call(
                   abstractSessionEntity:
                       (abstractSessionEntity as SessionModel).copyWith(
                     onRoad: true,
                     currentOfferId: abstractOfferEntity.id,
                   ),
-                );
-                Get.to(
-                  () => OfferPage(
-                    abstractOfferEntity: abstractOfferEntity,
-                  ),
-                  arguments: {
-                    'abstractOfferEntity': abstractOfferEntity,
-                  },
-                );
+                )
+                    .then((AbstractSessionEntity savedAbstractSessionEntity) {
+                  if (savedAbstractSessionEntity.onRoad == true) {
+                    GetxSnackbarWidget(
+                      title: 'TU OFERTA ES AHORA VISIBLE!',
+                      subtitle:
+                          'Espera a completar los ${abstractOfferEntity.maxCount} pasajeros, o inicia manualmente con los que tengas.',
+                      duration: const Duration(seconds: 15),
+                    );
+                    Get.offAll(
+                      () => OfferPage(
+                        abstractOfferEntity: abstractOfferEntity,
+                      ),
+                      arguments: {
+                        'abstractOfferEntity': abstractOfferEntity,
+                      },
+                    );
+                  } else {
+                    isLoading.value = false;
+                  }
+                });
               });
             }
           });

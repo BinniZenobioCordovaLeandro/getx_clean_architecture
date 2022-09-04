@@ -4,11 +4,9 @@
 #     types:
 #       - completed
 on:
-  pull_request:
+  push:
     branches:
-      - main
-      - master
-      - develop
+      - qa
 name: "Deploy to App Distribution"
 jobs:
   build:

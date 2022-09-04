@@ -20,10 +20,30 @@
 		<string>$(FLUTTER_BUILD_NAME)</string>
 		<key>CFBundleSignature</key>
 		<string>????</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.1006184739013-f9fru1hpjl9j8v5ei94tho8a1d7hmb01</string>
+				</array>
+			</dict>
+		</array>
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsLocalNetworking</key>
+			<true/>
+		</dict>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>This app needs access to location when in the background.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app needs access to location when open.</string>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
@@ -43,31 +63,48 @@
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<true/>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>This app needs access to location when open.</string>
-		<key>NSLocationAlwaysUsageDescription</key>
-		<string>This app needs access to location when in the background.</string>
-		<!-- Firebase -->
-		<key>NSAppTransportSecurity</key>
-		<dict>
-			<key>NSAllowsLocalNetworking</key>
-			<true/>
-		</dict>
-		<!-- End Firebase -->
-		<!-- Google Sign-in Section -->
+		<!-- Deep linking -->
+		<key>FlutterDeepLinkingEnabled</key>
+		<true/>
 		<key>CFBundleURLTypes</key>
 		<array>
 			<dict>
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>pickpointer</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<!-- TODO Replace this value: -->
-					<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-					<string>com.googleusercontent.apps.1006184739013-f9fru1hpjl9j8v5ei94tho8a1d7hmb01</string>
+					<string>http</string>
+					<string>https</string>
+					<string>platanitos</string>
+				</array>
+			</dict>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>pickpointer.com</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>http</string>
+					<string>https</string>
+					<string>platanitos</string>
+				</array>
+			</dict>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>www.pickpointer.com</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>http</string>
+					<string>https</string>
+					<string>platanitos</string>
 				</array>
 			</dict>
 		</array>
-		<!-- End of the Google Sign-in Section -->
+		<!-- Deep linking -->
 	</dict>
 </plist>

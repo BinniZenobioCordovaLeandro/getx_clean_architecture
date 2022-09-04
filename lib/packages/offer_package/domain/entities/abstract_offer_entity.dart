@@ -23,6 +23,7 @@ abstract class AbstractOfferEntity extends Equatable {
   final String? userCarColor;
   final String? userPhoneNumber;
   final String? userRank;
+  final String? userTokenMessaging;
   final String? routeId;
   final String? routeTitle;
   final String? routeDescription;
@@ -59,6 +60,7 @@ abstract class AbstractOfferEntity extends Equatable {
     this.userCarColor,
     this.userPhoneNumber,
     this.userRank,
+    this.userTokenMessaging,
     this.routeId,
     this.routeTitle,
     this.routeDescription,

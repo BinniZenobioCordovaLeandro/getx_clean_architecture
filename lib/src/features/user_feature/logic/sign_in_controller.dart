@@ -11,6 +11,7 @@ import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_
 import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/set_user_usecase.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/user_exists_usecase.dart';
+import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/google_sign_in_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 
@@ -22,6 +23,9 @@ class SignInController extends GetxController {
 
   final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
+
+  final FirebaseNotificationProvider? firebaseNotificationProvider =
+      FirebaseNotificationProvider.getInstance();
 
   var isSigned = false.obs;
   var googleIsLoading = false.obs;
@@ -65,12 +69,14 @@ class SignInController extends GetxController {
       if (googleSignInAccount != null) {
         _verifySessionUsecase
             .call()
-            .then((AbstractSessionEntity abstractSessionEntity) {
+            .then((AbstractSessionEntity abstractSessionEntity) async {
           final SessionModel sessionModel =
               abstractSessionEntity as SessionModel;
+          final tokenMessaging = await firebaseNotificationProvider?.getToken();
           final SessionModel newSessionModel = sessionModel.copyWith(
             isSigned: true,
             idUsers: googleSignInAccount.id,
+            tokenMessaging: tokenMessaging,
           );
           _getUserUsecase
               .call(userId: googleSignInAccount.id)

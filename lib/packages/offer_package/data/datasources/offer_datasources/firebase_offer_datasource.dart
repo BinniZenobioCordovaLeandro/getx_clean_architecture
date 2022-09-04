@@ -32,8 +32,6 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
         .get()
         .then((snapshot) {
       List<AbstractOfferEntity> offers = [];
-      print('snapshot.docs');
-      print(snapshot.docs);
       for (DocumentSnapshot offer in snapshot.docs) {
         offers.add(OfferModel.fromMap(offer.data() as Map<String, dynamic>));
       }
@@ -67,4 +65,30 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
     offers?.doc(offerModel.id).set(offerModel.toMap());
     return Future.value(offerModel);
   }
+
+  @override
+  Future<AbstractOfferEntity>? updateOffer({
+    required AbstractOfferEntity abstractOfferEntity,
+  }) {
+    OfferModel offerModel = abstractOfferEntity as OfferModel;
+    Map<String, dynamic> mapStringDynamic = offerModel.toMap();
+    Map<String, dynamic> newMapStringDynamic = {};
+    mapStringDynamic.forEach((key, value) {
+      if (value != null) {
+        newMapStringDynamic.putIfAbsent(key, () => value);
+      }
+    });
+    offers?.doc(offerModel.id).update(newMapStringDynamic);
+    return Future.value(offerModel);
+  }
+
+  @override
+  Future<AbstractOfferEntity>? startOffer({
+    required String offerId,
+  }) {}
+
+  @override
+  Future<AbstractOfferEntity>? finishOffer({
+    required String offerId,
+  }) {}
 }

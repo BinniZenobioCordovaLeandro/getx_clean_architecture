@@ -49,7 +49,7 @@ class SearchLocationCardWidget extends StatefulWidget {
 }
 
 class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
-  final MapController mapController = MapController();
+  MapController? mapController;
 
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
@@ -109,7 +109,7 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
   moveToMyLocation() {
     getMyLocation()?.then((LatLng? latLng) {
       if (latLng != null) {
-        mapController.move(latLng, 15.0);
+        move(latLng);
       }
     });
   }
@@ -130,20 +130,25 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
     return futureLatLng;
   }
 
+  move(LatLng latLng) {
+    WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
+      mapController!.move(latLng, 15.0);
+    });
+  }
+
   @override
   void initState() {
+    super.initState();
     if (widget.initialValue != null) {
       boolean = widget.initialValue!;
     }
-    WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-      if (widget.initialLatLng?.latitude != 0 &&
-          widget.initialLatLng?.longitude != 0) {
-        mapController.move(widget.initialLatLng!, 15.0);
-      } else {
-        moveToMyLocation();
-      }
-    });
-    super.initState();
+    if (widget.initialLatLng != null &&
+        widget.initialLatLng?.latitude != 0 &&
+        widget.initialLatLng?.longitude != 0) {
+      move(widget.initialLatLng!);
+    } else {
+      moveToMyLocation();
+    }
   }
 
   @override
@@ -173,17 +178,14 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
               onChanged: widget.disabled
                   ? null
                   : (value) {
-                      WidgetsBinding.instance!
-                          .addPostFrameCallback((Duration duration) {
-                        setState(() {
-                          boolean = value!;
-                          if (value == true) {
-                            if (widget.onChanged != null) {
-                              widget.onChanged!(widget.initialLatLng!);
-                            }
-                            mapController.move(widget.initialLatLng!, 15.0);
+                      setState(() {
+                        boolean = value!;
+                        if (value == true) {
+                          if (widget.onChanged != null) {
+                            widget.onChanged!(widget.initialLatLng!);
                           }
-                        });
+                          move(widget.initialLatLng!);
+                        }
                       });
                     },
             ),
@@ -227,17 +229,14 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                       getPlaceDetail('${listPrediction[i].placeId}')?.then(
                         (LatLng? latLng) {
                           if (latLng != null) {
-                            WidgetsBinding.instance!
-                                .addPostFrameCallback((Duration duration) {
-                              mapController.move(latLng, 15.0);
-                              setState(() {
-                                listPrediction = [];
-                                if (widget.onChanged != null) {
-                                  widget.onChanged!(latLng);
-                                }
-                                textEditingController.text =
-                                    '${listPrediction[i].description}';
-                              });
+                            move(latLng);
+                            setState(() {
+                              listPrediction = [];
+                              if (widget.onChanged != null) {
+                                widget.onChanged!(latLng);
+                              }
+                              textEditingController.text =
+                                  '${listPrediction[i].description}';
                             });
                           }
                         },
@@ -251,7 +250,9 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
             child: Stack(
               children: [
                 FlutterMapWidget(
-                  mapController: mapController,
+                  onMapCreated: (MapController controller) {
+                    mapController = controller;
+                  },
                   interactiveFlags: boolean ? InteractiveFlag.none : null,
                   onPositionChanged: (mapPosition, boolean) => {
                     WidgetsBinding.instance!
@@ -275,30 +276,36 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                             width: 20.0,
                             height: 20.0,
                             point: myLatLng,
-                            anchorPos: AnchorPos.align(
-                              AnchorAlign.top,
-                            ),
+                            anchorPos: AnchorPos.align(AnchorAlign.top),
                             builder: (BuildContext context) => IconButton(
                               tooltip: 'Mi ubicacion actual',
-                              icon: Icon(
-                                Icons.person_pin_circle_sharp,
-                                color: Theme.of(context).primaryColor,
-                                size: 20.0,
+                              icon: Center(
+                                child: Icon(
+                                  Icons.person_pin_circle_sharp,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 20.0,
+                                ),
                               ),
                               onPressed: () {},
                             ),
                           ),
                           Marker(
-                            width: 50.0,
-                            height: 50.0,
+                            width: 0,
+                            height: 0,
                             point: latLng,
-                            anchorPos: AnchorPos.align(
-                              AnchorAlign.top,
+                            anchorPos: AnchorPos.align(AnchorAlign.center),
+                            builder: (BuildContext context) => const Icon(
+                              Icons.circle,
+                              size: 5,
                             ),
-                            builder: (BuildContext context) => IconButton(
-                              iconSize: 50.0,
-                              icon: widget.iconMarker,
-                              onPressed: () {},
+                          ),
+                          Marker(
+                            width: 45.0,
+                            height: 45.0,
+                            point: latLng,
+                            anchorPos: AnchorPos.align(AnchorAlign.top),
+                            builder: (BuildContext context) => Center(
+                              child: widget.iconMarker,
                             ),
                           ),
                         ],

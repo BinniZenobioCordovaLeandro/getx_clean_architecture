@@ -4,9 +4,10 @@ import 'package:pickpointer/src/core/widgets/form_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/rank_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
-import 'package:pickpointer/src/core/widgets/svg_or_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/features/user_feature/logic/user_controller.dart';
+import 'package:pickpointer/src/features/user_feature/views/widgets/pick_image_card.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class UserPage extends StatefulWidget {
@@ -45,6 +46,23 @@ class _UserPageState extends State<UserPage> {
               onChanged: (value) => userController.name.value = value,
             ),
             TextFieldWidget(
+              labelText: 'Email',
+              initialValue: userController.email.value,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Este campo es requerido';
+                }
+                RegExp emailPath = RegExp(
+                  r'^[a-zA-Z0-9.a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+                );
+                if (!emailPath.hasMatch(value)) {
+                  return 'El email no es válido';
+                }
+                return null;
+              },
+              onChanged: (value) => userController.email.value = value,
+            ),
+            TextFieldWidget(
               labelText: 'Documento de Identidad',
               initialValue: userController.document.value,
               validator: (String? value) {
@@ -66,16 +84,15 @@ class _UserPageState extends State<UserPage> {
               },
               onChanged: (value) => userController.phoneNumber.value = value,
             ),
-            AspectRatio(
-              aspectRatio: 3 / 1,
-              child: SvgOrImageWidget(
-                urlSvgOrImage: userController.avatar.value,
-              ),
+            const SizedBox(
+              width: double.infinity,
+              child: TextWidget('Avatar'),
             ),
-            TextFieldWidget(
-              labelText: 'Avatar (url)',
-              initialValue: userController.avatar.value,
-              onChanged: (value) => userController.avatar.value = value,
+            PickImageCard(
+              urlSvgOrImage: userController.avatar.value,
+              onChanged: (String? string) {
+                userController.avatar.value = string!;
+              },
             ),
             SwitchListTile(
               title: const Text('Activar modo conductor'),
@@ -97,10 +114,16 @@ class _UserPageState extends State<UserPage> {
                 onChanged: (value) => userController.carPlate.value = value,
               ),
             if (userController.isDriver.value)
-              TextFieldWidget(
-                labelText: 'Foto de Carro (url)',
-                initialValue: userController.carPhoto.value,
-                onChanged: (value) => userController.carPhoto.value = value,
+              const SizedBox(
+                width: double.infinity,
+                child: TextWidget('Foto de Carro'),
+              ),
+            if (userController.isDriver.value)
+              PickImageCard(
+                urlSvgOrImage: userController.carPhoto.value,
+                onChanged: (String? string) {
+                  userController.carPhoto.value = string!;
+                },
               ),
             if (userController.isDriver.value)
               TextFieldWidget(

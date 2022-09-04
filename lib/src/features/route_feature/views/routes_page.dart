@@ -10,6 +10,7 @@ import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
@@ -22,21 +23,15 @@ import 'package:pickpointer/src/features/route_feature/views/widgets/search_dest
 import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
 import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
 
-class RoutesPage extends StatefulWidget {
+class RoutesPage extends StatelessWidget {
   const RoutesPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<RoutesPage> createState() => _RoutesPageState();
-}
-
-class _RoutesPageState extends State<RoutesPage> {
-  final RoutesController routesController = RoutesController.instance;
-  final Debouncer debouncer = Debouncer();
-
-  @override
   Widget build(BuildContext context) {
+    final RoutesController routesController = RoutesController.instance;
+    final Debouncer debouncer = Debouncer();
     return Obx(() {
       return Scaffold(
         appBar: AppBarWidget(
@@ -84,7 +79,9 @@ class _RoutesPageState extends State<RoutesPage> {
           children: [
             SizedBox(
               child: FlutterMapWidget(
-                mapController: routesController.mapController,
+                onMapCreated: (MapController controller) {
+                  routesController.mapController = controller;
+                },
                 center: routesController.position.value,
                 children: [
                   MarkerLayerWidget(
@@ -137,6 +134,7 @@ class _RoutesPageState extends State<RoutesPage> {
                           return PopupMarkerCardWidget(
                             abstractRouteEntity: abstractRouteEntity,
                             onTap: () {
+                              routesController.verifySession();
                               Get.to(
                                 () => RoutePage(
                                   abstractRouteEntity: abstractRouteEntity,
@@ -195,14 +193,13 @@ class _RoutesPageState extends State<RoutesPage> {
               child: SafeAreaWidget(
                 child: FractionallySizedBoxWidget(
                   child: SearchDestinationCardWidget(
-                    // ignore: invalid_use_of_protected_member
                     predictions: routesController.predictions.value,
                     onTapPrediction: (Prediction prediction) {
                       routesController
                           .getPlaceDetail('${prediction.placeId}')
                           ?.then((LatLng latLng) => routesController
                               .mapController
-                              .move(latLng, 15.0));
+                              ?.move(latLng, 15.0));
                       routesController.cleanPredictions();
                     },
                     onChanged: (String string) {

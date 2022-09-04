@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
+import 'package:pickpointer/src/core/models/notification_message_model.dart';
+import 'package:pickpointer/src/core/providers/analytics_provider.dart';
 import 'package:pickpointer/src/core/providers/firebase_config_provider.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
+import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/platform_provider.dart';
 import 'package:pickpointer/src/core/util/version_util.dart';
@@ -11,6 +18,8 @@ import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
+import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class App extends StatefulWidget {
@@ -32,14 +41,44 @@ class _AppState extends State<App> {
   final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
 
+  final AnalyticsProvider? analyticsProvider = AnalyticsProvider.getInstance();
+
+  final GeolocatorProvider? geolocatorProvider =
+      GeolocatorProvider.getInstance();
+
+  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
+  );
+
   bool validateVersion = false;
+  bool validateOnWay = false;
 
   @override
   void initState() {
     super.initState();
     firebaseNotificationProvider?.initialize();
-    firebaseNotificationProvider?.getToken();
     notificationProvider?.initialize();
+    analyticsProvider?.initialize();
+    geolocatorProvider?.initialize();
+    firebaseNotificationProvider?.onMessage
+        .listen((NotificationMessageModel event) {
+      if (event.isMessage == "true" && event.link != null) {
+        String link = event.link!;
+        Get.offAllNamed(link);
+      }
+      notificationProvider?.sendNotification(
+        title: event.title,
+        body: event.body,
+        bigPicture: event.imageUrl,
+      );
+    });
+    firebaseNotificationProvider?.onMessageOpened
+        .listen((NotificationMessageModel event) {
+      if (event.isMessage == "true" && event.link != null) {
+        String link = event.link!;
+        Get.offAllNamed(link);
+      }
+    });
     validateVersion = false;
   }
 
@@ -99,12 +138,44 @@ class _AppState extends State<App> {
     }
   }
 
+  verifyIsOnTheWay() {
+    _verifySessionUsecase
+        .call()
+        .then((AbstractSessionEntity abstractSessionEntity) {
+      if (abstractSessionEntity.currentOrderId != null) {
+        Get.offAll(
+          () => OrderPage(
+            abstractOrderEntityId: abstractSessionEntity.currentOrderId,
+          ),
+          arguments: {
+            'abstractOrderEntityId': abstractSessionEntity.currentOrderId,
+          },
+        );
+      } else if (abstractSessionEntity.currentOfferId != null) {
+        Get.offAll(
+          () => OfferPage(
+            abstractOfferEntityId: abstractSessionEntity.currentOfferId,
+          ),
+          arguments: {
+            'abstractOfferEntityId': abstractSessionEntity.currentOfferId,
+          },
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!validateVersion) {
       verifyMinimalVersion(context);
       setState(() {
         validateVersion = true;
+      });
+    }
+    if (!validateOnWay) {
+      verifyIsOnTheWay();
+      setState(() {
+        validateOnWay = true;
       });
     }
     return const RoutesPage();

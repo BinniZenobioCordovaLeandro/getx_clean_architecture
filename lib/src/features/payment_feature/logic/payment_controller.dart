@@ -16,6 +16,7 @@ import 'package:pickpointer/packages/user_package/data/datasources/user_datasour
 import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
 
 class PaymentController extends GetxController {
@@ -100,11 +101,13 @@ class PaymentController extends GetxController {
                 userId: abstractUserEntity.id,
                 userName: abstractUserEntity.name,
                 userEmail: abstractUserEntity.email,
+                userAvatar: abstractUserEntity.avatar,
                 userPhone: abstractUserEntity.phoneNumber,
                 userPickPointLat: '${originLatLng.value.latitude}',
                 userPickPointLng: '${originLatLng.value.longitude}',
                 userDropPointLat: '${destinationLatLng.value.latitude}',
                 userDropPointLng: '${destinationLatLng.value.longitude}',
+                userTokenMessaging: abstractSessionEntity.tokenMessaging,
                 offerId: abstractOfferEntity.id,
                 offerCount: abstractOfferEntity.count,
                 offerMaxCount: abstractOfferEntity.maxCount,
@@ -135,6 +138,7 @@ class PaymentController extends GetxController {
                 driverCarColor: abstractOfferEntity.userCarColor,
                 driverPhoneNumber: abstractOfferEntity.userPhoneNumber,
                 driverRank: abstractOfferEntity.userRank,
+                driverTokenMessaging: abstractOfferEntity.userTokenMessaging,
                 createdAt: DateTime.now().millisecondsSinceEpoch,
                 updatedAt: DateTime.now().millisecondsSinceEpoch,
               ),
@@ -150,7 +154,24 @@ class PaymentController extends GetxController {
                   currentOrderId: abstractOrderEntity.id,
                 ),
               );
-              Get.to(
+              var message =
+                  'Perfecto!, compraste ${abstractOrderEntity.count} asiento(s)';
+              if (abstractOrderEntity.offerCount != null &&
+                  abstractOrderEntity.offerMaxCount != null &&
+                  abstractOrderEntity.offerCount! + abstractOrderEntity.count! <
+                      abstractOrderEntity.offerMaxCount!) {
+                int pendingComplete = abstractOrderEntity.offerMaxCount! -
+                    abstractOrderEntity.offerCount! -
+                    abstractOrderEntity.count!;
+                message +=
+                    '\nEspera un poco, estamos trabajando en completar los $pendingComplete pasajero(s) restantes';
+              }
+              GetxSnackbarWidget(
+                title: 'ORDEN CREADA!',
+                subtitle: message,
+                duration: const Duration(seconds: 15),
+              );
+              Get.offAll(
                 () => OrderPage(
                   abstractOrderEntity: abstractOrderEntity,
                 ),

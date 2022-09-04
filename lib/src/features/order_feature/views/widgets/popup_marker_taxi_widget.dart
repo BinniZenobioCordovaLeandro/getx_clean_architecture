@@ -11,6 +11,38 @@ class PopupMarkerTaxiWidget extends StatelessWidget {
     required this.meters,
   }) : super(key: key);
 
+  child(BuildContext context) {
+    return CardWidget(
+      color: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          children: [
+            const TextWidget(
+              'El vehiculo esta a',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextWidget(
+              meters > 1000
+                  ? (meters / 1000).toStringAsFixed(2)
+                  : meters.toStringAsFixed(2),
+              style: Theme.of(context).textTheme.headline6?.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            TextWidget(
+              meters > 1000 ? "Kilometros" : "metros",
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -19,65 +51,9 @@ class PopupMarkerTaxiWidget extends StatelessWidget {
       child: Stack(
         children: [
           Blur(
-            child: CardWidget(
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  children: [
-                    const TextWidget(
-                      'El vehiculo esta a',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextWidget(
-                      meters > 1000
-                          ? (meters / 1000).toStringAsFixed(2)
-                          : meters.toStringAsFixed(2),
-                      style: Theme.of(context).textTheme.headline6?.copyWith(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    TextWidget(
-                      '${meters > 1000 ? "Kilometros" : "metros"} de ti',
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            child: child(context),
           ),
-          CardWidget(
-            color: Colors.transparent,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                children: [
-                  const TextWidget(
-                    'El vehiculo esta a',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextWidget(
-                    meters > 1000
-                        ? (meters / 1000).toStringAsFixed(2)
-                        : meters.toStringAsFixed(2),
-                    style: Theme.of(context).textTheme.headline6?.copyWith(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  TextWidget(
-                    '${meters > 1000 ? "Kilometros" : "metros"} de ti',
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child(context),
         ],
       ),
     );

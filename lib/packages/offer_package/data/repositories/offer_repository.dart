@@ -49,4 +49,31 @@ class OfferRepository implements AbstractOfferRepository {
       abstractOfferEntity: abstractOfferEntity,
     );
   }
+
+  @override
+  Future<AbstractOfferEntity>? updateOffer({
+    required AbstractOfferEntity abstractOfferEntity,
+  }) {
+    return _abstractOfferRepository!.updateOffer(
+      abstractOfferEntity: abstractOfferEntity,
+    );
+  }
+
+  @override
+  Future<AbstractOfferEntity>? startOffer({
+    required String offerId,
+  }) {
+    return _abstractOfferRepository!.startOffer(
+      offerId: offerId,
+    );
+  }
+
+  @override
+  Future<AbstractOfferEntity>? finishOffer({
+    required String offerId,
+  }) {
+    return _abstractOfferRepository!.finishOffer(
+      offerId: offerId,
+    );
+  }
 }

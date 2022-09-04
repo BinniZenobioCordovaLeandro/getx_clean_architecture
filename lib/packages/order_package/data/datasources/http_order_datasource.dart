@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:pickpointer/packages/order_package/data/models/order_model.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/repositories/abstract_order_repository.dart';
@@ -23,10 +22,9 @@ class HttpOrderDatasource implements AbstractOrderRepository {
   }) {
     Future<AbstractOrderEntity> futureAbstractOrderEntity = http
         .put(
-      Uri.parse('http://192.168.1.102:3000/createOrder'),
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
+      Uri.parse(
+          'https://us-central1-pickpointer.cloudfunctions.net/createOrder'),
+      headers: {'Content-Type': 'application/json'},
       body: (order as OrderModel).toJson(),
     )
         .then((http.Response value) {

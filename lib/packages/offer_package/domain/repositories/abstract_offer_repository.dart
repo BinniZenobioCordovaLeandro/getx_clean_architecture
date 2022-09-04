@@ -18,4 +18,16 @@ abstract class AbstractOfferRepository {
   Future<AbstractOfferEntity>? addOffer({
     required AbstractOfferEntity abstractOfferEntity,
   });
+
+  Future<AbstractOfferEntity>? updateOffer({
+    required AbstractOfferEntity abstractOfferEntity,
+  });
+
+  Future<AbstractOfferEntity>? startOffer({
+    required String offerId,
+  });
+
+  Future<AbstractOfferEntity>? finishOffer({
+    required String offerId,
+  });
 }

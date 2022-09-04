@@ -42,7 +42,6 @@ class RoutePage extends StatefulWidget {
 
 class _RoutePageState extends State<RoutePage> {
   final RouteController routeController = RouteController.instance;
-  final MapController mapController = MapController();
 
   Future<List<LatLng>>? futureListLatLng;
   Future<List<AbstractOfferEntity>>? futureListAbstractOfferEntity;
@@ -60,8 +59,7 @@ class _RoutePageState extends State<RoutePage> {
               IconButton(
                 onPressed: () async {
                   if (routeController.isSigned.value) {
-                    if (false) {
-                      // TODO: routeController.onRoad.value
+                    if (routeController.onRoad.value) {
                       ModalBottomSheetHelper(
                         context: context,
                         title: 'Ya estas en cola en una ruta!',
@@ -120,7 +118,7 @@ class _RoutePageState extends State<RoutePage> {
         body: Stack(
           children: [
             FlutterMapWidget(
-              mapController: mapController,
+              mapController: routeController.mapController,
               bounds: LatLngBounds(
                 LatLng(
                   double.tryParse('${widget.abstractRouteEntity?.startLat}') ??
@@ -300,7 +298,8 @@ class _RoutePageState extends State<RoutePage> {
                                 OfferCardWidget(
                                   abstractOfferEntity: abstractOfferEntity,
                                   onTap: (abstractOfferEntity) {
-                                    mapController.fitBounds(LatLngBounds(
+                                    routeController.mapController
+                                        .fitBounds(LatLngBounds(
                                       LatLng(
                                           double.parse(
                                               '${abstractOfferEntity.startLat}'),

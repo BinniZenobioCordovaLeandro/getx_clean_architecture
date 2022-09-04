@@ -6,30 +6,30 @@ class VehicleModel extends AbstractVehicleEntity {
   @override
   final String? id;
   @override
-  final String? lat;
+  final String? latitude;
   @override
-  final String? lng;
+  final String? longitude;
   @override
   final String? offerId;
 
   const VehicleModel({
     this.id,
-    this.lat,
-    this.lng,
+    this.latitude,
+    this.longitude,
     this.offerId,
   });
 
   factory VehicleModel.fromMap(Map<String, dynamic> data) => VehicleModel(
         id: data['id'] as String?,
-        lat: data['lat'] as String?,
-        lng: data['lng'] as String?,
+        latitude: data['latitude'] as String?,
+        longitude: data['longitude'] as String?,
         offerId: data['offer_id'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'lat': lat,
-        'lng': lng,
+        'latitude': latitude,
+        'longitude': longitude,
         'offer_id': offerId,
       };
 
@@ -53,8 +53,8 @@ class VehicleModel extends AbstractVehicleEntity {
   }) {
     return VehicleModel(
       id: id ?? this.id,
-      lat: lat ?? this.lat,
-      lng: lng ?? this.lng,
+      latitude: lat ?? this.latitude,
+      longitude: lng ?? this.longitude,
       offerId: offerId ?? this.offerId,
     );
   }
@@ -65,8 +65,8 @@ class VehicleModel extends AbstractVehicleEntity {
   @override
   List<Object?> get props => [
         id,
-        lat,
-        lng,
+        latitude,
+        longitude,
         offerId,
       ];
 }

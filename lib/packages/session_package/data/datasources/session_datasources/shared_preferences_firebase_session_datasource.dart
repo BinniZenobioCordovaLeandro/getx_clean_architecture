@@ -50,9 +50,13 @@ class SharedPreferencesFirebaseSessionDatasources
     if (json != null) {
       final SessionModel sessionModel = SessionModel.fromJson(json);
       return sessions!.doc(sessionModel.idSessions).get().then((snapshot) {
-        final SessionModel sessionModel =
-            SessionModel.fromMap(snapshot.data() as Map<String, dynamic>);
-        return sessionModel;
+        if (snapshot.exists) {
+          final SessionModel sessionModel =
+              SessionModel.fromMap(snapshot.data() as Map<String, dynamic>);
+          return sessionModel;
+        } else {
+          return setSession(abstractSessionEntity: sessionModel);
+        }
       });
     } else {
       return Future.value(null);

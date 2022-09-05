@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pickpointer/src/app.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
@@ -9,7 +10,7 @@ import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dar
 import 'package:pickpointer/src/core/widgets/svg_or_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/video_player_widget.dart';
-import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
+import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
 
 class WebLayout extends StatelessWidget {
   const WebLayout({Key? key}) : super(key: key);
@@ -162,7 +163,11 @@ class WebLayout extends StatelessWidget {
                           width: 300,
                           child: ElevatedButtonWidget(
                             title: 'Unete a nosotros',
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(
+                                () => const SignInUserPage(),
+                              );
+                            },
                           ),
                         ),
                       ],

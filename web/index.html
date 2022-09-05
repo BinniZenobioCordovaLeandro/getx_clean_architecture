@@ -25,15 +25,23 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="pickpointer">
   <meta name="google-signin-client_id" content="123054099128-91nov2744gl9rihf4qoc0aa22q1j029j.apps.googleusercontent.com">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="icons/icon.png"/>
 
   <title>pickpointer</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <script type="text/javascript">
+    let useHtml = true;
+    if (useHtml) {
+      window.flutterWebRenderer = "html";
+    } else {
+      window.flutterWebRenderer = "canvaskit";
+    }
+  </script>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->

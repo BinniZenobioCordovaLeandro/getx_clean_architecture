@@ -10,7 +10,6 @@ import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
-import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
@@ -18,6 +17,7 @@ import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
 import 'package:pickpointer/src/features/route_feature/views/new_route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
+import 'package:pickpointer/src/features/route_feature/views/routes_filter_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_marker_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/search_destination_card_widget.dart';
 import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
@@ -37,6 +37,19 @@ class RoutesPage extends StatelessWidget {
         appBar: AppBarWidget(
           title: 'PickPointer',
           actions: [
+            IconButton(
+              onPressed: () async {
+                Get.to(
+                  () => const RoutesFilterPage(),
+                  arguments: {},
+                );
+              },
+              tooltip: 'Filtrar rutas',
+              icon: Icon(
+                Icons.filter_list_rounded,
+                color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+              ),
+            ),
             if (routesController.isDriver.value == true)
               IconButton(
                 onPressed: () async {

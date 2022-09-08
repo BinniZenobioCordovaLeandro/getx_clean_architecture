@@ -186,44 +186,46 @@ class RoutesPage extends StatelessWidget {
                   ),
                 ),
               ),
-            Positioned(
-              top: 50,
-              left: 0,
-              right: 0,
-              child: SafeAreaWidget(
-                child: SizedBox(
-                  height: 200,
-                  width: double.infinity,
-                  child: SingleChildScrollViewWidget(
-                      child: FractionallySizedBoxWidget(
-                    child: WrapWidget(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: [
-                        for (var abstractRouteEntity
-                            in routesController.filteredRoutes.value)
-                          SizedBox(
-                            width: double.infinity,
-                            child: RouteItemCardWidget(
-                              onTap: () {
-                                Get.to(
-                                  () => RoutePage(
-                                    abstractRouteEntity: abstractRouteEntity,
-                                  ),
-                                  arguments: {
-                                    'abstractRouteEntity': abstractRouteEntity,
-                                  },
-                                );
-                              },
-                              abstractRouteEntity: abstractRouteEntity,
+            if (routesController.filteredRoutes.isNotEmpty)
+              Positioned(
+                top: 50,
+                left: 0,
+                right: 0,
+                child: SafeAreaWidget(
+                  child: SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: SingleChildScrollViewWidget(
+                        child: FractionallySizedBoxWidget(
+                      child: WrapWidget(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: [
+                          for (var abstractRouteEntity
+                              in routesController.filteredRoutes.value)
+                            SizedBox(
+                              width: double.infinity,
+                              child: RouteItemCardWidget(
+                                onTap: () {
+                                  Get.to(
+                                    () => RoutePage(
+                                      abstractRouteEntity: abstractRouteEntity,
+                                    ),
+                                    arguments: {
+                                      'abstractRouteEntity':
+                                          abstractRouteEntity,
+                                    },
+                                  );
+                                },
+                                abstractRouteEntity: abstractRouteEntity,
+                              ),
                             ),
-                          ),
-                      ],
-                    ),
-                  )),
+                        ],
+                      ),
+                    )),
+                  ),
                 ),
               ),
-            ),
             Positioned(
               bottom: 16,
               left: 0,

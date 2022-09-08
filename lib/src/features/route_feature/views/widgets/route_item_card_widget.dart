@@ -17,48 +17,56 @@ class RouteItemCardWidget extends StatelessWidget {
     this.onTap,
   }) : super(key: key);
 
+  child(BuildContext context) {
+    return CardWidget(
+      child: InkWellWidget(
+        onTap: onTap,
+        child: FractionallySizedBoxWidget(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8,
+            ),
+            child: WrapWidget(
+              runSpacing: 2,
+              spacing: 2,
+              children: <Widget>[
+                SizedBox(
+                  width: double.infinity,
+                  child: TextWidget(
+                    'Destino: ${abstractRouteEntity?.to}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextWidget(
+                    'Origen: ${abstractRouteEntity?.from}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: Stack(
         children: [
-          CardWidget(
-            child: InkWellWidget(
-              onTap: onTap,
-              child: FractionallySizedBoxWidget(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16.0,
-                  ),
-                  child: WrapWidget(
-                    children: <Widget>[
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextWidget(
-                          'Destino: ${abstractRouteEntity?.to}',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextWidget(
-                          'Origen: ${abstractRouteEntity?.from}',
-                          style: Theme.of(context).textTheme.bodySmall,
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          BlurWidget(
+            child: child(context),
           ),
+          child(context),
         ],
       ),
     );

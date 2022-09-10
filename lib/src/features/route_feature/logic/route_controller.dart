@@ -5,28 +5,29 @@ import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offers_by_route_usecase.dart';
+import 'package:pickpointer/packages/route_package/data/datasources/route_datasources/firebase_route_datasource.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
+import 'package:pickpointer/packages/route_package/domain/usecases/get_route_usecase.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
+import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 
 class RouteController extends GetxController {
   static RouteController get instance => Get.put(RouteController());
 
-  var isSigned = false.obs;
-  var isDriver = false.obs;
-  var onRoad = false.obs;
-  var currentOfferId = ''.obs;
-
-  var isLoading = false.obs;
-  var polylineListLatLng = <LatLng>[].obs;
-  var listAbstractOfferEntity = <AbstractOfferEntity>[].obs;
-  var listWayPoints = <LatLng>[].obs;
-
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
+
+  final FirebaseNotificationProvider? firebaseNotificationProvider =
+      FirebaseNotificationProvider.getInstance();
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
     abstractSessionRepository: SharedPreferencesSessionDatasources(),
+  );
+
+  final GetRouteUsecase _getRouteUsecase = GetRouteUsecase(
+    abstractRouteRepository: FirebaseRouteDatasource(),
   );
 
   final GetOffersByRouteUsecase getOffersByRouteUsecase =
@@ -34,7 +35,24 @@ class RouteController extends GetxController {
     abstractOfferRepository: FirebaseOfferDatasource(),
   );
 
-  MapController mapController = MapController();
+  MapController? mapController;
+  AbstractRouteEntity? abstractRouteEntity;
+
+  var isSigned = false.obs;
+  var isDriver = false.obs;
+  var onRoad = false.obs;
+  var currentOfferId = ''.obs;
+
+  var isLoading = false.obs;
+  var errorMessage = ''.obs;
+  var polylineListLatLng = <LatLng>[].obs;
+  var listAbstractOfferEntity = <AbstractOfferEntity>[].obs;
+  var listWayPoints = <LatLng>[].obs;
+
+  var routeId = ''.obs;
+
+  var routeTo = ''.obs;
+  var routeFrom = ''.obs;
 
   Future<List<LatLng>> getPolylineBetweenCoordinates({
     required LatLng origin,
@@ -51,6 +69,9 @@ class RouteController extends GetxController {
         .then((List<LatLng> listLatLng) {
       isLoading.value = false;
       return listLatLng;
+    }).catchError((error) {
+      errorMessage.value = error.toString();
+      isLoading.value = false;
     });
     return futureListLatLng;
   }
@@ -77,33 +98,37 @@ class RouteController extends GetxController {
     return futureBool;
   }
 
-  @override
-  void onInit() {
-    mapController = MapController();
-    super.onInit();
+  subscribeToRouteTopic() {
+    isLoading.value = true;
+    String topicRoute = 'route_${routeId.value}';
+    firebaseNotificationProvider!
+        .subscribeToTopic(topic: topicRoute)
+        .then((value) {
+      isLoading.value = false;
+      GetxSnackbarWidget(
+        title: 'BIEN!, TE NOTIFICAREMOS!',
+        subtitle:
+            'Te noficaremos cada que tengamos un nuevo vehiculo en ruta ;)',
+      );
+    }).catchError((onError) {
+      isLoading.value = false;
+    });
   }
 
-  @override
-  void onReady() {
-    AbstractRouteEntity _abstractRouteEntity =
-        Get.arguments['abstractRouteEntity'];
-    getPolylineBetweenCoordinates(
-      origin: LatLng(
-        double.parse('${_abstractRouteEntity.startLat}'),
-        double.parse('${_abstractRouteEntity.startLng}'),
-      ),
-      destination: LatLng(
-        double.parse('${_abstractRouteEntity.endLat}'),
-        double.parse('${_abstractRouteEntity.endLng}'),
-      ),
-    ).then(
-      (value) => polylineListLatLng.value = value,
-    );
-    getOffersByRoute(routeId: '${_abstractRouteEntity.id}')?.then(
-      (value) => listAbstractOfferEntity.value = value,
-    );
-    verifySession();
-    super.onReady();
+  unsubscribeToRouteTopic() {
+    isLoading.value = true;
+    String topicRoute = 'route_${routeId.value}';
+    firebaseNotificationProvider!
+        .unsubscribeFromTopic(topic: topicRoute)
+        .then((value) {
+      isLoading.value = false;
+      GetxSnackbarWidget(
+        title: 'DEJAREMOS DE NOTIFICARTE!',
+        subtitle: 'Hola, dejaremos de notificarte en esta ruta.',
+      );
+    }).catchError((onError) {
+      isLoading.value = false;
+    });
   }
 
   showOfferPolylineMarkers(AbstractOfferEntity abstractOfferEntity) {
@@ -134,5 +159,62 @@ class RouteController extends GetxController {
     ).then(
       (value) => polylineListLatLng.value = value,
     );
+  }
+
+  centerRouteMap(AbstractRouteEntity abstractRouteEntity) {
+    mapController?.fitBounds(LatLngBounds(
+      LatLng(
+        double.tryParse('${abstractRouteEntity.startLat}') ?? 0,
+        double.tryParse('${abstractRouteEntity.startLng}') ?? 0,
+      ),
+      LatLng(
+        double.tryParse('${abstractRouteEntity.endLat}') ?? 0,
+        double.tryParse('${abstractRouteEntity.endLng}') ?? 0,
+      ),
+    ));
+  }
+
+  void initialize(AbstractRouteEntity abstractRouteEntity) {
+    routeId.value = abstractRouteEntity.id!;
+    routeTo.value = abstractRouteEntity.to!;
+    routeFrom.value = abstractRouteEntity.from!;
+    this.abstractRouteEntity = abstractRouteEntity;
+    centerRouteMap(abstractRouteEntity);
+    getPolylineBetweenCoordinates(
+      origin: LatLng(
+        double.parse('${abstractRouteEntity.startLat}'),
+        double.parse('${abstractRouteEntity.startLng}'),
+      ),
+      destination: LatLng(
+        double.parse('${abstractRouteEntity.endLat}'),
+        double.parse('${abstractRouteEntity.endLng}'),
+      ),
+    ).then(
+      (value) => polylineListLatLng.value = value,
+    );
+    getOffersByRoute(routeId: '${abstractRouteEntity.id}')?.then(
+      (value) => listAbstractOfferEntity.value = value,
+    );
+    verifySession();
+  }
+
+  @override
+  void onReady() {
+    String? abstractRouteEntityId;
+    if (Get.arguments != null && Get.arguments['abstractRouteEntity'] != null) {
+      initialize(Get.arguments['abstractRouteEntity']);
+    } else if (Get.arguments != null &&
+        Get.arguments['abstractRouteEntityId'] != null) {
+      abstractRouteEntityId = Get.arguments['abstractRouteEntityId'];
+    } else {
+      abstractRouteEntityId = Get.parameters['abstractRouteEntityId'];
+    }
+    _getRouteUsecase
+        .call(routeId: abstractRouteEntityId!)
+        ?.then((AbstractRouteEntity? abstractRouteEntity) {
+      initialize(abstractRouteEntity!);
+    });
+
+    super.onReady();
   }
 }

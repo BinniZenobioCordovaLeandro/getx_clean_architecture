@@ -102,7 +102,7 @@ class OrderController extends GetxController {
 
   Future<bool>? sendNotification() {
     Future<bool>? futureBool = notificationProvider
-        ?.sendNotification(
+        ?.sendLocalNotification(
           title: 'title',
           body: 'body',
         )

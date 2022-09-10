@@ -35,7 +35,7 @@ class NotificationProvider {
     return isNotificationEnabled;
   }
 
-  Future<bool> sendNotification({
+  Future<bool> sendLocalNotification({
     String? title,
     String? body,
     String? bigPicture,

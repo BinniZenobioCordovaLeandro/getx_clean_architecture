@@ -66,7 +66,7 @@ class _AppState extends State<App> {
         String link = event.link!;
         Get.offAllNamed(link);
       }
-      notificationProvider?.sendNotification(
+      notificationProvider?.sendLocalNotification(
         title: event.title,
         body: event.body,
         bigPicture: event.imageUrl,
@@ -74,7 +74,7 @@ class _AppState extends State<App> {
     });
     firebaseNotificationProvider?.onMessageOpened
         .listen((NotificationMessageModel event) {
-      if (event.isMessage == "true" && event.link != null) {
+      if (event.link != null) {
         String link = event.link!;
         Get.offAllNamed(link);
       }

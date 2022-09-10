@@ -146,7 +146,6 @@ class _OrderPageState extends State<OrderPage> {
             children: [
               SizedBox(
                 child: FlutterMapWidget(
-                  mapController: orderController.mapController,
                   onMapCreated: (MapController controller) {
                     orderController.mapController = controller;
                   },

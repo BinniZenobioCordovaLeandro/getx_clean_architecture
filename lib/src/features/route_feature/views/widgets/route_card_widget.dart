@@ -7,11 +7,13 @@ import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class RouteCardWidget extends StatelessWidget {
-  final AbstractRouteEntity? abstractRouteEntity;
+  final String? to;
+  final String? from;
 
   const RouteCardWidget({
     Key? key,
-    this.abstractRouteEntity,
+    this.to,
+    this.from,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,7 @@ class RouteCardWidget extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: TextWidget(
-                          'Destino: ${abstractRouteEntity?.to}',
+                          'Destino: $to',
                           style:
                               Theme.of(context).textTheme.headline6?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -44,7 +46,7 @@ class RouteCardWidget extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: TextWidget(
-                          'Origen: ${abstractRouteEntity?.from}',
+                          'Origen: $from',
                           textAlign: TextAlign.justify,
                         ),
                       ),
@@ -66,7 +68,7 @@ class RouteCardWidget extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: TextWidget(
-                        'Destino: ${abstractRouteEntity?.to}',
+                        'Destino: $to',
                         style: Theme.of(context).textTheme.headline6?.copyWith(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold,
@@ -77,7 +79,7 @@ class RouteCardWidget extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: TextWidget(
-                        'Origen: ${abstractRouteEntity?.from}',
+                        'Origen: $from',
                         textAlign: TextAlign.justify,
                       ),
                     ),

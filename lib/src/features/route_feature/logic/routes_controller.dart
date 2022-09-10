@@ -33,6 +33,7 @@ class RoutesController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var routes = <AbstractRouteEntity>[].obs;
+  var filteredRoutes = <AbstractRouteEntity>[].obs;
   var mapRoutes = {}.obs;
   var futureListAbstractRouteEntity = Future.value().obs;
   var futureAbstractSessionEntity = Future.value().obs;
@@ -151,6 +152,27 @@ class RoutesController extends GetxController {
         errorMessage.value = error.toString();
       },
     );
+  }
+
+  onFilterDestain(
+    String? to,
+    String? from,
+  ) {
+    if (to != null && from != null) {
+      RegExp regExpFrom = RegExp(from.toLowerCase());
+      RegExp regExpTo = RegExp(to.toLowerCase());
+      filteredRoutes.value = routes.value
+          .where((AbstractRouteEntity route) =>
+              regExpFrom.hasMatch('${route.from?.toLowerCase()}') &&
+              regExpTo.hasMatch('${route.to?.toLowerCase()}'))
+          .toList();
+    } else if (to != null) {
+      RegExp regExpTo = RegExp(to.toLowerCase());
+      filteredRoutes.value = routes.value
+          .where((AbstractRouteEntity route) =>
+              regExpTo.hasMatch('${route.to?.toLowerCase()}'))
+          .toList();
+    }
   }
 
   Future<LatLng>? getPlaceDetail(String placeId) {

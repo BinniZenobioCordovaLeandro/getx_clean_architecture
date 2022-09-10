@@ -76,6 +76,20 @@ class FirebaseNotificationProvider {
     return messaging.getToken();
   }
 
+  Future<bool> subscribeToTopic({
+    required String topic,
+  }) {
+    messaging.subscribeToTopic(topic);
+    return Future.value(true);
+  }
+
+  Future<bool> unsubscribeFromTopic({
+    required String topic,
+  }) {
+    messaging.unsubscribeFromTopic(topic);
+    return Future.value(true);
+  }
+
   Future<bool> sendMessage({
     required List<String> to,
     required String title,
@@ -85,8 +99,6 @@ class FirebaseNotificationProvider {
     String? link = '',
   }) async {
     if (!await checkPermission()) return false;
-    print('token');
-    print(to.length == 1 ? to[0] : to);
     http.Response response = await http.post(
       Uri.parse(
           'https://us-central1-pickpointer.cloudfunctions.net/sendNotification'),
@@ -109,7 +121,40 @@ class FirebaseNotificationProvider {
         }
       }),
     );
-    print('response.body: ${response.body}');
+    return true;
+  }
+
+  Future<bool> sendMessageToTopic({
+    required String topic,
+    required String title,
+    required String body,
+    String? image = '',
+    bool? isMessage = false,
+    String? link = '',
+  }) async {
+    if (!await checkPermission()) return false;
+    http.Response response = await http.post(
+      Uri.parse(
+          'https://us-central1-pickpointer.cloudfunctions.net/sendNotificationTopic'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'topic': topic,
+        'payload': {
+          'data': {
+            'link': link,
+            'is_message': '$isMessage',
+          },
+          'notification': {
+            'title': title,
+            'body': body,
+            'imageUrl': image,
+          },
+        },
+        'options': {
+          'priority': "high",
+        }
+      }),
+    );
     return true;
   }
 }

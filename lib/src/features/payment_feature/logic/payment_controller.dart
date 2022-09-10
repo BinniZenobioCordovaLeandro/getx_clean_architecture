@@ -55,7 +55,7 @@ class PaymentController extends GetxController {
     required AbstractOrderEntity abstractOrderEntity,
   }) {
     Future<bool>? futureBool = notificationProvider
-        ?.sendNotification(
+        ?.sendLocalNotification(
           title: 'ORDEN CREADA CON EXITO',
           body: 'Su orden ha sido creada con exito',
         )

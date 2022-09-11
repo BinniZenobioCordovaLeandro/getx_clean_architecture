@@ -3,15 +3,17 @@ import 'package:get/get.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
-import 'package:pickpointer/src/core/util/debounder_util.dart';
+import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
+import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
+import 'package:pickpointer/src/core/widgets/svg_or_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
@@ -31,7 +33,100 @@ class RoutesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RoutesController routesController = RoutesController.instance;
-    final Debouncer debouncer = Debouncer();
+
+    WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
+      ModalBottomSheetHelper(
+        context: context,
+        title: 'PickPointer!',
+        child: SingleChildScrollViewWidget(
+          child: FractionallySizedBoxWidget(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: WrapWidget(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextWidget(
+                      'Bienvenido a nuestra comunidad!',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  ),
+                  Row(
+                    children: const [
+                      Expanded(
+                        flex: 1,
+                        child: TextWidget(
+                          'Disfruta de viajar realmente rapido!',
+                        ),
+                      ),
+                      VerticalDivider(),
+                      Expanded(
+                        flex: 1,
+                        child: SvgOrImageWidget(
+                          fit: BoxFit.cover,
+                          urlSvgOrImage:
+                              'https://img.freepik.com/foto-gratis/manos-volante-al-conducir-alta-velocidad-interior-coche_169016-22978.jpg',
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: const [
+                      Expanded(
+                        flex: 1,
+                        child: SvgOrImageWidget(
+                          fit: BoxFit.cover,
+                          urlSvgOrImage:
+                              'https://img.freepik.com/fotos-premium/joven-hispano-que-automovil-usa-mascara-protectora-prevenir-propagacion-coronavirus_221589-55.jpg',
+                        ),
+                      ),
+                      VerticalDivider(),
+                      Expanded(
+                        flex: 1,
+                        child: TextWidget(
+                          'Disfruta de viajar seguro a donde tu necesites!',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextWidget(
+                      '¿Tienes auto y quieres ser conductor?',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  ),
+                  const TextWidget(
+                    'Registrate y activa el modo conductor en la configuración de tu perfil',
+                  ),
+                  const SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: SvgOrImageWidget(
+                      fit: BoxFit.cover,
+                      urlSvgOrImage:
+                          'https://img.freepik.com/foto-gratis/hombre-conductor-feliz-sonriendo-mostrando-pulgares-arriba-conducir-coche-deportivo_158595-4195.jpg',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        childFooter: SizedBox(
+          width: double.infinity,
+          child: FractionallySizedBoxWidget(
+            child: ElevatedButtonWidget(
+              title: 'Aceptar',
+              onPressed: () => Get.back(),
+            ),
+          ),
+        ),
+        complete: () {},
+      );
+    });
+
     return Obx(() {
       return Scaffold(
         appBar: AppBarWidget(

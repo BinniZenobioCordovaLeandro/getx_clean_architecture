@@ -40,6 +40,6 @@ jobs:
 
       - name: Build Flutter Web
         run: |
-          flutter build web --release
+          flutter build web --release --web-renderer html
           cd build/web
           zip -r web-app.zip .

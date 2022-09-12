@@ -34,98 +34,96 @@ class RoutesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final RoutesController routesController = RoutesController.instance;
 
-    WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-      ModalBottomSheetHelper(
-        context: context,
-        title: 'PickPointer!',
-        child: SingleChildScrollViewWidget(
-          child: FractionallySizedBoxWidget(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: WrapWidget(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: TextWidget(
-                      'Bienvenido a nuestra comunidad!',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                  ),
-                  Row(
-                    children: const [
-                      Expanded(
-                        flex: 1,
-                        child: TextWidget(
-                          'Disfruta de viajar realmente rapido!',
-                        ),
-                      ),
-                      VerticalDivider(),
-                      Expanded(
-                        flex: 1,
-                        child: SvgOrImageWidget(
-                          fit: BoxFit.cover,
-                          urlSvgOrImage:
-                              'https://img.freepik.com/foto-gratis/manos-volante-al-conducir-alta-velocidad-interior-coche_169016-22978.jpg',
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: const [
-                      Expanded(
-                        flex: 1,
-                        child: SvgOrImageWidget(
-                          fit: BoxFit.cover,
-                          urlSvgOrImage:
-                              'https://img.freepik.com/fotos-premium/joven-hispano-que-automovil-usa-mascara-protectora-prevenir-propagacion-coronavirus_221589-55.jpg',
-                        ),
-                      ),
-                      VerticalDivider(),
-                      Expanded(
-                        flex: 1,
-                        child: TextWidget(
-                          'Disfruta de viajar seguro a donde tu necesites!',
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Divider(),
-                  SizedBox(
-                    width: double.infinity,
-                    child: TextWidget(
-                      '¿Tienes auto y quieres ser conductor?',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                  ),
-                  const TextWidget(
-                    'Registrate y activa el modo conductor en la configuración de tu perfil',
-                  ),
-                  const SizedBox(
-                    height: 200,
-                    width: double.infinity,
-                    child: SvgOrImageWidget(
-                      fit: BoxFit.cover,
-                      urlSvgOrImage:
-                          'https://img.freepik.com/foto-gratis/hombre-conductor-feliz-sonriendo-mostrando-pulgares-arriba-conducir-coche-deportivo_158595-4195.jpg',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        childFooter: SizedBox(
-          width: double.infinity,
-          child: FractionallySizedBoxWidget(
-            child: ElevatedButtonWidget(
-              title: 'Aceptar',
-              onPressed: () => Get.back(),
-            ),
-          ),
-        ),
-        complete: () {},
-      );
-    });
+    // ModalBottomSheetHelper(
+    //   context: context,
+    //   title: 'PickPointer!',
+    //   child: SingleChildScrollViewWidget(
+    //     child: FractionallySizedBoxWidget(
+    //       child: Padding(
+    //         padding: const EdgeInsets.symmetric(vertical: 8.0),
+    //         child: WrapWidget(
+    //           children: [
+    //             SizedBox(
+    //               width: double.infinity,
+    //               child: TextWidget(
+    //                 'Bienvenido a nuestra comunidad!',
+    //                 style: Theme.of(context).textTheme.headline6,
+    //               ),
+    //             ),
+    //             Row(
+    //               children: const [
+    //                 Expanded(
+    //                   flex: 1,
+    //                   child: TextWidget(
+    //                     'Disfruta de viajar realmente rapido!',
+    //                   ),
+    //                 ),
+    //                 VerticalDivider(),
+    //                 Expanded(
+    //                   flex: 1,
+    //                   child: SvgOrImageWidget(
+    //                     fit: BoxFit.cover,
+    //                     urlSvgOrImage:
+    //                         'https://img.freepik.com/foto-gratis/manos-volante-al-conducir-alta-velocidad-interior-coche_169016-22978.jpg',
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //             Row(
+    //               children: const [
+    //                 Expanded(
+    //                   flex: 1,
+    //                   child: SvgOrImageWidget(
+    //                     fit: BoxFit.cover,
+    //                     urlSvgOrImage:
+    //                         'https://img.freepik.com/fotos-premium/joven-hispano-que-automovil-usa-mascara-protectora-prevenir-propagacion-coronavirus_221589-55.jpg',
+    //                   ),
+    //                 ),
+    //                 VerticalDivider(),
+    //                 Expanded(
+    //                   flex: 1,
+    //                   child: TextWidget(
+    //                     'Disfruta de viajar seguro a donde tu necesites!',
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //             const Divider(),
+    //             SizedBox(
+    //               width: double.infinity,
+    //               child: TextWidget(
+    //                 '¿Tienes auto y quieres ser conductor?',
+    //                 style: Theme.of(context).textTheme.headline6,
+    //               ),
+    //             ),
+    //             const TextWidget(
+    //               'Registrate y activa el modo conductor en la configuración de tu perfil',
+    //             ),
+    //             const SizedBox(
+    //               height: 200,
+    //               width: double.infinity,
+    //               child: SvgOrImageWidget(
+    //                 fit: BoxFit.cover,
+    //                 urlSvgOrImage:
+    //                     'https://img.freepik.com/foto-gratis/hombre-conductor-feliz-sonriendo-mostrando-pulgares-arriba-conducir-coche-deportivo_158595-4195.jpg',
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    //   childFooter: SizedBox(
+    //     width: double.infinity,
+    //     child: FractionallySizedBoxWidget(
+    //       child: ElevatedButtonWidget(
+    //         title: 'Aceptar',
+    //         onPressed: () => Get.back(),
+    //       ),
+    //     ),
+    //   ),
+    //   complete: () {},
+    // );
 
     return Obx(() {
       return Scaffold(
@@ -162,9 +160,13 @@ class RoutesPage extends StatelessWidget {
                   );
                 }
               },
-              tooltip: 'Mis datos',
+              tooltip: routesController.isSigned.value == false
+                  ? 'Login'
+                  : 'Mis datos',
               icon: Icon(
-                Icons.co_present_outlined,
+                routesController.isSigned.value == false
+                    ? Icons.login_outlined
+                    : Icons.co_present_outlined,
                 color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
               ),
             ),
@@ -322,6 +324,7 @@ class RoutesPage extends StatelessWidget {
                 ),
               ),
             Positioned(
+              key: const Key('FilterDestinationCardWidget'),
               bottom: 16,
               left: 0,
               right: 0,

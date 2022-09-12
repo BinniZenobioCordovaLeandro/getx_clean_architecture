@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/widgets/blur_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/circle_avatar_image_widget.dart';
@@ -10,12 +11,14 @@ import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 class AcceptPassengerCardWidget extends StatelessWidget {
   final String avatar;
   final String fullName;
+  final String? phoneNumber;
   final Function()? onPressed;
 
   const AcceptPassengerCardWidget({
     Key? key,
     required this.avatar,
     required this.fullName,
+    required this.phoneNumber,
     required this.onPressed,
   }) : super(key: key);
 
@@ -50,11 +53,25 @@ class AcceptPassengerCardWidget extends StatelessWidget {
                       children: [
                         TextWidget(
                           fullName,
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
                   ),
+                  if (phoneNumber != null)
+                    IconButton(
+                      onPressed: () {
+                        LauncherLinkHelper launcherLinkHelper =
+                            LauncherLinkHelper(
+                          url: phoneNumber!,
+                          isPhone: true,
+                        );
+                        launcherLinkHelper.makePhoneCall();
+                      },
+                      icon: const Icon(
+                        Icons.phone,
+                      ),
+                    ),
                 ],
               ),
               ElevatedButtonWidget(

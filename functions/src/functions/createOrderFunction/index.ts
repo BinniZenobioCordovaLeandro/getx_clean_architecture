@@ -59,6 +59,7 @@ export const handler = (event: any) => {
               userId: orderRequest.user_id,
               orderId: orderId,
               fullName: orderRequest.user_name,
+              phoneNumber: orderRequest.userPhone,
               avatar: orderRequest.user_avatar ||
                 "https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png",
               count: requestQuantity,

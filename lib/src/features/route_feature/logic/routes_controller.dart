@@ -83,6 +83,10 @@ class RoutesController extends GetxController {
       firebaseNotificationProvider!
           .subscribeToTopic(topic: 'pickpointer_app_signed');
     }
+    if (abstractSessionEntity.isPhoneVerified == true) {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_phone_verified');
+    }
   }
 
   Future<bool> verifySession() {

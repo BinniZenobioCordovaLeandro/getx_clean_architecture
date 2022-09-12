@@ -11,6 +11,7 @@ import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
@@ -26,6 +27,7 @@ import 'package:pickpointer/src/features/route_feature/views/widgets/offers_empt
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/route_card_widget.dart';
 import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
+import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
 
 class RoutePage extends StatefulWidget {
   final String? abstractRouteEntityId;
@@ -356,23 +358,41 @@ class _RoutePageState extends State<RoutePage> {
                                     onPressed: !routeController.onRoad.value
                                         ? (abstractOfferEntity) async {
                                             if (routeController
-                                                    .isSigned.value ==
-                                                false) {
+                                                        .isSigned.value ==
+                                                    false ||
+                                                routeController.isPhoneVerified
+                                                        .value ==
+                                                    false) {
                                               await routeController
                                                   .verifySession();
                                             }
                                             if (routeController
                                                 .isSigned.value) {
-                                              Get.to(
-                                                () => PaymentPage(
-                                                  abstractOfferEntity:
-                                                      abstractOfferEntity,
-                                                ),
-                                                arguments: {
-                                                  'abstractOfferEntity':
-                                                      abstractOfferEntity,
-                                                },
-                                              );
+                                              if (routeController
+                                                      .isPhoneVerified.value ==
+                                                  false) {
+                                                GetxSnackbarWidget(
+                                                  title:
+                                                      'VERIFICA TU NUMERO DE CELULAR',
+                                                  subtitle:
+                                                      'Por favor agrega y verifica tu número de dispositivo.',
+                                                );
+                                                Get.to(
+                                                  () => const UserPage(),
+                                                  arguments: {},
+                                                );
+                                              } else {
+                                                Get.to(
+                                                  () => PaymentPage(
+                                                    abstractOfferEntity:
+                                                        abstractOfferEntity,
+                                                  ),
+                                                  arguments: {
+                                                    'abstractOfferEntity':
+                                                        abstractOfferEntity,
+                                                  },
+                                                );
+                                              }
                                             } else {
                                               Get.to(
                                                 () => const SignInUserPage(),

@@ -77,6 +77,10 @@ class OfferController extends GetxController {
   var polylineListLatLng = <LatLng>[].obs;
 
   var offerId = ''.obs;
+  var offerTo = ''.obs;
+  var offerFrom = ''.obs;
+  var offerPrice = 0.0.obs;
+
   var offerStateId =
       ''.obs; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
 
@@ -259,6 +263,9 @@ class OfferController extends GetxController {
 
   void initialize(AbstractOfferEntity abstractOfferEntity) {
     offerId.value = abstractOfferEntity.id!;
+    offerTo.value = abstractOfferEntity.routeTo!;
+    offerFrom.value = abstractOfferEntity.routeFrom!;
+    offerPrice.value = abstractOfferEntity.price!;
     offerStateId.value = abstractOfferEntity.stateId!;
     userCarPlate.value = abstractOfferEntity.userCarPlate!;
     if (abstractOfferEntity.stateId == '1' ||

@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 abstract class AbstractSessionEntity extends Equatable {
   final bool? isSigned;
   final bool? isDriver;
+  final bool? isPhoneVerified;
   final String? idSessions;
   final String? idUsers;
   final bool? onRoad;
@@ -13,6 +14,7 @@ abstract class AbstractSessionEntity extends Equatable {
   const AbstractSessionEntity({
     this.isSigned,
     this.isDriver,
+    this.isPhoneVerified,
     this.idSessions,
     this.idUsers,
     this.onRoad,

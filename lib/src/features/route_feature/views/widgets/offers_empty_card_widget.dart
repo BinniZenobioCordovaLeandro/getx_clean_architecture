@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:pickpointer/src/core/widgets/blur_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
+import 'package:progress_state_button/progress_button.dart';
 
-class RouteCardWidget extends StatelessWidget {
-  final String? to;
-  final String? from;
+class OffersEmptyCardCardWidget extends StatelessWidget {
+  final bool? isLoading;
+  final Function? onPressed;
 
-  const RouteCardWidget({
+  const OffersEmptyCardCardWidget({
     Key? key,
-    this.to,
-    this.from,
+    this.isLoading = false,
+    this.onPressed,
   }) : super(key: key);
 
   Widget child(BuildContext context) {
@@ -21,28 +23,24 @@ class RouteCardWidget extends StatelessWidget {
       child: FractionallySizedBoxWidget(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: 16.0,
+            vertical: 8,
           ),
           child: WrapWidget(
-            children: <Widget>[
-              SizedBox(
-                width: double.infinity,
-                child: TextWidget(
-                  'Destino: $to',
-                  style: Theme.of(context).textTheme.headline6?.copyWith(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                  textAlign: TextAlign.justify,
-                ),
+            children: [
+              TextWidget(
+                'Por el momento no tenemos vehiculos en servicio',
+                style: Theme.of(context).textTheme.headline6,
               ),
-              SizedBox(
-                width: double.infinity,
-                child: TextWidget(
-                  'Origen: $from',
-                  textAlign: TextAlign.justify,
-                ),
+              const TextWidget(
+                '¿Quieres recibir una notificacion cuando lleguen vehiculos a esta ruta?',
               ),
+              ProgressStateButtonWidget(
+                success: 'Enviarme una notificación',
+                state: isLoading == true
+                    ? ButtonState.loading
+                    : ButtonState.success,
+                onPressed: onPressed,
+              )
             ],
           ),
         ),

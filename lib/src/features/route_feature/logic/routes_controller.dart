@@ -33,6 +33,7 @@ class RoutesController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var routes = <AbstractRouteEntity>[].obs;
+  var filteredRoutes = <AbstractRouteEntity>[].obs;
   var mapRoutes = {}.obs;
   var futureListAbstractRouteEntity = Future.value().obs;
   var futureAbstractSessionEntity = Future.value().obs;
@@ -67,6 +68,27 @@ class RoutesController extends GetxController {
     });
   }
 
+  subscribeToAppTopic({
+    required AbstractSessionEntity abstractSessionEntity,
+  }) {
+    firebaseNotificationProvider!.subscribeToTopic(topic: 'pickpointer_app');
+    if (abstractSessionEntity.isDriver == true) {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_driver');
+    } else {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_client');
+    }
+    if (abstractSessionEntity.isSigned == true) {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_signed');
+    }
+    if (abstractSessionEntity.isPhoneVerified == true) {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_phone_verified');
+    }
+  }
+
   Future<bool> verifySession() {
     Future<bool> futureBool = _verifySessionUsecase
         .call()
@@ -74,6 +96,7 @@ class RoutesController extends GetxController {
       isSigned.value = abstractSessionEntity.isSigned!;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
       _updateSessionUsecase.call(abstractSessionEntity: abstractSessionEntity);
+      subscribeToAppTopic(abstractSessionEntity: abstractSessionEntity);
       return isSigned.value;
     });
     return futureBool;
@@ -133,6 +156,27 @@ class RoutesController extends GetxController {
         errorMessage.value = error.toString();
       },
     );
+  }
+
+  onFilterDestain(
+    String? to,
+    String? from,
+  ) {
+    if (to != null && from != null) {
+      RegExp regExpFrom = RegExp(from.toLowerCase());
+      RegExp regExpTo = RegExp(to.toLowerCase());
+      filteredRoutes.value = routes.value
+          .where((AbstractRouteEntity route) =>
+              regExpFrom.hasMatch('${route.from?.toLowerCase()}') &&
+              regExpTo.hasMatch('${route.to?.toLowerCase()}'))
+          .toList();
+    } else if (to != null) {
+      RegExp regExpTo = RegExp(to.toLowerCase());
+      filteredRoutes.value = routes.value
+          .where((AbstractRouteEntity route) =>
+              regExpTo.hasMatch('${route.to?.toLowerCase()}'))
+          .toList();
+    }
   }
 
   Future<LatLng>? getPlaceDetail(String placeId) {

@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as createOrderPackage from "./functions/createOrderFunction";
 import * as sendNotificationPackage from "./functions/sendNotificationFunction";
+import * as sendNotificationToTopicPackage from "./functions/sendNotificationTopicFunction";
 import * as startTripPackage from "./functions/startTripFunction";
 import * as finishTripPackage from "./functions/finishTripFunction";
 import * as triggers from "./triggers";
@@ -26,6 +27,16 @@ export const createOrder = functions.https.onRequest((request, response) => {
 export const sendNotification = functions.https.onRequest((request, response) => {
   functions.logger.info("sendNotification logs!", {structuredData: true});
   sendNotificationPackage.handler(request.body).then((result: any) => {
+    console.log("request.body: ", request.body);
+    response.status(200).send(result);
+  }).catch((err: any) => {
+    response.status(500).send(err);
+  });
+});
+
+export const sendNotificationTopic = functions.https.onRequest((request, response) => {
+  functions.logger.info("sendNotificationTopic logs!", {structuredData: true});
+  sendNotificationToTopicPackage.handler(request.body).then((result: any) => {
     console.log("request.body: ", request.body);
     response.status(200).send(result);
   }).catch((err: any) => {

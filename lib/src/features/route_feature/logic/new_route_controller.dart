@@ -61,7 +61,7 @@ class NewRouteController extends GetxController {
 
   Future<bool>? sendNotification() {
     Future<bool>? futureBool = notificationProvider
-        ?.sendNotification(
+        ?.sendLocalNotification(
           title: 'Solicitud enviada con exito',
           body:
               'Su solicitud de ruta ha sido enviada con exito, y aprobada de inmediato.',

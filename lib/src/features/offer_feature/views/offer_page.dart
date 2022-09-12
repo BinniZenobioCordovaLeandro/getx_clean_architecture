@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
+import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
@@ -16,8 +18,10 @@ import 'package:pickpointer/src/features/offer_feature/logic/offer_controller.da
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/accept_passenger_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip_card_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/widgets/offer_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/start_trip_card_widget.dart';
+import 'package:pickpointer/src/features/route_feature/views/widgets/offer_card_widget.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {
@@ -235,6 +239,23 @@ class _OfferPageState extends State<OfferPage> {
                 ),
               ),
             Positioned(
+              top: 40,
+              left: 0,
+              right: 0,
+              child: SafeAreaWidget(
+                child: FractionallySizedBoxWidget(
+                  child: ShimmerWidget(
+                    enabled: offerController.isLoading.value,
+                    child: OfferDescriptionCardWidget(
+                      to: offerController.offerTo.value,
+                      from: offerController.offerFrom.value,
+                      price: offerController.offerPrice.value,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
               bottom: 16.0,
               left: 0.0,
               right: 0.0,
@@ -259,10 +280,11 @@ class _OfferPageState extends State<OfferPage> {
                                           double.parse(order["pickPointLng"]),
                                         ),
                                       ) <
-                                      500)
+                                      1000)
                                   ? AcceptPassengerCardWidget(
                                       avatar: order['avatar'],
                                       fullName: order['fullName'],
+                                      phoneNumber: order['phoneNumber'],
                                       onPressed: () {
                                         offerController
                                             .firebaseNotificationProvider

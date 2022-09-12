@@ -8,10 +8,13 @@ import 'package:pickpointer/src/core/themes/light_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
 import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
+import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
 import 'package:pickpointer/web_layout.dart';
 import 'firebase_options.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 Future<void> main() async {
+  setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -42,6 +45,10 @@ class MyApp extends StatelessWidget {
             page: () => const App(),
           ),
           GetPage(
+            name: '/route/:abstractRouteEntityId',
+            page: () => const RoutePage(),
+          ),
+          GetPage(
             name: '/order/:abstractOrderEntityId',
             page: () => const OrderPage(),
           ),
@@ -51,17 +58,11 @@ class MyApp extends StatelessWidget {
           ),
         ],
         home: Row(
-          children: [
-            const Expanded(
+          children: const [
+            Expanded(
               flex: 1,
               child: WebLayout(),
             ),
-            Container(
-              constraints: const BoxConstraints(
-                maxWidth: 500,
-              ),
-              child: const App(),
-            )
           ],
         ),
       );
@@ -77,6 +78,10 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/',
           page: () => const App(),
+        ),
+        GetPage(
+          name: '/route/:abstractRouteEntityId',
+          page: () => const RoutePage(),
         ),
         GetPage(
           name: '/order/:abstractOrderEntityId',

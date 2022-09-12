@@ -106,6 +106,12 @@ adb shell am start -a android.intent.action.VIEW \
     -d "pickpointer://pickpointer.com/offer/292190b0-f5a4-11ec-aa53-69e3b9da4a7e"
 ```
 
+```zsh
+adb shell am start -a android.intent.action.VIEW \
+    -c android.intent.category.BROWSABLE \
+    -d "pickpointer://pickpointer.com/route/292190b0-f5a4-11ec-aa53-69e3b9da4a7e"
+```
+
 `iOS`
 
 ```zsh
@@ -114,6 +120,10 @@ xcrun simctl openurl booted pickpointer://pickpointer.com/order/276f8420-1dd6-11
 
 ```zsh
 xcrun simctl openurl booted pickpointer://pickpointer.com/offer/292190b0-f5a4-11ec-aa53-69e3b9da4a7e
+```
+
+```zsh
+xcrun simctl openurl booted pickpointer://pickpointer.com/route/292190b0-f5a4-11ec-aa53-69e3b9da4a7e
 ```
 
 ## Push Notification

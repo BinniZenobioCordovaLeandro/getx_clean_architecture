@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
+import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
+import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/packages/user_package/data/datasources/user_datasource.dart/firebase_user_datasource.dart';
 import 'package:pickpointer/packages/user_package/data/models/user_model.dart';
 import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_entity.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/update_user_usecase.dart';
+import 'package:pickpointer/src/core/providers/firebase_authentication_provider.dart';
+import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/storage_provider.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
@@ -16,7 +22,14 @@ class UserController extends GetxController {
 
   final StorageProvider? storageProvider = StorageProvider.getInstance();
 
+  final FirebaseNotificationProvider? firebaseNotificationProvider =
+      FirebaseNotificationProvider.getInstance();
+
+  final FirebaseAuthenticationProvider? firebaseAuthenticationProvider =
+      FirebaseAuthenticationProvider.getInstance();
+
   final formKey = GlobalKey<FormState>();
+  final formCodeKey = GlobalKey<FormState>();
 
   var isLoadingData = false.obs;
   var isLoadingSave = false.obs;
@@ -31,9 +44,18 @@ class UserController extends GetxController {
   var carModel = ''.obs;
   var carColor = ''.obs;
   var phoneNumber = ''.obs;
+  var phoneCode = ''.obs;
   var rank = 5.0.obs;
   var isDriver = false.obs;
   var isDriverVerified = false.obs;
+
+  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
+  );
+
+  final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
+  );
 
   final UpdateUserUsecase _updateUserUsecase = UpdateUserUsecase(
     abstractUserRepository: FirebaseUserDatasource(),
@@ -41,10 +63,6 @@ class UserController extends GetxController {
 
   final GetUserUsecase _getUserUsecase = GetUserUsecase(
     abstractUserRepository: FirebaseUserDatasource(),
-  );
-
-  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
-    abstractSessionRepository: SharedPreferencesSessionDatasources(),
   );
 
   getUserData() {
@@ -93,6 +111,44 @@ class UserController extends GetxController {
     return path as String;
   }
 
+  verifyCode({
+    required String smsCode,
+  }) {
+    firebaseAuthenticationProvider!
+        .verifyPhoneAuth(smsCode: smsCode)
+        .then((String? user) {
+      if (user != null) {
+        updateUserData();
+      }
+    });
+  }
+
+  Future<bool?> sendVerificationCode({
+    required String phoneNumber,
+  }) {
+    return firebaseAuthenticationProvider!
+        .sendPhoneAuth(phoneNumber: phoneNumber);
+  }
+
+  Future<bool> updateSession({
+    required bool isPhoneVerified,
+  }) {
+    Future<bool> futureBool = _verifySessionUsecase
+        .call()
+        .then((AbstractSessionEntity abstractSessionEntity) {
+      SessionModel sessionModel = abstractSessionEntity as SessionModel;
+      _updateSessionUsecase.call(
+        abstractSessionEntity: sessionModel.copyWith(
+          isPhoneVerified: true,
+        ),
+      );
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_phone_verified');
+      return isPhoneVerified;
+    });
+    return futureBool;
+  }
+
   updateUserData() async {
     bool isValidForm = formKey.currentState!.validate();
     try {
@@ -123,6 +179,7 @@ class UserController extends GetxController {
         _updateUserUsecase
             .call(abstractUserEntity: _userModel)!
             .then((AbstractUserEntity abstractUserEntity) {
+          updateSession(isPhoneVerified: true);
           GetxSnackbarWidget(
             title: 'Actualizado!',
             subtitle: 'Estamos revizando la informacion.',

@@ -52,7 +52,7 @@ class SignInController extends GetxController {
 
   Future<bool>? sendNotification() {
     Future<bool>? futureBool = notificationProvider
-        ?.sendNotification(
+        ?.sendLocalNotification(
           title: 'BIENVENIDO A PICKPOINTER (MODO TEST)',
           body:
               'Esta app permite viajar rapido y barato.\nDisfrute el modo TEST. Pronto saldremos a PRODUCCIÓN!.',

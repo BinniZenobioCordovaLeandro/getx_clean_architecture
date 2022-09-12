@@ -7,6 +7,8 @@ class SessionModel extends AbstractSessionEntity {
   @override
   final bool? isDriver;
   @override
+  final bool? isPhoneVerified;
+  @override
   final String? idSessions;
   @override
   final String? idUsers;
@@ -22,6 +24,7 @@ class SessionModel extends AbstractSessionEntity {
   const SessionModel({
     this.isSigned,
     this.isDriver,
+    this.isPhoneVerified,
     this.idSessions,
     this.idUsers,
     this.onRoad,
@@ -33,6 +36,7 @@ class SessionModel extends AbstractSessionEntity {
   factory SessionModel.fromMap(Map<String, dynamic> data) => SessionModel(
         isSigned: data['is_signed'] as bool?,
         isDriver: data['is_driver'] as bool?,
+        isPhoneVerified: data['is_phone_verified'] as bool?,
         idSessions: data['id_sessions'] as String?,
         idUsers: data['id_users'] as String?,
         onRoad: data['on_road'] as bool?,
@@ -44,6 +48,7 @@ class SessionModel extends AbstractSessionEntity {
   Map<String, dynamic> toMap() => {
         'is_signed': isSigned,
         'is_driver': isDriver,
+        'is_phone_verified': isPhoneVerified,
         'id_sessions': idSessions,
         'id_users': idUsers,
         'on_road': onRoad,
@@ -67,6 +72,7 @@ class SessionModel extends AbstractSessionEntity {
   SessionModel copyWith({
     bool? isSigned,
     bool? isDriver,
+    bool? isPhoneVerified,
     String? idSessions,
     String? idUsers,
     bool? onRoad,
@@ -77,6 +83,7 @@ class SessionModel extends AbstractSessionEntity {
     return SessionModel(
       isSigned: isSigned ?? this.isSigned,
       isDriver: isDriver ?? this.isDriver,
+      isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
       idSessions: idSessions ?? this.idSessions,
       idUsers: idUsers ?? this.idUsers,
       onRoad: onRoad ?? this.onRoad,
@@ -93,6 +100,7 @@ class SessionModel extends AbstractSessionEntity {
   List<Object?> get props => [
         isSigned,
         isDriver,
+        isPhoneVerified,
         idSessions,
         idUsers,
         onRoad,

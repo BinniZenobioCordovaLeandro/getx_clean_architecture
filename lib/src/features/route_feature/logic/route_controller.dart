@@ -39,6 +39,7 @@ class RouteController extends GetxController {
   AbstractRouteEntity? abstractRouteEntity;
 
   var isSigned = false.obs;
+  var isPhoneVerified = false.obs;
   var isDriver = false.obs;
   var onRoad = false.obs;
   var currentOfferId = ''.obs;
@@ -90,6 +91,7 @@ class RouteController extends GetxController {
     Future<bool> futureBool =
         _verifySessionUsecase.call().then((abstractSessionEntity) {
       isSigned.value = abstractSessionEntity.isSigned!;
+      isPhoneVerified.value = abstractSessionEntity.isPhoneVerified ?? false;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
       onRoad.value = abstractSessionEntity.onRoad ?? false;
       currentOfferId.value = abstractSessionEntity.currentOfferId ?? '';

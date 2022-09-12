@@ -49,6 +49,17 @@ class RouteItemCardWidget extends StatelessWidget {
                     textAlign: TextAlign.justify,
                   ),
                 ),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextWidget(
+                    'Desde S/. ${abstractRouteEntity?.price}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
               ],
             ),
           ),

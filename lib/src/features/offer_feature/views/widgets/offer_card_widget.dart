@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:pickpointer/src/core/widgets/blur_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';

@@ -4,7 +4,6 @@ on:
       - main
       - master
       - qa
-      - develop
 name: "Test & Build"
 jobs:
   build:

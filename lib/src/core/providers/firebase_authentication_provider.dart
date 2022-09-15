@@ -13,21 +13,24 @@ class FirebaseAuthenticationProvider {
 
   Future<bool> sendPhoneAuth({
     required String phoneNumber,
+    Function? onSent,
+    Function? onVerified,
+    final Function(String? identifier)? onError,
   }) async {
     try {
       print('sendPhoneAuth phoneNumber $phoneNumber');
-      await firebaseAuth.verifyPhoneNumber(
+      firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           print('credential ${credential.smsCode}, ${credential.signInMethod}');
         },
         verificationFailed: (FirebaseAuthException e) {
-          if (e.code == 'invalid-phone-number') {
-            print('The provided phone number is not valid.');
-          }
-          if (e.code == 'missing-client-identifier') {
-            print('The provided phone number is not valid.');
+          // e.code == 'invalid-phone-number' // 'The provided phone number is not valid.';
+          // e.code == 'missing-client-identifier' // 'The user is missinf identified';
+          // e.code == "too-many-requests" // 'Too many requests received';
+          if (onError != null) {
+            onError(e.code);
           }
         },
         codeSent: (String verificationId, int? resendToken) async {
@@ -40,9 +43,11 @@ class FirebaseAuthenticationProvider {
           lastVerificationId = verificationId;
         },
       );
-      return Future.value(true);
+      return Future.delayed(
+        const Duration(seconds: 1),
+        () => true,
+      );
     } catch (error) {
-      print('error ${error.toString()}');
       return Future.error(error);
     }
   }
@@ -57,7 +62,7 @@ class FirebaseAuthenticationProvider {
       );
       return signInAuthenticator(credential: credential);
     }
-    return Future.error('no value for lastVerificationId');
+    return Future.error('No value for lastVerificationId');
   }
 
   Future<String?> signInAuthenticator({

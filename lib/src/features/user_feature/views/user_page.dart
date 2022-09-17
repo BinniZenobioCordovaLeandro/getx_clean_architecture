@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
+import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
 import 'package:pickpointer/src/core/widgets/form_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/rank_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
+import 'package:pickpointer/src/core/widgets/switch_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
@@ -156,6 +158,21 @@ class _UserPageState extends State<UserPage> {
                 },
                 onChanged: (value) => userController.carColor.value = value,
               ),
+            const SizedBox(
+              width: double.infinity,
+              child: SwitchWidget(
+                title:
+                    'Al usar esta app, acepto los terminos y condiciones de la aplicación y entiendo claramente las politicas de uso.',
+                value: true,
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: TextWidget(
+                'Al GUARDAR, verificaremos que no eres un ROBOT y luego te enviaremos un SMS con el código de verificación.',
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ),
             ProgressStateButtonWidget(
               state: userController.isLoadingSave.value
                   ? ButtonState.loading
@@ -174,57 +191,72 @@ class _UserPageState extends State<UserPage> {
                       ModalBottomSheetHelper(
                         context: context,
                         title: 'PickPointer!',
-                        child: FormWidget(
-                          key: userController.formCodeKey,
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: FractionallySizedBoxWidget(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: WrapWidget(
-                                  children: [
-                                    SizedBox(
-                                      child: TextFieldWidget(
-                                        labelText: 'Codigo de verificación',
-                                        initialValue:
-                                            userController.phoneCode.value,
-                                        validator: (String? value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Este campo es requerido';
-                                          }
-                                          return null;
-                                        },
-                                        onChanged: (value) => userController
-                                            .phoneCode.value = value,
+                        child: Obx(() {
+                          return FormWidget(
+                            key: userController.formCodeKey,
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: FractionallySizedBoxWidget(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: WrapWidget(
+                                    children: [
+                                      SizedBox(
+                                        child: TextWidget(
+                                          'Te hemos enviado el código de verificación al número ${userController.phoneNumber.value}',
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      child: ProgressStateButtonWidget(
-                                        state:
-                                            userController.isLoadingSave.value
-                                                ? ButtonState.loading
-                                                : ButtonState.success,
-                                        success: 'VALIDAR NUMERO',
-                                        onPressed: () {
-                                          bool isValidForm = userController
-                                              .formCodeKey.currentState!
-                                              .validate();
-                                          if (isValidForm) {
-                                            userController.verifyCode(
-                                              smsCode: userController
-                                                  .phoneCode.value,
-                                            );
-                                          }
-                                        },
+                                      SizedBox(
+                                        child: TextFieldWidget(
+                                          labelText: 'Codigo de verificación',
+                                          initialValue:
+                                              userController.phoneCode.value,
+                                          validator: (String? value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Este campo es requerido';
+                                            }
+                                            return null;
+                                          },
+                                          onChanged: (value) => userController
+                                              .phoneCode.value = value,
+                                        ),
                                       ),
-                                    )
-                                  ],
+                                      if (userController
+                                          .errorMessage.value.isNotEmpty)
+                                        CardAlertWidget(
+                                          title: 'HEY!',
+                                          message:
+                                              userController.errorMessage.value,
+                                        ),
+                                      SizedBox(
+                                        child: ProgressStateButtonWidget(
+                                          state:
+                                              userController.isLoadingSave.value
+                                                  ? ButtonState.loading
+                                                  : ButtonState.success,
+                                          success: 'VALIDAR NUMERO',
+                                          onPressed: () {
+                                            bool isValidForm = userController
+                                                .formCodeKey.currentState!
+                                                .validate();
+                                            if (isValidForm) {
+                                              userController.verifyCode(
+                                                smsCode: userController
+                                                    .phoneCode.value,
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        }),
                       );
                     }
                   });

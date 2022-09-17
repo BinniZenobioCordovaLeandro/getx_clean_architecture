@@ -57,12 +57,12 @@ class FirebaseNotificationProvider {
   Future<bool> checkPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
-      announcement: false,
       badge: true,
+      sound: true,
+      announcement: false,
       carPlay: false,
       criticalAlert: false,
       provisional: false,
-      sound: true,
     );
     messaging.setForegroundNotificationPresentationOptions(
       alert: true,
@@ -73,7 +73,14 @@ class FirebaseNotificationProvider {
   }
 
   Future<String?> getToken() {
-    return messaging.getToken();
+    Future<String?> futureString = messaging.getToken().then((String? token) {
+      print('token $token');
+      return token;
+    }).catchError((error) {
+      print('token error $error');
+      checkPermission();
+    });
+    return futureString;
   }
 
   Future<bool> subscribeToTopic({

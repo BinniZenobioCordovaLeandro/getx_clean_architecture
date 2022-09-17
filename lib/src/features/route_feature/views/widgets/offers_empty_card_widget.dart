@@ -28,11 +28,11 @@ class OffersEmptyCardCardWidget extends StatelessWidget {
           child: WrapWidget(
             children: [
               TextWidget(
-                'Por el momento no tenemos vehiculos en servicio',
+                'Todos los vehiculos en esta ruta estan servicio',
                 style: Theme.of(context).textTheme.headline6,
               ),
               const TextWidget(
-                '¿Quieres recibir una notificacion cuando lleguen vehiculos a esta ruta?',
+                '¿Quieres recibir una notificación cuando tengamos autos disponibles a esta ruta?',
               ),
               ProgressStateButtonWidget(
                 success: 'Enviarme una notificación',

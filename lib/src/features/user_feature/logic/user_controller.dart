@@ -32,6 +32,7 @@ class UserController extends GetxController {
   final formCodeKey = GlobalKey<FormState>();
 
   var isLoadingData = false.obs;
+  var errorMessage = ''.obs;
   var isLoadingSave = false.obs;
 
   var userId = ''.obs;
@@ -48,6 +49,7 @@ class UserController extends GetxController {
   var rank = 5.0.obs;
   var isDriver = false.obs;
   var isDriverVerified = false.obs;
+  var policies = false.obs;
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
@@ -114,20 +116,58 @@ class UserController extends GetxController {
   verifyCode({
     required String smsCode,
   }) {
+    isLoadingSave.value = true;
+    errorMessage.value = '';
     firebaseAuthenticationProvider!
         .verifyPhoneAuth(smsCode: smsCode)
         .then((String? user) {
       if (user != null) {
         updateUserData();
+      } else {
+        isLoadingSave.value = false;
       }
+    }).catchError((error) {
+      errorMessage.value =
+          'El CODIGO no es valido, verifica tu número ${phoneNumber.value}, o intenta más tarde.';
+      isLoadingSave.value = false;
     });
   }
 
   Future<bool?> sendVerificationCode({
     required String phoneNumber,
   }) {
-    return firebaseAuthenticationProvider!
-        .sendPhoneAuth(phoneNumber: phoneNumber);
+    isLoadingSave.value = true;
+    Future<bool> futureBool = firebaseAuthenticationProvider!
+        .sendPhoneAuth(
+            phoneNumber: phoneNumber,
+            onError: (String? identifier) {
+              switch (identifier) {
+                case 'invalid-phone-number':
+                  errorMessage.value =
+                      'Ingresaste un número de telefono no valido.';
+                  break;
+                case 'missing-client-identifier':
+                  errorMessage.value =
+                      'Tienes que superar el CAPTCHA, vuelve atras y reintenta.';
+                  break;
+                case 'too-many-requests':
+                  errorMessage.value =
+                      'Intenta más tarde, Realizaste demasiados intentos fallidos.';
+                  break;
+                default:
+                  errorMessage.value =
+                      'Intenta más tarde, presentamos un inconveniente al tratar de valid.';
+              }
+              isLoadingSave.value = false;
+            })
+        .then((bool boolean) {
+      isLoadingSave.value = false;
+      return boolean;
+    }).catchError((error) {
+      errorMessage.value = 'Debes de verificar que no eres un robot.';
+      isLoadingSave.value = false;
+    });
+    return futureBool;
   }
 
   Future<bool> updateSession({

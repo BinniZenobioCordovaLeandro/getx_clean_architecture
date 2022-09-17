@@ -90,7 +90,7 @@ class _OfferPageState extends State<OfferPage> {
                                 style: Theme.of(context).textTheme.headline6,
                               ),
                               TextWidget(
-                                'Si finalizas el viaje, no podrás volver a acceder a él. \nAdemas, si finalizas sin haber completado el viaje llegaras a afectar tu calificación. \n\nSolo hazlo si estás seguro de no tener pasajeros en el viaje o a la espera.',
+                                'Si finalizas el viaje, no podrás volver a acceder a él. \nAdemas, si finalizas sin haber completado el viaje podrias llegar a afectar tu calificación. \n\nSolo hazlo si estás seguro de no tener pasajeros en el viaje o a la espera.',
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               ProgressStateButtonWidget(

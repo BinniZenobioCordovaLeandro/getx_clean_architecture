@@ -88,13 +88,13 @@ class NewRouteController extends GetxController {
               ?.then((bool boolean) {
             if (boolean) {
               sendNotification();
+              formKey.currentState!.reset();
+              Get.back();
               GetxSnackbarWidget(
                 title: 'SOLICITUD ENVIADA!',
                 subtitle:
                     'Estamos revisando tu solicitud, la aprobaremos lo antes posible.',
               );
-              formKey.currentState!.reset();
-              Get.back();
             }
           });
         }

@@ -53,6 +53,7 @@ class NewOfferController extends GetxController {
 
   var maxCount = 0.obs;
   var price = 0.0.obs;
+  var showImmediately = false.obs;
 
   Future<bool>? sendLocalNotification({
     required AbstractRouteEntity abstractRouteEntity,

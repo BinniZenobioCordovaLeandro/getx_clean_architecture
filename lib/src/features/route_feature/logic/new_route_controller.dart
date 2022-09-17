@@ -9,6 +9,7 @@ import 'package:pickpointer/packages/session_package/data/datasources/session_da
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:uuid/uuid.dart';
 
 class NewRouteController extends GetxController {
@@ -87,6 +88,11 @@ class NewRouteController extends GetxController {
               ?.then((bool boolean) {
             if (boolean) {
               sendNotification();
+              GetxSnackbarWidget(
+                title: 'SOLICITUD ENVIADA!',
+                subtitle:
+                    'Estamos revisando tu solicitud, la aprobaremos lo antes posible.',
+              );
               formKey.currentState!.reset();
               Get.back();
             }

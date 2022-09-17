@@ -15,10 +15,10 @@ class ProgressStateButtonWidget extends StatelessWidget {
 
   const ProgressStateButtonWidget({
     Key? key,
-    this.idle = 'INCATIVO',
-    this.loading = 'PROCESANDO...',
-    this.fail = 'REINTENTAR',
-    this.success = 'PROCESADO!',
+    this.idle,
+    this.loading,
+    this.fail,
+    this.success,
     this.onPressed,
     this.state = ButtonState.success,
     this.radius = 8.00,
@@ -35,7 +35,7 @@ class ProgressStateButtonWidget extends StatelessWidget {
       child: ProgressButton(
         stateWidgets: {
           ButtonState.idle: Text(
-            '$idle',
+            '${idle ?? success}',
             style: Theme.of(context)
                 .textTheme
                 .button!
@@ -44,7 +44,7 @@ class ProgressStateButtonWidget extends StatelessWidget {
           ButtonState.loading: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              '$loading',
+              '${loading ?? success}',
               style: Theme.of(context)
                   .textTheme
                   .button!
@@ -52,7 +52,7 @@ class ProgressStateButtonWidget extends StatelessWidget {
             ),
           ),
           ButtonState.fail: Text(
-            '$fail',
+            '${fail ?? success}',
             style: Theme.of(context)
                 .textTheme
                 .button!
@@ -74,11 +74,13 @@ class ProgressStateButtonWidget extends StatelessWidget {
           ButtonState.fail: background ?? Theme.of(context).primaryColor,
           ButtonState.success: background ?? Theme.of(context).primaryColor,
         },
-        onPressed: () {
-          if (state != ButtonState.idle && state != ButtonState.loading) {
-            onPressed!();
-          }
-        },
+        onPressed: state != ButtonState.idle
+            ? () {
+                if (state != ButtonState.idle && state != ButtonState.loading) {
+                  onPressed!();
+                }
+              }
+            : null,
         state: state,
         padding: const EdgeInsets.all(8.0),
         radius: radius!,

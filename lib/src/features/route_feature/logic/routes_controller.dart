@@ -68,27 +68,6 @@ class RoutesController extends GetxController {
     });
   }
 
-  subscribeToAppTopic({
-    required AbstractSessionEntity abstractSessionEntity,
-  }) {
-    firebaseNotificationProvider!.subscribeToTopic(topic: 'pickpointer_app');
-    if (abstractSessionEntity.isDriver == true) {
-      firebaseNotificationProvider!
-          .subscribeToTopic(topic: 'pickpointer_app_driver');
-    } else {
-      firebaseNotificationProvider!
-          .subscribeToTopic(topic: 'pickpointer_app_client');
-    }
-    if (abstractSessionEntity.isSigned == true) {
-      firebaseNotificationProvider!
-          .subscribeToTopic(topic: 'pickpointer_app_signed');
-    }
-    if (abstractSessionEntity.isPhoneVerified == true) {
-      firebaseNotificationProvider!
-          .subscribeToTopic(topic: 'pickpointer_app_phone_verified');
-    }
-  }
-
   Future<bool> verifySession() {
     Future<bool> futureBool = _verifySessionUsecase
         .call()
@@ -96,7 +75,6 @@ class RoutesController extends GetxController {
       isSigned.value = abstractSessionEntity.isSigned!;
       isDriver.value = abstractSessionEntity.isDriver ?? false;
       _updateSessionUsecase.call(abstractSessionEntity: abstractSessionEntity);
-      subscribeToAppTopic(abstractSessionEntity: abstractSessionEntity);
       return isSigned.value;
     });
     return futureBool;

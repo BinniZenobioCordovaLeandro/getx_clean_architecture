@@ -138,6 +138,33 @@ class _AppState extends State<App> {
     }
   }
 
+  subscribeToAppTopic({
+    required AbstractSessionEntity abstractSessionEntity,
+  }) {
+    firebaseNotificationProvider!.subscribeToTopic(topic: 'pickpointer_app');
+    if (abstractSessionEntity.isDriver == true) {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_driver');
+    } else {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_client');
+    }
+    if (abstractSessionEntity.isSigned == true) {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_signed');
+    }
+    if (abstractSessionEntity.isPhoneVerified == true) {
+      firebaseNotificationProvider!
+          .subscribeToTopic(topic: 'pickpointer_app_phone_verified');
+    }
+  }
+
+  verifyTokenSubscription(AbstractSessionEntity abstractSessionEntity) {
+    firebaseNotificationProvider?.getToken().then((String? value) {
+      subscribeToAppTopic(abstractSessionEntity: abstractSessionEntity);
+    });
+  }
+
   verifyIsOnTheWay() {
     _verifySessionUsecase
         .call()
@@ -161,6 +188,8 @@ class _AppState extends State<App> {
           },
         );
       }
+      // Verify token exist and subscribe to topics
+      verifyTokenSubscription(abstractSessionEntity);
     });
   }
 

@@ -27,20 +27,44 @@ class RouteCardWidget extends StatelessWidget {
             children: <Widget>[
               SizedBox(
                 width: double.infinity,
-                child: TextWidget(
-                  'Destino: $to',
-                  style: Theme.of(context).textTheme.headline6?.copyWith(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: TextWidget(
+                        'Destino: $to',
+                        style: Theme.of(context).textTheme.headline6?.copyWith(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                        textAlign: TextAlign.justify,
                       ),
-                  textAlign: TextAlign.justify,
+                    ),
+                    const VerticalDivider(),
+                    const Icon(
+                      Icons.location_pin,
+                      color: Colors.red,
+                    ),
+                  ],
                 ),
               ),
               SizedBox(
                 width: double.infinity,
-                child: TextWidget(
-                  'Origen: $from',
-                  textAlign: TextAlign.justify,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: TextWidget(
+                        'Origen: $from',
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                    const VerticalDivider(),
+                    const Icon(
+                      Icons.taxi_alert_outlined,
+                      color: Colors.blue,
+                    ),
+                  ],
                 ),
               ),
             ],

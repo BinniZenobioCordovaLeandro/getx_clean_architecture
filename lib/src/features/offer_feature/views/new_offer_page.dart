@@ -5,6 +5,7 @@ import 'package:pickpointer/src/core/widgets/form_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
+import 'package:pickpointer/src/core/widgets/switch_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/logic/new_offer_controller.dart';
@@ -95,10 +96,23 @@ class _NewOfferPageState extends State<NewOfferPage> {
                   ),
                   SizedBox(
                     width: double.infinity,
+                    child: SwitchWidget(
+                      title:
+                          'Estoy disponible de INMEDIATO para realizar el viaje.\nEstoy de acuerdo en que la venta de asientos se realiza a DISTINTOS usuarios.\nEstoy de acuerdo en recibir el pago en EFECTIVO por parte de los compradores.',
+                      value: offerController.showImmediately.value,
+                      onChanged: (bool? boolean) {
+                        offerController.showImmediately.value = boolean!;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
                     child: ProgressStateButtonWidget(
-                      state: offerController.isLoading.value
-                          ? ButtonState.loading
-                          : ButtonState.success,
+                      state: offerController.showImmediately.value == false
+                          ? ButtonState.idle
+                          : offerController.isLoading.value
+                              ? ButtonState.loading
+                              : ButtonState.success,
                       success: 'Publicar',
                       onPressed: () {
                         offerController.onSumbit(

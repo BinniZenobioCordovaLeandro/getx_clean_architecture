@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -9,7 +8,7 @@ class GeolocatorProvider {
   static GeolocatorProvider? _instance;
 
   bool isLocationServiceEnabled = false;
-  GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
+  final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
   Stream<Position> get onPositionChanged => _streamOnPositionChanged.stream;
 
@@ -25,7 +24,7 @@ class GeolocatorProvider {
   }
 
   Future<bool> configure() {
-    _geolocatorPlatform.getServiceStatusStream().listen((event) {
+    _geolocatorPlatform.getServiceStatusStream().listen((ServiceStatus event) {
       if (event == ServiceStatus.disabled) {
         isLocationServiceEnabled = false;
         initialize();
@@ -47,19 +46,18 @@ class GeolocatorProvider {
   Future<bool> checkPermission() async {
     bool? serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!(serviceEnabled == true)) {
-      throw Exception('Location service is not enabled');
-    }
+      // throw Exception('Location service is not enabled');
+      LocationPermission? permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('Location permission is denied forever');
+      }
 
-    LocationPermission? permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever) {
-      throw Exception('Location permission is denied forever');
-    }
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        throw Exception('Location permission is denied');
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse &&
+            permission != LocationPermission.always) {
+          throw Exception('Location permission is denied');
+        }
       }
     }
 
@@ -67,9 +65,10 @@ class GeolocatorProvider {
     return isLocationServiceEnabled;
   }
 
-  Future<Position?>? getCurrentPosition() {
+  Future<Position?>? getCurrentPosition() async {
     if (!isLocationServiceEnabled) {
-      throw Exception('Location service is not enabled');
+      await checkPermission();
+      // throw Exception('Location service is not enabled');
     }
     return Geolocator.getCurrentPosition(
       timeLimit: const Duration(

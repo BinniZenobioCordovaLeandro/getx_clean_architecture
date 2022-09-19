@@ -57,13 +57,11 @@ class FirebaseRouteDatasource implements AbstractRouteRepository {
     required String userId,
   }) {
     RouteModel routeModel = abstractRouteEntity as RouteModel;
-    Future<AbstractRouteEntity> futureAbstractRouteEntity =
-        routesRequests!.add({
+    routesRequests?.doc(routeModel.id).set({
       ...routeModel.toMap(),
       'user_id': userId,
-    }).then((value) {
-      return Future.value(routeModel);
+      'approved': false,
     });
-    return futureAbstractRouteEntity;
+    return Future.value(routeModel);
   }
 }

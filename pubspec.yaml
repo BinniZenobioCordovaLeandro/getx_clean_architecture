@@ -48,7 +48,8 @@ dependencies:
     sdk: flutter
   flutter_map: ^1.1.1
   flutter_map_marker_popup: ^2.0.1
-  flutter_polyline_points: ^1.0.0
+  flutter_polyline_points:
+    path: ../flutter_polyline_points/
   flutter_svg: ^1.0.0
   geolocator: ^8.2.0
   get: ^4.6.1

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
@@ -46,6 +47,8 @@ class RouteController extends GetxController {
 
   var isLoading = false.obs;
   var errorMessage = ''.obs;
+  var travelTime = const Duration().obs;
+  var travelDistance = 0.0.obs;
   var polylineListLatLng = <LatLng>[].obs;
   var listAbstractOfferEntity = <AbstractOfferEntity>[].obs;
   var listWayPoints = <LatLng>[].obs;
@@ -55,21 +58,28 @@ class RouteController extends GetxController {
   var routeTo = ''.obs;
   var routeFrom = ''.obs;
 
-  Future<List<LatLng>> getPolylineBetweenCoordinates({
+  Future<bool> getPolylineBetweenCoordinates({
     required LatLng origin,
     required LatLng destination,
     List<LatLng>? wayPoints,
   }) {
     isLoading.value = true;
-    Future<List<LatLng>> futureListLatLng = polylineProvider!
+    Future<bool> futureListLatLng = polylineProvider!
         .getPolylineBetweenCoordinates(
       origin: origin,
       destination: destination,
       wayPoints: wayPoints,
     )
-        .then((List<LatLng> listLatLng) {
+        .then((PolylineResult polylineResult) {
+      List<LatLng> listLatLng =
+          polylineProvider!.convertPointToLatLng(polylineResult.points);
+      polylineListLatLng.value = listLatLng;
+      travelTime.value = polylineResult.duration;
+      // '${( / 60).toStringAsFixed(2)} horas de viaje';
+      travelDistance.value = polylineResult.meters;
+      // '${(polylineResult.meters / 1000).toStringAsFixed(2)} Kilometros de viaje ';
       isLoading.value = false;
-      return listLatLng;
+      return true;
     }).catchError((error) {
       errorMessage.value = error.toString();
       isLoading.value = false;
@@ -158,8 +168,6 @@ class RouteController extends GetxController {
         double.parse('${abstractOfferEntity.endLng}'),
       ),
       wayPoints: listLatLng,
-    ).then(
-      (value) => polylineListLatLng.value = value,
     );
   }
 
@@ -191,8 +199,6 @@ class RouteController extends GetxController {
         double.parse('${abstractRouteEntity.endLat}'),
         double.parse('${abstractRouteEntity.endLng}'),
       ),
-    ).then(
-      (value) => polylineListLatLng.value = value,
     );
     getOffersByRoute(routeId: '${abstractRouteEntity.id}')?.then(
       (value) => listAbstractOfferEntity.value = value,

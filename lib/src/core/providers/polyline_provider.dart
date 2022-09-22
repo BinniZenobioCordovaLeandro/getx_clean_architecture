@@ -11,12 +11,12 @@ class PolylineProvider {
     return _instance;
   }
 
-  Future<List<LatLng>> getPolylineBetweenCoordinates({
+  Future<PolylineResult> getPolylineBetweenCoordinates({
     required LatLng origin,
     required LatLng destination,
     List<LatLng>? wayPoints,
   }) {
-    Future<List<LatLng>> futureListLatLng = polylinePoints
+    Future<PolylineResult> futureListLatLng = polylinePoints
         .getRouteBetweenCoordinates(
       ConfigEnv.apiKeyDirections,
       PointLatLng(
@@ -40,17 +40,22 @@ class PolylineProvider {
       if (polylineResult.errorMessage?.isNotEmpty == true) {
         return throw Exception(polylineResult.errorMessage);
       }
-      return polylineResult.points
-          .map((PointLatLng point) => LatLng(
-                point.latitude,
-                point.longitude,
-              ))
-          .toList();
+      return polylineResult;
+      
     }, onError: (dynamic error) {
       return throw Exception(error.toString());
     });
 
     return futureListLatLng;
+  }
+
+  List<LatLng> convertPointToLatLng(List<PointLatLng> points){
+    return points
+          .map((PointLatLng point) => LatLng(
+                point.latitude,
+                point.longitude,
+              ))
+          .toList();
   }
 
   List<LatLng> decodePolyline(String encodedString) {

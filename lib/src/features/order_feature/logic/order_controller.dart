@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -81,21 +82,24 @@ class OrderController extends GetxController {
   var driverCarPlate = ''.obs;
   var driverPhoneNumber = ''.obs;
 
-  Future<List<LatLng>> getPolylineBetweenCoordinates({
+  Future<bool> getPolylineBetweenCoordinates({
     required LatLng origin,
     required LatLng destination,
     List<LatLng>? wayPoints,
   }) {
     isLoading.value = true;
-    Future<List<LatLng>> futureListLatLng = polylineProvider!
+    Future<bool> futureListLatLng = polylineProvider!
         .getPolylineBetweenCoordinates(
       origin: origin,
       destination: destination,
       wayPoints: wayPoints,
     )
-        .then((List<LatLng> listLatLng) {
+        .then((PolylineResult polylineResult) {
+      List<LatLng> listLatLng =
+          polylineProvider!.convertPointToLatLng(polylineResult.points);
+      polylineListLatLng.value = listLatLng;
       isLoading.value = false;
-      return listLatLng;
+      return true;
     });
     return futureListLatLng;
   }
@@ -163,8 +167,6 @@ class OrderController extends GetxController {
         double.parse('${abstractOrderEntity.routeEndLng}'),
       ),
       wayPoints: listLatLng,
-    ).then(
-      (value) => polylineListLatLng.value = value,
     );
   }
 

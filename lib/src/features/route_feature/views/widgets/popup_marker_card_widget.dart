@@ -30,7 +30,7 @@ class PopupMarkerCardWidget extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: TextWidget(
-                    'Desde: S/. ${abstractRouteEntity?.price}',
+                    'Desde: S/ ${abstractRouteEntity?.price}',
                     style: Theme.of(context).textTheme.subtitle1?.copyWith(
                           color: Theme.of(context).primaryColor,
                           fontStyle: FontStyle.italic,

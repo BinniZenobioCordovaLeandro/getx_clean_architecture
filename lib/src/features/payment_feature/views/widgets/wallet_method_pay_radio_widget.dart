@@ -51,7 +51,7 @@ class WalletMethodPayRadioWidget extends StatelessWidget {
                     children: [
                       const Center(
                         child: TextWidget(
-                          'Recarga S/. 0.20 para pagar con tu monedero',
+                          'Recarga S/ 0.20 para pagar con tu monedero',
                         ),
                       ),
                       ElevatedButtonWidget(

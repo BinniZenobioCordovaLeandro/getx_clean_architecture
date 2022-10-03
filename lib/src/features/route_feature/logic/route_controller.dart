@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
@@ -13,6 +13,7 @@ import 'package:pickpointer/packages/session_package/data/datasources/session_da
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/core/util/decode_list_waypoints.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 
 class RouteController extends GetxController {
@@ -147,15 +148,7 @@ class RouteController extends GetxController {
     List<LatLng> listLatLng = [];
     String? wayPoints = abstractOfferEntity.wayPoints;
     if (wayPoints != null && wayPoints.length > 10) {
-      List list = jsonDecode(wayPoints);
-      listLatLng = list.map((string) {
-        var split = string.split(',');
-        LatLng latLng = LatLng(
-          double.parse(split[0].trim()),
-          double.parse(split[1].trim()),
-        );
-        return latLng;
-      }).toList();
+      listLatLng = decodeListWaypoints(wayPoints);
     }
     listWayPoints.value = listLatLng;
     getPolylineBetweenCoordinates(
@@ -172,16 +165,24 @@ class RouteController extends GetxController {
   }
 
   centerRouteMap(AbstractRouteEntity abstractRouteEntity) {
-    mapController?.fitBounds(LatLngBounds(
-      LatLng(
-        double.tryParse('${abstractRouteEntity.startLat}') ?? 0,
-        double.tryParse('${abstractRouteEntity.startLng}') ?? 0,
+    mapController?.fitBounds(
+      LatLngBounds(
+        LatLng(
+          double.tryParse('${abstractRouteEntity.startLat}') ?? 0,
+          double.tryParse('${abstractRouteEntity.startLng}') ?? 0,
+        ),
+        LatLng(
+          double.tryParse('${abstractRouteEntity.endLat}') ?? 0,
+          double.tryParse('${abstractRouteEntity.endLng}') ?? 0,
+        ),
       ),
-      LatLng(
-        double.tryParse('${abstractRouteEntity.endLat}') ?? 0,
-        double.tryParse('${abstractRouteEntity.endLng}') ?? 0,
+      options: const FitBoundsOptions(
+        padding: EdgeInsets.symmetric(
+          vertical: 200,
+          horizontal: 20,
+        ),
       ),
-    ));
+    );
   }
 
   void initialize(AbstractRouteEntity abstractRouteEntity) {

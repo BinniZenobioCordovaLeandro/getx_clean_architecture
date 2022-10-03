@@ -74,9 +74,9 @@ class NewOfferController extends GetxController {
     Future<bool>? futureBool = firebaseNotificationProvider!.sendMessageToTopic(
       topic: 'route_${abstractOfferEntity.routeId}',
       title:
-          'S/. ${abstractOfferEntity.price?.toStringAsFixed(2)} => ${abstractOfferEntity.routeTitle}',
+          'S/ ${abstractOfferEntity.price?.toStringAsFixed(2)} => ${abstractOfferEntity.routeTitle}',
       body:
-          'Viaja a ${abstractOfferEntity.routeTo} por solo S/.${abstractOfferEntity.price?.toStringAsFixed(2)}!',
+          'Viaja a ${abstractOfferEntity.routeTo} por solo S/${abstractOfferEntity.price?.toStringAsFixed(2)}!',
       link: '/route/${abstractOfferEntity.routeId}',
     )..then((value) => value);
     return futureBool;

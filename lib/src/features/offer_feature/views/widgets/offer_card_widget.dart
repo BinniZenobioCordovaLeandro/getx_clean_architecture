@@ -50,7 +50,7 @@ class OfferDescriptionCardWidget extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextWidget(
-                  'Precio: S/. ${price?.toStringAsFixed(2)}',
+                  'Precio: S/ ${price?.toStringAsFixed(2)}',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,

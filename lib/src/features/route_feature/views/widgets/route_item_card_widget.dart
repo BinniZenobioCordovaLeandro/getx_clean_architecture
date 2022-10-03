@@ -52,7 +52,7 @@ class RouteItemCardWidget extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: TextWidget(
-                    'Desde S/. ${abstractRouteEntity?.price}',
+                    'Desde S/ ${abstractRouteEntity?.price}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,

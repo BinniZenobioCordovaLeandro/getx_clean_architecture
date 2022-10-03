@@ -20,6 +20,7 @@ import 'package:pickpointer/packages/vehicle_package/domain/usecases/stream_vehi
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/core/util/decode_list_waypoints.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
@@ -146,15 +147,7 @@ class OrderController extends GetxController {
     List<LatLng> listLatLng = [];
     String? wayPoints = abstractOrderEntity.offerWayPoints;
     if (wayPoints != null && wayPoints.length > 10) {
-      List list = jsonDecode(wayPoints);
-      listLatLng = list.map((string) {
-        var split = string.split(',');
-        LatLng latLng = LatLng(
-          double.parse(split[0].trim()),
-          double.parse(split[1].trim()),
-        );
-        return latLng;
-      }).toList();
+      listLatLng = decodeListWaypoints(wayPoints);
     }
     listWayPoints.value = listLatLng;
     getPolylineBetweenCoordinates(

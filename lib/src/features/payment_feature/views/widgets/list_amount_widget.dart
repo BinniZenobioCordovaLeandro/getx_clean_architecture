@@ -27,7 +27,7 @@ class _ListAmountWidgetState extends State<ListAmountWidget> {
           ListTileRadioWidget(
             groupValue: groupValue,
             value: amount,
-            title: TextWidget('S/. $amount'),
+            title: TextWidget('S/ $amount'),
             onChanged: (value) {
               setState(() {
                 groupValue = value;

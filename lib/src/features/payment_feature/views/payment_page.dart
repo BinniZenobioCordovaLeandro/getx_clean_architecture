@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
+import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
+import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
+import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/form_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
 import 'package:pickpointer/src/core/widgets/search_location_card_widget.dart';
+import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/payment_feature/logic/payment_controller.dart';
 import 'package:pickpointer/src/features/payment_feature/views/enums/method_pay_type.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/src/features/payment_feature/views/widgets/cash_method_pay_radio_widget.dart';
+import 'package:pickpointer/src/features/payment_feature/views/widgets/payment_resume_widget.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -21,10 +28,7 @@ class PaymentPage extends StatefulWidget {
     Key? key,
     this.abstractOfferEntity,
     this.abstractOfferEntityId,
-  })  : assert(
-          abstractOfferEntity != null || abstractOfferEntityId != null,
-        ),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -58,10 +62,6 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
                 helperText:
                     'El punto de recojo, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
-                // initialLatLng: LatLng(
-                //   double.parse('${widget.abstractOfferEntity!.startLat}'),
-                //   double.parse('${widget.abstractOfferEntity!.startLng}'),
-                // ),
                 validator: (value) {
                   if (value == null) {
                     return 'Debe seleccionar un punto de recojo';
@@ -69,13 +69,14 @@ class _PaymentPageState extends State<PaymentPage> {
                   return null;
                 },
                 onChanged: (LatLng latLng) {
-                  print(latLng);
-                  paymentController.originLatLng.value = latLng;
+                  paymentController.userOriginLatLng.value = latLng;
                 },
               ),
             ),
             SizedBox(
               child: SearchLocationCardWidget(
+                key: Key(
+                    '${paymentController.offerEndLatLng.value.latitude}-${paymentController.offerEndLatLng.value.longitude}'),
                 title: 'Voy al destino de la ruta',
                 labelText: 'Dejame en',
                 leading: const Icon(
@@ -85,10 +86,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 initialValue: true,
                 helperText:
                     'El punto de bajada, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
-                initialLatLng: LatLng(
-                  double.parse('${widget.abstractOfferEntity!.endLat}'),
-                  double.parse('${widget.abstractOfferEntity!.endLng}'),
-                ),
+                initialLatLng: paymentController.offerEndLatLng.value,
                 validator: (value) {
                   if (value == null) {
                     return 'Debe seleccionar un punto de bajada';
@@ -96,7 +94,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   return null;
                 },
                 onChanged: (LatLng latLng) {
-                  paymentController.destinationLatLng.value = latLng;
+                  paymentController.userDestinationLatLng.value = latLng;
                 },
               ),
             ),
@@ -112,7 +110,7 @@ class _PaymentPageState extends State<PaymentPage> {
               child: TextFieldWidget(
                 labelText: 'Cantidad de asientos',
                 helperText:
-                    'Maximo de ${widget.abstractOfferEntity!.maxCount! - widget.abstractOfferEntity!.count!} asientos disponibles',
+                    'Maximo de ${paymentController.offerAvailableSeats.value} asientos disponibles',
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: false,
                   signed: false,
@@ -128,11 +126,8 @@ class _PaymentPageState extends State<PaymentPage> {
                     return 'Debe ingresar la cantidad de asientos';
                   }
                   if (int.parse(value) >
-                      (widget.abstractOfferEntity!.maxCount! -
-                          widget.abstractOfferEntity!.count!)) {
-                    int max = widget.abstractOfferEntity!.maxCount! -
-                        widget.abstractOfferEntity!.count!;
-                    return 'Maximo de $max asientos disponibles';
+                      paymentController.offerAvailableSeats.value) {
+                    return 'Maximo de ${paymentController.offerAvailableSeats.value} asientos disponibles';
                   }
                   return null;
                 },
@@ -157,17 +152,224 @@ class _PaymentPageState extends State<PaymentPage> {
                 paymentController.payMethod.value = 1;
               },
             ),
+            const Divider(),
+            if (paymentController.errorMessage.value.isNotEmpty)
+              CardAlertWidget(
+                title: 'HEY!',
+                message: paymentController.errorMessage.value,
+              ),
             ProgressStateButtonWidget(
               state: paymentController.isLoading.value
                   ? ButtonState.loading
                   : ButtonState.success,
-              success: 'Contratar',
+              success: 'CONTINUAR',
               onPressed: () {
-                if (paymentController.payMethod.value != 0) {
-                  paymentController.onSubmit(
-                    abstractOfferEntity: widget.abstractOfferEntity!,
-                  );
-                }
+                paymentController.calculateAditionalPrice()!.then((bool value) {
+                  if (value) {
+                    ModalBottomSheetHelper(
+                      context: context,
+                      title: '',
+                      child: Obx(() {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: FractionallySizedBoxWidget(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: WrapWidget(
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: TextWidget(
+                                      'Resumen de pago',
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
+                                  ),
+                                  PaymentResumeWidget(
+                                    quantity: paymentController.seats.value,
+                                    subtotal: paymentController.subtotal.value,
+                                    aditional:
+                                        paymentController.aditionalCost.value,
+                                    total: paymentController.total.value,
+                                  ),
+                                  AspectRatio(
+                                    aspectRatio: 16 / 9,
+                                    child: FlutterMapWidget(
+                                      onMapCreated: (MapController controller) {
+                                        paymentController.mapController =
+                                            controller;
+                                      },
+                                      children: [
+                                        MarkerLayerWidget(
+                                          options: MarkerLayerOptions(
+                                            markers: [
+                                              Marker(
+                                                width: 50,
+                                                height: 50,
+                                                anchorPos: AnchorPos.align(
+                                                  AnchorAlign.center,
+                                                ),
+                                                point: paymentController
+                                                    .offerStartLatLng.value,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Icon(
+                                                  Icons.taxi_alert_outlined,
+                                                  color: Colors.blue,
+                                                  size: 50,
+                                                ),
+                                              ),
+                                              Marker(
+                                                width: 50,
+                                                height: 50,
+                                                anchorPos: AnchorPos.align(
+                                                  AnchorAlign.top,
+                                                ),
+                                                point: paymentController
+                                                    .offerEndLatLng.value,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Icon(
+                                                  Icons.location_pin,
+                                                  color: Colors.red,
+                                                  size: 50,
+                                                ),
+                                              ),
+                                              Marker(
+                                                width: 50,
+                                                height: 50,
+                                                anchorPos: AnchorPos.align(
+                                                    AnchorAlign.top),
+                                                point: paymentController
+                                                    .userOriginLatLng.value,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        Icon(
+                                                  Icons.person_pin,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  size: 50,
+                                                ),
+                                              ),
+                                              Marker(
+                                                width: 50,
+                                                height: 50,
+                                                anchorPos: AnchorPos.align(
+                                                    AnchorAlign.top),
+                                                point: paymentController
+                                                    .userDestinationLatLng
+                                                    .value,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Icon(
+                                                  Icons.person_pin,
+                                                  color: Colors.red,
+                                                  size: 50,
+                                                ),
+                                              ),
+                                              for (var wayPoint
+                                                  in paymentController
+                                                      .offerWayPoints.value)
+                                                Marker(
+                                                  width: 10,
+                                                  height: 10,
+                                                  anchorPos: AnchorPos.align(
+                                                      AnchorAlign.center),
+                                                  point: wayPoint,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          Icon(
+                                                    Icons.circle,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    size: 10,
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                        PolylineLayerWidget(
+                                          options: PolylineLayerOptions(
+                                            polylines: [
+                                              Polyline(
+                                                points: <LatLng>[
+                                                  ...paymentController
+                                                      .basePolylineListLatLng
+                                                      .value,
+                                                ],
+                                                strokeWidth: 5,
+                                                color: Colors.black,
+                                                isDotted: true,
+                                                gradientColors: <Color>[
+                                                  Colors.grey,
+                                                ],
+                                              ),
+                                              Polyline(
+                                                points: <LatLng>[
+                                                  ...paymentController
+                                                      .userPolylineListLatLng
+                                                      .value,
+                                                ],
+                                                strokeWidth: 5,
+                                                color: Colors.black,
+                                                isDotted: true,
+                                                gradientColors: <Color>[
+                                                  Colors.blue,
+                                                  Colors.red,
+                                                  Colors.red,
+                                                  Colors.red,
+                                                  Colors.red,
+                                                  Colors.red,
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  TextWidget(
+                                    'Ruta sugerida para realizar el recorrido.\nEsta ruta puede cambiar, segun el trafico, accidentes vehiculares, o contrato de los asientos restantes.',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        ?.copyWith(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                  ),
+                                  TextWidget(
+                                    'Luego de contratar, te enviaremos NOTIFICACIONES indicando cuando el vehiculo inicia la ruta y cuando esta cerca a tu PUNTO DE ORIGEN.\nTen un viaje SEGURO, COMODO, ACCESIBLE Y RAPIDO!',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        ?.copyWith(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                  ),
+                                  ProgressStateButtonWidget(
+                                    state: paymentController.isLoading.value
+                                        ? ButtonState.loading
+                                        : ButtonState.success,
+                                    success: 'CONTRATAR',
+                                    onPressed: () {
+                                      if (paymentController.payMethod.value !=
+                                          0) {
+                                        paymentController.onSubmit(
+                                          abstractOfferEntity:
+                                              widget.abstractOfferEntity!,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    );
+                  }
+                });
               },
             ),
           ],

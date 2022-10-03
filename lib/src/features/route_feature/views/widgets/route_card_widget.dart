@@ -86,23 +86,17 @@ class RouteCardWidget extends StatelessWidget {
               if (duration != null)
                 SizedBox(
                   width: double.infinity,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: WrapWidget(
                     children: [
-                      Expanded(
-                        child: TextWidget(
-                          'Tiempo: ${getDurationString(duration!)}',
-                          textAlign: TextAlign.justify,
-                          style: Theme.of(context).textTheme.caption,
-                        ),
+                      TextWidget(
+                        'Tiempo: ${getDurationString(duration!)}',
+                        textAlign: TextAlign.justify,
+                        style: Theme.of(context).textTheme.caption,
                       ),
-                      const VerticalDivider(),
-                      Expanded(
-                        child: TextWidget(
-                          'Distancia: ${getDistanceString(meters!)}',
-                          textAlign: TextAlign.justify,
-                          style: Theme.of(context).textTheme.caption,
-                        ),
+                      TextWidget(
+                        'Distancia: ${getDistanceString(meters!)}',
+                        textAlign: TextAlign.justify,
+                        style: Theme.of(context).textTheme.caption,
                       ),
                     ],
                   ),

@@ -28,14 +28,19 @@ class OffersEmptyCardCardWidget extends StatelessWidget {
           child: WrapWidget(
             children: [
               TextWidget(
-                'Todos los vehiculos en esta ruta estan servicio',
+                'Todos los vehiculos en esta ruta estan viajando.',
+                style: Theme.of(context).textTheme.caption,
+              ),
+              TextWidget(
+                '¿Quieres recibir una notificación para viajar en esta ruta?',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              const TextWidget(
-                '¿Quieres recibir una notificación cuando tengamos autos disponibles a esta ruta?',
+              TextWidget(
+                'Te eviaremos una notificación cada que tengamos un vehiculo disponible, para que puedas viajar.\nSe desactivara automaticamente al comprar el pasaje.',
+                style: Theme.of(context).textTheme.caption,
               ),
               ProgressStateButtonWidget(
-                success: 'Enviarme una notificación',
+                success: 'Enviame un MENSAJE',
                 state: isLoading == true
                     ? ButtonState.loading
                     : ButtonState.success,

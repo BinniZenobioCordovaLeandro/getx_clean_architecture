@@ -1,5 +1,6 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
@@ -12,6 +13,7 @@ import 'package:pickpointer/packages/session_package/data/datasources/session_da
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/core/util/decode_list_waypoints.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 
 class RouteController extends GetxController {
@@ -46,6 +48,8 @@ class RouteController extends GetxController {
 
   var isLoading = false.obs;
   var errorMessage = ''.obs;
+  var travelTime = const Duration().obs;
+  var travelDistance = 0.0.obs;
   var polylineListLatLng = <LatLng>[].obs;
   var listAbstractOfferEntity = <AbstractOfferEntity>[].obs;
   var listWayPoints = <LatLng>[].obs;
@@ -55,21 +59,28 @@ class RouteController extends GetxController {
   var routeTo = ''.obs;
   var routeFrom = ''.obs;
 
-  Future<List<LatLng>> getPolylineBetweenCoordinates({
+  Future<bool> getPolylineBetweenCoordinates({
     required LatLng origin,
     required LatLng destination,
     List<LatLng>? wayPoints,
   }) {
     isLoading.value = true;
-    Future<List<LatLng>> futureListLatLng = polylineProvider!
+    Future<bool> futureListLatLng = polylineProvider!
         .getPolylineBetweenCoordinates(
       origin: origin,
       destination: destination,
       wayPoints: wayPoints,
     )
-        .then((List<LatLng> listLatLng) {
+        .then((PolylineResult polylineResult) {
+      List<LatLng> listLatLng =
+          polylineProvider!.convertPointToLatLng(polylineResult.points);
+      polylineListLatLng.value = listLatLng;
+      travelTime.value = polylineResult.duration;
+      // '${( / 60).toStringAsFixed(2)} horas de viaje';
+      travelDistance.value = polylineResult.meters;
+      // '${(polylineResult.meters / 1000).toStringAsFixed(2)} Kilometros de viaje ';
       isLoading.value = false;
-      return listLatLng;
+      return true;
     }).catchError((error) {
       errorMessage.value = error.toString();
       isLoading.value = false;
@@ -137,15 +148,7 @@ class RouteController extends GetxController {
     List<LatLng> listLatLng = [];
     String? wayPoints = abstractOfferEntity.wayPoints;
     if (wayPoints != null && wayPoints.length > 10) {
-      List list = jsonDecode(wayPoints);
-      listLatLng = list.map((string) {
-        var split = string.split(',');
-        LatLng latLng = LatLng(
-          double.parse(split[0].trim()),
-          double.parse(split[1].trim()),
-        );
-        return latLng;
-      }).toList();
+      listLatLng = decodeListWaypoints(wayPoints);
     }
     listWayPoints.value = listLatLng;
     getPolylineBetweenCoordinates(
@@ -158,22 +161,28 @@ class RouteController extends GetxController {
         double.parse('${abstractOfferEntity.endLng}'),
       ),
       wayPoints: listLatLng,
-    ).then(
-      (value) => polylineListLatLng.value = value,
     );
   }
 
   centerRouteMap(AbstractRouteEntity abstractRouteEntity) {
-    mapController?.fitBounds(LatLngBounds(
-      LatLng(
-        double.tryParse('${abstractRouteEntity.startLat}') ?? 0,
-        double.tryParse('${abstractRouteEntity.startLng}') ?? 0,
+    mapController?.fitBounds(
+      LatLngBounds(
+        LatLng(
+          double.tryParse('${abstractRouteEntity.startLat}') ?? 0,
+          double.tryParse('${abstractRouteEntity.startLng}') ?? 0,
+        ),
+        LatLng(
+          double.tryParse('${abstractRouteEntity.endLat}') ?? 0,
+          double.tryParse('${abstractRouteEntity.endLng}') ?? 0,
+        ),
       ),
-      LatLng(
-        double.tryParse('${abstractRouteEntity.endLat}') ?? 0,
-        double.tryParse('${abstractRouteEntity.endLng}') ?? 0,
+      options: const FitBoundsOptions(
+        padding: EdgeInsets.symmetric(
+          vertical: 200,
+          horizontal: 20,
+        ),
       ),
-    ));
+    );
   }
 
   void initialize(AbstractRouteEntity abstractRouteEntity) {
@@ -191,8 +200,6 @@ class RouteController extends GetxController {
         double.parse('${abstractRouteEntity.endLat}'),
         double.parse('${abstractRouteEntity.endLng}'),
       ),
-    ).then(
-      (value) => polylineListLatLng.value = value,
     );
     getOffersByRoute(routeId: '${abstractRouteEntity.id}')?.then(
       (value) => listAbstractOfferEntity.value = value,

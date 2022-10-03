@@ -4,35 +4,46 @@ import 'package:pickpointer/src/core/env/config_env.dart';
 
 class PolylineProvider {
   static PolylineProvider? _instance;
-  PolylinePoints polylinePoints = PolylinePoints();
 
   static PolylineProvider? getInstance() {
     _instance ??= PolylineProvider();
     return _instance;
   }
 
-  Future<List<LatLng>> getPolylineBetweenCoordinates({
+  Future<PolylineResult> getPolylineBetweenCoordinates({
     required LatLng origin,
     required LatLng destination,
     List<LatLng>? wayPoints,
   }) {
-    Future<List<LatLng>> futureListLatLng = polylinePoints
+    PointLatLng originPoint = PointLatLng(
+      origin.latitude,
+      origin.longitude,
+    );
+    PointLatLng destinationPoint = PointLatLng(
+      destination.latitude,
+      destination.longitude,
+    );
+
+    List<PolylineWayPoint> wayPointsTrip =
+        (wayPoints != null && wayPoints.isNotEmpty)
+            ? wayPoints.map((wayPoint) {
+                return PolylineWayPoint(
+                  location: '${wayPoint.latitude},${wayPoint.longitude}',
+                  stopOver: false,
+                );
+              }).toList()
+            : [];
+
+    print(originPoint.toString());
+    print(destinationPoint.toString());
+    print(wayPointsTrip.toString());
+
+    Future<PolylineResult> futureListLatLng = PolylinePoints()
         .getRouteBetweenCoordinates(
       ConfigEnv.apiKeyDirections,
-      PointLatLng(
-        origin.latitude,
-        origin.longitude,
-      ),
-      PointLatLng(
-        destination.latitude,
-        destination.longitude,
-      ),
-      wayPoints: (wayPoints != null && wayPoints.isNotEmpty)
-          ? wayPoints.map((wayPoint) {
-              return PolylineWayPoint(
-                  location: '${wayPoint.latitude},${wayPoint.longitude}');
-            }).toList()
-          : [],
+      originPoint,
+      destinationPoint,
+      wayPoints: wayPointsTrip,
       optimizeWaypoints: true,
       travelMode: TravelMode.driving,
     )
@@ -40,12 +51,7 @@ class PolylineProvider {
       if (polylineResult.errorMessage?.isNotEmpty == true) {
         return throw Exception(polylineResult.errorMessage);
       }
-      return polylineResult.points
-          .map((PointLatLng point) => LatLng(
-                point.latitude,
-                point.longitude,
-              ))
-          .toList();
+      return polylineResult;
     }, onError: (dynamic error) {
       return throw Exception(error.toString());
     });
@@ -53,9 +59,18 @@ class PolylineProvider {
     return futureListLatLng;
   }
 
+  List<LatLng> convertPointToLatLng(List<PointLatLng> points) {
+    return points
+        .map((PointLatLng point) => LatLng(
+              point.latitude,
+              point.longitude,
+            ))
+        .toList();
+  }
+
   List<LatLng> decodePolyline(String encodedString) {
     List<PointLatLng> listPointLatLng =
-        polylinePoints.decodePolyline(encodedString);
+        PolylinePoints().decodePolyline(encodedString);
     return listPointLatLng
         .map((PointLatLng point) => LatLng(point.latitude, point.longitude))
         .toList();

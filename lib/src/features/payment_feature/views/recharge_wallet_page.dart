@@ -28,7 +28,7 @@ class _RechargeWalletPageState extends State<RechargeWalletPage> {
     return ScaffoldScrollWidget(
       title: 'Recargar Monedero',
       footer: ElevatedButtonWidget(
-        title: 'Recargar S/. 9.00',
+        title: 'Recargar S/ 9.00',
         onPressed: (groupValue > 0) ? () {} : null,
       ),
       children: [

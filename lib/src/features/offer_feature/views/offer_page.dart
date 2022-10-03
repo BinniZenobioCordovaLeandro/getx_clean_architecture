@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
@@ -21,7 +20,6 @@ import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip
 import 'package:pickpointer/src/features/offer_feature/views/widgets/offer_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/start_trip_card_widget.dart';
-import 'package:pickpointer/src/features/route_feature/views/widgets/offer_card_widget.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {

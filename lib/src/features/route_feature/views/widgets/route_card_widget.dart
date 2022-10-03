@@ -8,12 +8,28 @@ import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 class RouteCardWidget extends StatelessWidget {
   final String? to;
   final String? from;
+  final double? meters;
+  final Duration? duration;
 
   const RouteCardWidget({
     Key? key,
     this.to,
     this.from,
+    this.meters,
+    this.duration,
   }) : super(key: key);
+
+  String? getDistanceString(double meters) {
+    if (meters > 1000) {
+      return '${(meters / 1000).toStringAsFixed(2)} Kilometros';
+    }
+    return '${meters.toStringAsFixed(2)} metros';
+  }
+
+  String? getDurationString(Duration duration) {
+    if (duration.inMinutes > 60) return '${duration.inHours} horas';
+    return '${duration.inMinutes} minutos';
+  }
 
   Widget child(BuildContext context) {
     return CardWidget(
@@ -67,6 +83,24 @@ class RouteCardWidget extends StatelessWidget {
                   ],
                 ),
               ),
+              if (duration != null)
+                SizedBox(
+                  width: double.infinity,
+                  child: WrapWidget(
+                    children: [
+                      TextWidget(
+                        'Tiempo: ${getDurationString(duration!)}',
+                        textAlign: TextAlign.justify,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      TextWidget(
+                        'Distancia: ${getDistanceString(meters!)}',
+                        textAlign: TextAlign.justify,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),

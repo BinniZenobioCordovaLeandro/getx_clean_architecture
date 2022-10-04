@@ -42,6 +42,19 @@ class _SignInUserPageState extends State<SignInUserPage> {
                     });
                   },
                 ),
+                ProgressStateButtonWidget(
+                  state: signInController.facebookIsLoading.value
+                      ? ButtonState.loading
+                      : ButtonState.success,
+                  color: Colors.white,
+                  background: const Color(0xFF3B5998),
+                  success: 'CONTINUAR CON FACEBOOK',
+                  onPressed: () {
+                    signInController.signInWithFacebook().then((boolean) {
+                      if (boolean) Navigator.of(context).pop(true);
+                    });
+                  },
+                ),
               ],
             ),
           ),

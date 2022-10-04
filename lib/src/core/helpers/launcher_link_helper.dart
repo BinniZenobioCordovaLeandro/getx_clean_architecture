@@ -6,10 +6,16 @@ class LauncherLinkHelper {
   LauncherLinkHelper({
     required String url,
     bool? isPhone,
+    bool? isMail,
   }) {
     if (isPhone == true) {
       _uri = Uri(
         scheme: 'tel',
+        path: url,
+      );
+    } else if (isPhone == true) {
+      _uri = Uri(
+        scheme: 'mailto',
         path: url,
       );
     } else {
@@ -71,6 +77,10 @@ class LauncherLinkHelper {
   }
 
   Future<void> makePhoneCall() async {
+    await launchUrl(_uri);
+  }
+
+  Future<void> sendEmail() async {
     await launchUrl(_uri);
   }
 }

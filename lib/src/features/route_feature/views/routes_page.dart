@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
+import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
+import 'package:pickpointer/src/core/widgets/expandable_fab_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
@@ -127,6 +129,39 @@ class RoutesPage extends StatelessWidget {
 
     return Obx(() {
       return Scaffold(
+        floatingActionButton: ExpandableFab(
+          distance: 80.0,
+          children: [
+            ActionButton(
+              icon: const Icon(Icons.mail_outline_outlined),
+              onPressed: () {
+                LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
+                  url: 'pickpointer@gmail.com',
+                  isMail: true,
+                );
+                launcherLinkHelper.sendEmail();
+              },
+            ),
+            ActionButton(
+              icon: const Icon(Icons.facebook_outlined),
+              onPressed: () {
+                LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
+                  url: 'https://m.me/100085260664181',
+                );
+                launcherLinkHelper.launchInBrowser();
+              },
+            ),
+            ActionButton(
+              icon: const Icon(Icons.tiktok_outlined),
+              onPressed: () {
+                LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
+                  url: 'https://tiktok.com/@pickpointer',
+                );
+                launcherLinkHelper.launchInBrowser();
+              },
+            ),
+          ],
+        ),
         appBar: AppBarWidget(
           title: 'PickPointer',
           actions: [

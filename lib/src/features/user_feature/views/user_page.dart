@@ -40,6 +40,11 @@ class _UserPageState extends State<UserPage> {
             RankWidget(
               value: userController.rank.value,
             ),
+            if (userController.observation.value.isNotEmpty)
+              CardAlertWidget(
+                title: 'HEY!',
+                message: userController.observation.value,
+              ),
             TextFieldWidget(
               labelText: 'Nombre Completo',
               initialValue: userController.name.value,

@@ -81,9 +81,6 @@ class FirebaseAuthenticationProvider {
         .then((UserCredential userCredential) {
       print('userCredential ${userCredential.toString()}');
       return userCredential.user?.uid ?? null;
-    }).catchError((error) {
-      print('error ${error.toString()}');
-      return error;
     });
     return futureString;
   }

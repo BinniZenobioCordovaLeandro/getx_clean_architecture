@@ -167,8 +167,15 @@ class UserController extends GetxController {
         isLoadingSave.value = false;
       }
     }).catchError((error) {
-      errorMessage.value =
-          'ERROR, No te logramos enviar el mensaje.\nVerifica tu conexion a internet e intenta más tarde.';
+      if (error.code == 'invalid-verification-code') {
+        errorMessage.value =
+            'El CODIGO usado es INVALIDO. Por favor reenvia el codigo SMS y asegurate de usar el ULTIMO recibido.';
+      } else if (error.code == 'invalid-verification-id') {
+        errorMessage.value = 'Estas usando un codigo que no es el ULTIMO.';
+      } else {
+        errorMessage.value =
+            'ERROR, No te logramos enviar el mensaje.\nVerifica tu número, tu conexion a internet e intenta más tarde.';
+      }
       isLoadingSave.value = false;
     });
   }

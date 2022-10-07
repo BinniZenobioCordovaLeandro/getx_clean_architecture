@@ -25,6 +25,8 @@ class UserModel implements AbstractUserEntity {
   @override
   final String? rank;
   @override
+  final String? observation;
+  @override
   final String? isDriver;
 
   const UserModel({
@@ -39,6 +41,7 @@ class UserModel implements AbstractUserEntity {
     this.carColor,
     this.phoneNumber,
     this.rank,
+    this.observation,
     this.isDriver,
   });
 
@@ -54,6 +57,7 @@ class UserModel implements AbstractUserEntity {
         carColor: data['car_color'] as String?,
         phoneNumber: data['phone_number'] as String?,
         rank: data['rank'] as String?,
+        observation: data['observation'] as String?,
         isDriver: data['is_driver'] as String?,
       );
 
@@ -69,6 +73,7 @@ class UserModel implements AbstractUserEntity {
         'car_color': carColor,
         'phone_number': phoneNumber,
         'rank': rank,
+        'observation': observation,
         'is_driver': isDriver,
       };
 
@@ -90,6 +95,7 @@ class UserModel implements AbstractUserEntity {
     String? carColor,
     String? phoneNumber,
     String? rank,
+    String? observation,
     String? isDriver,
   }) {
     return UserModel(
@@ -104,6 +110,7 @@ class UserModel implements AbstractUserEntity {
       carColor: carColor ?? this.carColor,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       rank: rank ?? this.rank,
+      observation: observation ?? this.observation,
       isDriver: isDriver ?? this.isDriver,
     );
   }
@@ -122,6 +129,7 @@ class UserModel implements AbstractUserEntity {
         carPhoto,
         phoneNumber,
         rank,
+        observation,
         isDriver,
       ];
 }

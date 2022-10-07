@@ -46,6 +46,7 @@ class UserController extends GetxController {
   var timerTracker = 60.obs;
 
   var userId = ''.obs;
+  var observation = ''.obs;
   var name = ''.obs;
   var email = ''.obs;
   var avatar = ''.obs;
@@ -104,6 +105,7 @@ class UserController extends GetxController {
             .call(userId: abstractSessionEntity.idUsers!)!
             .then((AbstractUserEntity abstractUserEntity) => {
                   userId.value = abstractSessionEntity.idUsers!,
+                  observation.value = abstractUserEntity.observation ?? '',
                   name.value = abstractUserEntity.name ?? '',
                   email.value = abstractUserEntity.email ?? '',
                   avatar.value = abstractUserEntity.avatar ?? '',

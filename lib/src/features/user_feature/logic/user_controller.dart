@@ -46,7 +46,6 @@ class UserController extends GetxController {
   var timerTracker = 60.obs;
 
   var userId = ''.obs;
-  var observation = ''.obs;
   var name = ''.obs;
   var email = ''.obs;
   var avatar = ''.obs;
@@ -55,9 +54,13 @@ class UserController extends GetxController {
   var carPhoto = ''.obs;
   var carModel = ''.obs;
   var carColor = ''.obs;
+  var carDescription = ''.obs;
   var phoneNumber = ''.obs;
+  var licensePhoto = ''.obs;
+  var license = ''.obs;
   var phoneCode = ''.obs;
   var rank = 5.0.obs;
+  var observation = ''.obs;
   var isDriver = false.obs;
   var isDriverVerified = false.obs;
   var policies = false.obs;
@@ -114,7 +117,11 @@ class UserController extends GetxController {
                   carPhoto.value = abstractUserEntity.carPhoto ?? '',
                   carModel.value = abstractUserEntity.carModel ?? '',
                   carColor.value = abstractUserEntity.carColor ?? '',
+                  carDescription.value =
+                      abstractUserEntity.carDescription ?? '',
                   phoneNumber.value = abstractUserEntity.phoneNumber ?? '',
+                  licensePhoto.value = abstractUserEntity.licensePhoto ?? '',
+                  license.value = abstractUserEntity.license ?? '',
                   rank.value = double.parse(abstractUserEntity.rank ?? '5.0'),
                   isDriver.value = abstractUserEntity.isDriver == '1' ||
                       abstractUserEntity.isDriver == '2',
@@ -270,6 +277,8 @@ class UserController extends GetxController {
             await filePathNormalizer(avatar.value, name: 'avatar');
         String carPhotoNormalized =
             await filePathNormalizer(carPhoto.value, name: 'carPhoto');
+        String licensePhotoNormalized =
+            await filePathNormalizer(licensePhoto.value, name: 'licensePhoto');
 
         final UserModel _userModel = UserModel(
           id: userId.value,
@@ -281,8 +290,12 @@ class UserController extends GetxController {
           carPhoto: carPhotoNormalized,
           carModel: carModel.value,
           carColor: carColor.value,
+          carDescription: carDescription.value,
           phoneNumber: phoneNumber.value,
+          licensePhoto: licensePhotoNormalized,
+          license: license.value,
           rank: rank.value.toString(),
+          observation: observation.value,
           isDriver: isDriverVerified.value
               ? '1'
               : isDriver.value

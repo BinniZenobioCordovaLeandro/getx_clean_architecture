@@ -164,6 +164,45 @@ class _UserPageState extends State<UserPage> {
                 },
                 onChanged: (value) => userController.carColor.value = value,
               ),
+            if (userController.isDriver.value)
+              TextFieldWidget(
+                labelText: 'Descripcion de Carro',
+                initialValue: userController.carDescription.value,
+                helperText:
+                    'Ej. Camioneta 4x4, 4 pasajeros, extra confort, aire acondicionado',
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es requerido';
+                  }
+                  return null;
+                },
+                onChanged: (value) =>
+                    userController.carDescription.value = value,
+              ),
+            if (userController.isDriver.value)
+              const SizedBox(
+                width: double.infinity,
+                child: TextWidget('Foto de Licencia'),
+              ),
+            if (userController.isDriver.value)
+              PickImageCard(
+                urlSvgOrImage: userController.licensePhoto.value,
+                onChanged: (String? string) {
+                  userController.licensePhoto.value = string!;
+                },
+              ),
+            if (userController.isDriver.value)
+              TextFieldWidget(
+                labelText: 'Licencia de conducir',
+                initialValue: userController.license.value,
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es requerido';
+                  }
+                  return null;
+                },
+                onChanged: (value) => userController.license.value = value,
+              ),
             const SizedBox(
               width: double.infinity,
               child: SwitchWidget(

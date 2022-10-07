@@ -21,7 +21,13 @@ class UserModel implements AbstractUserEntity {
   @override
   final String? carColor;
   @override
+  final String? carDescription;
+  @override
   final String? phoneNumber;
+  @override
+  final String? licensePhoto;
+  @override
+  final String? license;
   @override
   final String? rank;
   @override
@@ -39,7 +45,10 @@ class UserModel implements AbstractUserEntity {
     this.carPhoto,
     this.carModel,
     this.carColor,
+    this.carDescription,
     this.phoneNumber,
+    this.licensePhoto,
+    this.license,
     this.rank,
     this.observation,
     this.isDriver,
@@ -55,7 +64,10 @@ class UserModel implements AbstractUserEntity {
         carPhoto: data['car_photo'] as String?,
         carModel: data['car_model'] as String?,
         carColor: data['car_color'] as String?,
+        carDescription: data['car_description'] as String?,
         phoneNumber: data['phone_number'] as String?,
+        licensePhoto: data['license_photo'] as String?,
+        license: data['license'] as String?,
         rank: data['rank'] as String?,
         observation: data['observation'] as String?,
         isDriver: data['is_driver'] as String?,
@@ -71,7 +83,10 @@ class UserModel implements AbstractUserEntity {
         'car_photo': carPhoto,
         'car_model': carModel,
         'car_color': carColor,
+        'car_description': carDescription,
         'phone_number': phoneNumber,
+        'license_photo': licensePhoto,
+        'license': license,
         'rank': rank,
         'observation': observation,
         'is_driver': isDriver,
@@ -93,7 +108,10 @@ class UserModel implements AbstractUserEntity {
     String? carPhoto,
     String? carModel,
     String? carColor,
+    String? carDescription,
     String? phoneNumber,
+    String? licensePhoto,
+    String? license,
     String? rank,
     String? observation,
     String? isDriver,
@@ -108,7 +126,10 @@ class UserModel implements AbstractUserEntity {
       carPhoto: carPhoto ?? this.carPhoto,
       carModel: carModel ?? this.carModel,
       carColor: carColor ?? this.carColor,
+      carDescription: carDescription ?? this.carDescription,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      licensePhoto: licensePhoto ?? this.licensePhoto,
+      license: license ?? this.license,
       rank: rank ?? this.rank,
       observation: observation ?? this.observation,
       isDriver: isDriver ?? this.isDriver,
@@ -127,7 +148,12 @@ class UserModel implements AbstractUserEntity {
         document,
         carPlate,
         carPhoto,
+        carModel,
+        carColor,
+        carDescription,
         phoneNumber,
+        licensePhoto,
+        license,
         rank,
         observation,
         isDriver,

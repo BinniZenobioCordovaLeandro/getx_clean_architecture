@@ -84,6 +84,8 @@ class UserController extends GetxController {
 
   startTimer() {
     const second = Duration(seconds: 1);
+    countDownTimer?.cancel();
+    timerTracker.value = timerResetValue;
     countDownTimer = Timer.periodic(second, (timer) {
       if (timerTracker.value == 0) {
         timer.cancel();

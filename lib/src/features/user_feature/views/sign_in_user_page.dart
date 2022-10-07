@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/user_feature/logic/sign_in_controller.dart';
+import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class SignInUserPage extends StatefulWidget {
@@ -38,7 +40,17 @@ class _SignInUserPageState extends State<SignInUserPage> {
                   success: 'CONTINUAR CON GOOGLE',
                   onPressed: () {
                     signInController.signInWithGoogle().then((boolean) {
-                      if (boolean) Navigator.of(context).pop(true);
+                      if (boolean) {
+                        GetxSnackbarWidget(
+                          title: 'ACTUALIZA TU PERFIL ;)',
+                          subtitle:
+                              'Por favor agrega y verifica tu número de celular.',
+                        );
+                        Get.to(
+                          () => const UserPage(),
+                          arguments: {},
+                        );
+                      }
                     });
                   },
                 ),
@@ -51,7 +63,17 @@ class _SignInUserPageState extends State<SignInUserPage> {
                   success: 'CONTINUAR CON FACEBOOK',
                   onPressed: () {
                     signInController.signInWithFacebook().then((boolean) {
-                      if (boolean) Navigator.of(context).pop(true);
+                      if (boolean) {
+                        GetxSnackbarWidget(
+                          title: 'ACTUALIZA TU PERFIL ;)',
+                          subtitle:
+                              'Por favor agrega y verifica tu número de celular.',
+                        );
+                        Get.to(
+                          () => const UserPage(),
+                          arguments: {},
+                        );
+                      }
                     });
                   },
                 ),

@@ -14,7 +14,8 @@ class FirebaseAuthenticationProvider {
   Future<bool> sendPhoneAuth({
     required String phoneNumber,
     Function? onSent,
-    Function? onVerified,
+    Function? onAutoRetrieval,
+    Function(PhoneAuthCredential credential)? onVerified,
     final Function(String? identifier)? onError,
   }) async {
     try {
@@ -24,11 +25,14 @@ class FirebaseAuthenticationProvider {
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           print('credential ${credential.smsCode}, ${credential.signInMethod}');
+          firebaseAuth.signInWithCredential(credential);
+          if (onVerified != null) onVerified(credential);
         },
         verificationFailed: (FirebaseAuthException e) {
           // e.code == 'invalid-phone-number' // 'The provided phone number is not valid.';
           // e.code == 'missing-client-identifier' // 'The user is missinf identified';
           // e.code == "too-many-requests" // 'Too many requests received';
+          print('e.code ${e.code}');
           if (onError != null) {
             onError(e.code);
           }
@@ -36,11 +40,13 @@ class FirebaseAuthenticationProvider {
         codeSent: (String verificationId, int? resendToken) async {
           print('codeSent.verificationId $verificationId');
           lastVerificationId = verificationId;
+          if (onSent != null) onSent();
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           // Auto-resolution timed out...
           print('codeAutoRetrievalTimeout.verificationId $verificationId');
           lastVerificationId = verificationId;
+          if (onAutoRetrieval != null) onAutoRetrieval();
         },
       );
       return Future.delayed(
@@ -48,6 +54,7 @@ class FirebaseAuthenticationProvider {
         () => true,
       );
     } catch (error) {
+      print(error);
       return Future.error(error);
     }
   }
@@ -73,7 +80,10 @@ class FirebaseAuthenticationProvider {
         .signInWithCredential(credential)
         .then((UserCredential userCredential) {
       print('userCredential ${userCredential.toString()}');
-      return '${userCredential.user}';
+      return userCredential.user?.uid ?? null;
+    }).catchError((error) {
+      print('error ${error.toString()}');
+      return error;
     });
     return futureString;
   }

@@ -1,7 +1,9 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
-import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
@@ -28,12 +30,20 @@ class UserController extends GetxController {
   final FirebaseAuthenticationProvider? firebaseAuthenticationProvider =
       FirebaseAuthenticationProvider.getInstance();
 
-  final formKey = GlobalKey<FormState>();
-  final formCodeKey = GlobalKey<FormState>();
+  Timer? countDownTimer;
+
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>(debugLabel: 'formKey_userPage');
+  final GlobalKey<FormState> formCodeKey =
+      GlobalKey<FormState>(debugLabel: 'formCodeKey_userPage');
 
   var isLoadingData = false.obs;
+  var message = ''.obs;
   var errorMessage = ''.obs;
   var isLoadingSave = false.obs;
+
+  var timerResetValue = 60;
+  var timerTracker = 60.obs;
 
   var userId = ''.obs;
   var name = ''.obs;
@@ -66,6 +76,23 @@ class UserController extends GetxController {
   final GetUserUsecase _getUserUsecase = GetUserUsecase(
     abstractUserRepository: FirebaseUserDatasource(),
   );
+
+  stopTimer() {
+    countDownTimer?.cancel();
+    timerTracker.value = timerResetValue;
+  }
+
+  startTimer() {
+    const second = Duration(seconds: 1);
+    countDownTimer = Timer.periodic(second, (timer) {
+      if (timerTracker.value == 0) {
+        timer.cancel();
+        timerTracker.value = timerResetValue;
+      } else {
+        timerTracker.value--;
+      }
+    });
+  }
 
   getUserData() {
     isLoadingData.value = true;
@@ -103,6 +130,7 @@ class UserController extends GetxController {
   }) async {
     RegExp regExpHttp = RegExp('^http');
     if (path != null && !regExpHttp.hasMatch(path)) {
+      message.value = 'Cargando, Imagen de $name ..';
       String? urlPath = await storageProvider?.putFileFromPath(
         path,
         directory: userId.value,
@@ -113,6 +141,13 @@ class UserController extends GetxController {
     return path as String;
   }
 
+  resendCode() {
+    startTimer();
+    sendVerificationCode(
+      phoneNumber: phoneNumber.value,
+    );
+  }
+
   verifyCode({
     required String smsCode,
   }) {
@@ -121,14 +156,19 @@ class UserController extends GetxController {
     firebaseAuthenticationProvider!
         .verifyPhoneAuth(smsCode: smsCode)
         .then((String? user) {
-      if (user != null) {
+      if (user != null && user.isNotEmpty) {
+        isLoadingSave.value = true;
+        message.value =
+            'Perfecto!, ahora estamos procesando tu información, espera...';
         updateUserData();
       } else {
+        errorMessage.value =
+            'El CODIGO no es valido y expiro,\nTe enviaremos uno NUEVO, espera... ${timerTracker.value} segundos';
         isLoadingSave.value = false;
       }
     }).catchError((error) {
       errorMessage.value =
-          'El CODIGO no es valido, verifica tu número ${phoneNumber.value}, o intenta más tarde.';
+          'ERROR, No te logramos enviar el mensaje.\nVerifica tu conexion a internet e intenta más tarde.';
       isLoadingSave.value = false;
     });
   }
@@ -137,29 +177,50 @@ class UserController extends GetxController {
     required String phoneNumber,
   }) {
     isLoadingSave.value = true;
+    errorMessage.value = '';
+    message.value = '';
     Future<bool> futureBool = firebaseAuthenticationProvider!
         .sendPhoneAuth(
-            phoneNumber: phoneNumber,
-            onError: (String? identifier) {
-              switch (identifier) {
-                case 'invalid-phone-number':
-                  errorMessage.value =
-                      'Ingresaste un número de telefono no valido.';
-                  break;
-                case 'missing-client-identifier':
-                  errorMessage.value =
-                      'Tienes que superar el CAPTCHA, vuelve atras y reintenta.';
-                  break;
-                case 'too-many-requests':
-                  errorMessage.value =
-                      'Intenta más tarde, Realizaste demasiados intentos fallidos.';
-                  break;
-                default:
-                  errorMessage.value =
-                      'Intenta más tarde, presentamos un inconveniente al tratar de valid.';
-              }
-              isLoadingSave.value = false;
-            })
+      phoneNumber: phoneNumber,
+      onError: (String? identifier) {
+        switch (identifier) {
+          case 'invalid-phone-number':
+            errorMessage.value = 'Ingresaste un número de telefono no valido.';
+            break;
+          case 'missing-client-identifier':
+            errorMessage.value =
+                'Tienes que superar el CAPTCHA, vuelve atras y reintenta.';
+            break;
+          case 'too-many-requests':
+            errorMessage.value =
+                'Intenta más tarde, realizaste demasiados intentos fallidos. Vuelve en 30min o intenta con otro número.';
+            break;
+          default:
+            errorMessage.value =
+                'Verifica tu conexion a internet, e intenta más tarde.';
+        }
+        stopTimer();
+        isLoadingSave.value = false;
+      },
+      onSent: () {
+        isLoadingSave.value = false;
+        errorMessage.value = '';
+        message.value =
+            'Te hemos enviado el código de verificación al número $phoneNumber';
+        startTimer();
+      },
+      onAutoRetrieval: () {
+        errorMessage.value = '';
+        message.value =
+            'Te enviamos un nuevo codigo, a tu número $phoneNumber . Verifica bien y usa el ultimo.';
+        startTimer();
+      },
+      onVerified: (PhoneAuthCredential credential) {
+        errorMessage.value = '';
+        message.value =
+            'Número $phoneNumber verificado!,\nEspera un instante a que terminemos de cargar los datos...';
+      },
+    )
         .then((bool boolean) {
       isLoadingSave.value = false;
       return boolean;
@@ -198,6 +259,7 @@ class UserController extends GetxController {
             await filePathNormalizer(avatar.value, name: 'avatar');
         String carPhotoNormalized =
             await filePathNormalizer(carPhoto.value, name: 'carPhoto');
+
         final UserModel _userModel = UserModel(
           id: userId.value,
           name: name.value,
@@ -216,6 +278,8 @@ class UserController extends GetxController {
                   ? '2'
                   : '0', // TODO: only can set 1 (isDriver) from DataBase
         );
+
+        message.value = 'Actualizando, datos de perfil, espera...';
         _updateUserUsecase
             .call(abstractUserEntity: _userModel)!
             .then((AbstractUserEntity abstractUserEntity) {

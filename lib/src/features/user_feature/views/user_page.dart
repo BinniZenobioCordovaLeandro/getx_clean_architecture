@@ -8,6 +8,7 @@ import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/rank_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
 import 'package:pickpointer/src/core/widgets/switch_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
@@ -190,6 +191,9 @@ class _UserPageState extends State<UserPage> {
                     if (boolean == true) {
                       ModalBottomSheetHelper(
                         context: context,
+                        complete: () {
+                          userController.stopTimer();
+                        },
                         title: 'PickPointer!',
                         child: Obx(() {
                           return FormWidget(
@@ -202,11 +206,20 @@ class _UserPageState extends State<UserPage> {
                                       const EdgeInsets.symmetric(vertical: 8.0),
                                   child: WrapWidget(
                                     children: [
-                                      SizedBox(
-                                        child: TextWidget(
-                                          'Te hemos enviado el código de verificación al número ${userController.phoneNumber.value}',
+                                      if (userController
+                                          .errorMessage.value.isEmpty)
+                                        SizedBox(
+                                          child: TextWidget(
+                                            userController.message.value,
+                                          ),
                                         ),
-                                      ),
+                                      if (userController
+                                          .errorMessage.value.isNotEmpty)
+                                        CardAlertWidget(
+                                          title: 'HEY!',
+                                          message:
+                                              userController.errorMessage.value,
+                                        ),
                                       SizedBox(
                                         child: TextFieldWidget(
                                           labelText: 'Codigo de verificación',
@@ -223,12 +236,22 @@ class _UserPageState extends State<UserPage> {
                                               .phoneCode.value = value,
                                         ),
                                       ),
-                                      if (userController
-                                          .errorMessage.value.isNotEmpty)
-                                        CardAlertWidget(
-                                          title: 'HEY!',
-                                          message:
-                                              userController.errorMessage.value,
+                                      if (!userController.isLoadingSave.value)
+                                        SizedBox(
+                                          child: TextButtonWidget(
+                                            title: userController
+                                                        .timerTracker.value !=
+                                                    userController
+                                                        .timerResetValue
+                                                ? 'Reenviar código en ${userController.timerTracker.value} seg.'
+                                                : 'Reenviar código',
+                                            onPressed: (userController
+                                                        .timerTracker.value !=
+                                                    userController
+                                                        .timerResetValue)
+                                                ? null
+                                                : userController.resendCode,
+                                          ),
                                         ),
                                       SizedBox(
                                         child: ProgressStateButtonWidget(
@@ -259,6 +282,9 @@ class _UserPageState extends State<UserPage> {
                         }),
                       );
                     }
+                  }).catchError((error) {
+                    print('error');
+                    print(error);
                   });
                 }
               },

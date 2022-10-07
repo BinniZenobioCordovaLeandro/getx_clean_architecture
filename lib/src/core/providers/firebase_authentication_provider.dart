@@ -5,6 +5,7 @@ class FirebaseAuthenticationProvider {
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   static String? lastVerificationId;
+  static int? lastResendToken;
 
   static FirebaseAuthenticationProvider? getInstance() {
     _instance ??= FirebaseAuthenticationProvider();
@@ -22,6 +23,7 @@ class FirebaseAuthenticationProvider {
       print('sendPhoneAuth phoneNumber $phoneNumber');
       firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
+        forceResendingToken: lastResendToken,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           print('credential ${credential.smsCode}, ${credential.signInMethod}');
@@ -40,6 +42,7 @@ class FirebaseAuthenticationProvider {
         codeSent: (String verificationId, int? resendToken) async {
           print('codeSent.verificationId $verificationId');
           lastVerificationId = verificationId;
+          lastResendToken = resendToken;
           if (onSent != null) onSent();
         },
         codeAutoRetrievalTimeout: (String verificationId) {

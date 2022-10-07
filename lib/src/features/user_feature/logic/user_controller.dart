@@ -200,7 +200,7 @@ class UserController extends GetxController {
             break;
           case 'too-many-requests':
             errorMessage.value =
-                'Intenta más tarde, realizaste demasiados intentos fallidos. Vuelve en 30min o intenta con otro número.';
+                'Intenta más tarde, realizaste demasiados intentos fallidos. Vuelve en 1 hora o intenta con otro número.';
             break;
           default:
             errorMessage.value =

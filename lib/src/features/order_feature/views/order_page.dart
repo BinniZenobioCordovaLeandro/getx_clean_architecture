@@ -19,6 +19,7 @@ import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/order_feature/logic/order_controller.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/call_card_widget.dart';
+import 'package:pickpointer/src/features/order_feature/views/widgets/car_state_card_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/messages_box_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/order_card_widget.dart';
 import 'package:pickpointer/src/features/order_feature/views/widgets/popup_marker_taxi_widget.dart';
@@ -166,7 +167,7 @@ class _OrderPageState extends State<OrderPage> {
                               orderController.userPosition.value,
                             ],
                             strokeWidth: 5,
-                            color: Colors.purple,
+                            color: Colors.purple.withOpacity(0),
                             isDotted: true,
                           ),
                         ],
@@ -282,6 +283,8 @@ class _OrderPageState extends State<OrderPage> {
                       routeFrom: orderController.routeFrom.value,
                       userPickPointLat: orderController.userPickPointLat.value,
                       userPickPointLng: orderController.userPickPointLng.value,
+                      count: orderController.orderCount.value,
+                      total: orderController.orderTotal.value,
                     ),
                   ),
                 ),
@@ -292,20 +295,33 @@ class _OrderPageState extends State<OrderPage> {
                 right: 0,
                 child: SafeAreaWidget(
                   child: FractionallySizedBoxWidget(
-                    child: CallCardWidget(
-                        avatarUrl: orderController.driverAvatar.value,
-                        name: orderController.driverName.value,
-                        carPhoto: orderController.driverCarPhoto.value,
-                        carModel: orderController.driverCarModel.value,
-                        carPlate: orderController.driverCarPlate.value,
-                        onPressed: () {
-                          LauncherLinkHelper launcherLinkHelper =
-                              LauncherLinkHelper(
-                            url: orderController.driverPhoneNumber.value,
-                            isPhone: true,
-                          );
-                          launcherLinkHelper.makePhoneCall();
-                        }),
+                    child: WrapWidget(
+                      spacing: 2,
+                      runSpacing: 2,
+                      children: [
+                        if (orderController.taxiStateId.value.isNotEmpty)
+                          SizedBox(
+                            width: double.infinity,
+                            child: CarStateCardWidget(
+                              carStateId: orderController.taxiStateId.value,
+                            ),
+                          ),
+                        CallCardWidget(
+                            avatarUrl: orderController.driverAvatar.value,
+                            name: orderController.driverName.value,
+                            carPhoto: orderController.driverCarPhoto.value,
+                            carModel: orderController.driverCarModel.value,
+                            carPlate: orderController.driverCarPlate.value,
+                            onPressed: () {
+                              LauncherLinkHelper launcherLinkHelper =
+                                  LauncherLinkHelper(
+                                url: orderController.driverPhoneNumber.value,
+                                isPhone: true,
+                              );
+                              launcherLinkHelper.makePhoneCall();
+                            }),
+                      ],
+                    ),
                   ),
                 ),
               ),

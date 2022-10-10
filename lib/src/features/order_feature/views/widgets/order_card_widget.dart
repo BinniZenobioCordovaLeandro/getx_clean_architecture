@@ -10,6 +10,8 @@ class OrderCardWidget extends StatelessWidget {
   final String routeFrom;
   final String userPickPointLat;
   final String userPickPointLng;
+  final int? count;
+  final double? total;
 
   const OrderCardWidget({
     Key? key,
@@ -17,6 +19,8 @@ class OrderCardWidget extends StatelessWidget {
     required this.routeFrom,
     required this.userPickPointLat,
     required this.userPickPointLng,
+    this.count = 1,
+    this.total,
   }) : super(key: key);
 
   child(BuildContext context) {
@@ -28,6 +32,8 @@ class OrderCardWidget extends StatelessWidget {
             vertical: 16.0,
           ),
           child: WrapWidget(
+            spacing: 2,
+            runSpacing: 2,
             children: <Widget>[
               SizedBox(
                 width: double.infinity,
@@ -69,6 +75,35 @@ class OrderCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
+              if (total != null) const Divider(),
+              if (total != null)
+                SizedBox(
+                  width: double.infinity,
+                  child: Flex(
+                    direction: Axis.horizontal,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (count != null)
+                        TextWidget(
+                          '$count asiento(s)',
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                          textAlign: TextAlign.right,
+                        ),
+                      TextWidget(
+                        'Total: S/ ${total?.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.headline6?.copyWith(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                        textAlign: TextAlign.right,
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),

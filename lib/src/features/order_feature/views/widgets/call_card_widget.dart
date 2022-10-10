@@ -65,6 +65,7 @@ class CallCardWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
                           '$carModel',

@@ -76,9 +76,7 @@ class RouteController extends GetxController {
           polylineProvider!.convertPointToLatLng(polylineResult.points);
       polylineListLatLng.value = listLatLng;
       travelTime.value = polylineResult.duration;
-      // '${( / 60).toStringAsFixed(2)} horas de viaje';
       travelDistance.value = polylineResult.meters;
-      // '${(polylineResult.meters / 1000).toStringAsFixed(2)} Kilometros de viaje ';
       isLoading.value = false;
       return true;
     }).catchError((error) {

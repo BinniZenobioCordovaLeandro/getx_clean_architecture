@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:pickpointer/packages/offer_package/data/models/offer_order_model.dart';
+import 'package:pickpointer/packages/offer_package/domain/entities/offer_order_entity.dart';
 import 'package:pickpointer/packages/order_package/domain/entities/abstract_order_entity.dart';
 
 class OrderModel implements AbstractOrderEntity {
@@ -11,6 +13,8 @@ class OrderModel implements AbstractOrderEntity {
   final double? price;
   @override
   final int? count;
+  @override
+  final double? subtotal;
   @override
   final double? total;
   @override
@@ -57,7 +61,7 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final String? offerWayPoints;
   @override
-  final String? offerOrders;
+  final List<OfferOrderEntity>? offerOrders;
   @override
   final String? routeId;
   @override
@@ -110,6 +114,7 @@ class OrderModel implements AbstractOrderEntity {
     this.orderId,
     this.price,
     this.count,
+    this.subtotal,
     this.total,
     this.stateId,
     this.stateDescription,
@@ -163,6 +168,7 @@ class OrderModel implements AbstractOrderEntity {
         orderId: data['order_id'] as String?,
         price: double.parse('${data['price']}'),
         count: data['count'] as int?,
+        subtotal: double.parse('${data['subtotal']}'),
         total: double.parse('${data['total']}'),
         stateId: data['state_id'] as String?,
         stateDescription: data['state_description'] as String?,
@@ -185,7 +191,13 @@ class OrderModel implements AbstractOrderEntity {
         offerEndLat: data['offer_end_lat'] as String?,
         offerEndLng: data['offer_end_lng'] as String?,
         offerWayPoints: data['offer_way_points'] as String?,
-        offerOrders: data['offer_orders'] as String?,
+        offerOrders: List<OfferOrderEntity>.from(
+          data['offer_orders'] != null && data['offer_orders'].length > 10
+              ? (jsonDecode(data['offer_orders']) ?? []).map(
+                  (order) => OfferOrderModel.fromMap(order),
+                )
+              : [],
+        ),
         routeId: data['route_id'] as String?,
         routeTitle: data['route_title'] as String?,
         routeDescription: data['route_description'] as String?,
@@ -216,6 +228,7 @@ class OrderModel implements AbstractOrderEntity {
         'order_id': orderId,
         'price': price,
         'count': count,
+        'subtotal': subtotal,
         'total': total,
         'state_id': stateId,
         'state_description': stateDescription,
@@ -238,7 +251,14 @@ class OrderModel implements AbstractOrderEntity {
         'offer_end_lat': offerEndLat,
         'offer_end_lng': offerEndLng,
         'offer_way_points': offerWayPoints,
-        'offer_orders': offerOrders,
+        'offer_orders': (offerOrders != null && offerOrders!.isNotEmpty)
+            ? jsonEncode(
+                offerOrders
+                    ?.map((OfferOrderEntity order) =>
+                        (order as OfferOrderModel).toMap())
+                    .toList(),
+              )
+            : '[]',
         'route_id': routeId,
         'route_title': routeTitle,
         'route_description': routeDescription,
@@ -281,6 +301,7 @@ class OrderModel implements AbstractOrderEntity {
     String? orderId,
     double? price,
     int? count,
+    double? subtotal,
     double? total,
     String? stateId,
     String? stateDescription,
@@ -303,7 +324,7 @@ class OrderModel implements AbstractOrderEntity {
     String? offerEndLat,
     String? offerEndLng,
     String? offerWayPoints,
-    String? offerOrders,
+    List<OfferOrderEntity>? offerOrders,
     String? routeId,
     String? routeTitle,
     String? routeDescription,
@@ -333,6 +354,7 @@ class OrderModel implements AbstractOrderEntity {
       orderId: orderId ?? this.orderId,
       price: price ?? this.price,
       count: count ?? this.count,
+      subtotal: subtotal ?? this.subtotal,
       total: total ?? this.total,
       stateId: stateId ?? this.stateId,
       stateDescription: stateDescription ?? this.stateDescription,
@@ -392,6 +414,7 @@ class OrderModel implements AbstractOrderEntity {
       orderId,
       price,
       count,
+      subtotal,
       total,
       stateId,
       stateDescription,

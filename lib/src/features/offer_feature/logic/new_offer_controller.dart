@@ -101,12 +101,13 @@ class NewOfferController extends GetxController {
                 count: 0,
                 maxCount: maxCount.value,
                 price: price.value,
+                total: 0.0,
                 startLat: abstractRouteEntity.startLat,
                 startLng: abstractRouteEntity.startLng,
                 endLat: abstractRouteEntity.endLat,
                 endLng: abstractRouteEntity.endLng,
                 wayPoints: '[]',
-                orders: '[]',
+                orders: [],
                 stateId: '-1',
                 stateDescription:
                     'Esperando', // STATUS // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0

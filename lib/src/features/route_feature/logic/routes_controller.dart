@@ -98,24 +98,20 @@ class RoutesController extends GetxController {
   }
 
   getCurrentPosition() {
-    geolocatorProvider?.checkPermission().then((bool boolean) {
-      if (boolean) {
-        geolocatorProvider?.getCurrentPosition()?.then((Position? position) {
-          if (position != null) {
-            this.position.value = LatLng(
-              position.latitude,
-              position.longitude,
-            );
-            moveToMyLocation();
-            prepareStreamCurrentPosition();
-          }
-          isLoading.value = false;
-        });
-      } else {
-        isLoading.value = false;
+    geolocatorProvider?.getCurrentPosition()?.then((Position? position) {
+      if (position != null) {
+        this.position.value = LatLng(
+          position.latitude,
+          position.longitude,
+        );
+        moveToMyLocation();
+        prepareStreamCurrentPosition();
       }
-    }, onError: (dynamic error) {
+      isLoading.value = false;
+    }).catchError((error) {
+      print(error);
       errorMessage.value = error.toString();
+      print('error trying get position');
     });
   }
 

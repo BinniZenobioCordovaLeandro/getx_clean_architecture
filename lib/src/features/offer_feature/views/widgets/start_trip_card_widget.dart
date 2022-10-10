@@ -12,13 +12,11 @@ import 'package:progress_state_button/progress_button.dart';
 class StartTripCardWidget extends StatelessWidget {
   final bool isLoading;
   final Function()? onPressed;
-  final List<String>? customersAvatar;
 
   const StartTripCardWidget({
     Key? key,
     this.isLoading = false,
     this.onPressed,
-    this.customersAvatar,
   }) : super(key: key);
 
   child(BuildContext context) {
@@ -35,28 +33,8 @@ class StartTripCardWidget extends StatelessWidget {
                 '¡Esperando a que completen los pasajeros!',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              if (customersAvatar != null)
-                SingleChildScrollViewWidget(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (final avatar in customersAvatar!)
-                        Row(
-                          children: [
-                            CircleAvatarImageWidget(
-                              urlSvgOrImage: avatar,
-                            ),
-                            VerticalDivider(
-                              color: Theme.of(context).primaryColor,
-                              thickness: 2.00,
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
               TextWidget(
-                'Si decides iniciar YA!, no se buscaran mas pasajeros para tu viaje',
+                'Si decides iniciar YA!, no se buscaran mas pasajeros para tu viaje y TENDRAS QUE INICIAR EL VIAJE.',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               ProgressStateButtonWidget(

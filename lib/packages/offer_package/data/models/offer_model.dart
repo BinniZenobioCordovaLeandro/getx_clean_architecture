@@ -1,6 +1,7 @@
 import 'dart:convert';
-
+import 'package:pickpointer/packages/offer_package/data/models/offer_order_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
+import 'package:pickpointer/packages/offer_package/domain/entities/offer_order_entity.dart';
 
 class OfferModel implements AbstractOfferEntity {
   @override
@@ -12,6 +13,8 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final double? price;
   @override
+  final double? total;
+  @override
   final String? startLat;
   @override
   final String? startLng;
@@ -22,7 +25,7 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final String? wayPoints;
   @override
-  final String? orders;
+  final List<OfferOrderEntity>? orders;
   @override
   final String?
       stateId; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
@@ -80,6 +83,7 @@ class OfferModel implements AbstractOfferEntity {
     this.count,
     this.maxCount,
     this.price,
+    this.total,
     this.startLat,
     this.startLng,
     this.endLat,
@@ -117,13 +121,19 @@ class OfferModel implements AbstractOfferEntity {
         id: data['id'] as String?,
         count: data['count'] as int?,
         maxCount: data['max_count'] as int?,
-        price: double.parse('${data['price']}'),
+        price: double.tryParse('${data['price']}'),
+        total: double.tryParse('${data['total']}'),
         startLat: data['start_lat'] as String?,
         startLng: data['start_lng'] as String?,
         endLat: data['end_lat'] as String?,
         endLng: data['end_lng'] as String?,
         wayPoints: data['way_points'] as String?,
-        orders: data['orders'] as String?,
+        orders: List<OfferOrderEntity>.from(
+            data['orders'] != null && data['orders'].length > 10
+                ? (jsonDecode(data['orders'])).map(
+                    (order) => OfferOrderModel.fromMap(order),
+                  )
+                : []),
         stateId: data['state_id'] as String?,
         stateDescription: data['state_description'] as String?,
         userId: data['user_id'] as String?,
@@ -140,7 +150,7 @@ class OfferModel implements AbstractOfferEntity {
         routeId: data['route_id'] as String?,
         routeTitle: data['route_title'] as String?,
         routeDescription: data['route_description'] as String?,
-        routePrice: double.parse('${data['route_price']}'),
+        routePrice: double.tryParse('${data['route_price']}'),
         routeFrom: data['route_from'] as String?,
         routeTo: data['route_to'] as String?,
         routeStartLat: data['route_start_lat'] as String?,
@@ -156,12 +166,20 @@ class OfferModel implements AbstractOfferEntity {
         'count': count,
         'max_count': maxCount,
         'price': price,
+        'total': total,
         'start_lat': startLat,
         'start_lng': startLng,
         'end_lat': endLat,
         'end_lng': endLng,
         'way_points': wayPoints,
-        'orders': orders,
+        'orders': (orders != null && orders!.isNotEmpty)
+            ? jsonEncode(
+                orders
+                    ?.map((OfferOrderEntity order) =>
+                        (order as OfferOrderModel).toMap())
+                    .toList(),
+              )
+            : '[]',
         'state_id': stateId,
         'state_description': stateDescription,
         'user_id': userId,
@@ -200,12 +218,13 @@ class OfferModel implements AbstractOfferEntity {
     int? count,
     int? maxCount,
     double? price,
+    double? total,
     String? startLat,
     String? startLng,
     String? endLat,
     String? endLng,
     String? wayPoints,
-    String? orders,
+    List<OfferOrderEntity>? orders,
     String? stateId,
     String? stateDescription,
     String? userId,
@@ -237,6 +256,7 @@ class OfferModel implements AbstractOfferEntity {
       count: count ?? this.count,
       maxCount: maxCount ?? this.maxCount,
       price: price ?? this.price,
+      total: total ?? this.total,
       startLat: startLat ?? this.startLat,
       startLng: startLng ?? this.startLng,
       endLat: endLat ?? this.endLat,
@@ -281,6 +301,7 @@ class OfferModel implements AbstractOfferEntity {
       count,
       maxCount,
       price,
+      total,
       startLat,
       startLng,
       endLat,

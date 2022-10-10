@@ -8,13 +8,17 @@ import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 class OfferDescriptionCardWidget extends StatelessWidget {
   final String? to;
   final String? from;
-  final double? price;
+  final int? count;
+  final int? maxCount;
+  final double? total;
 
   const OfferDescriptionCardWidget({
     Key? key,
     this.to,
     this.from,
-    this.price,
+    this.count,
+    this.maxCount,
+    this.total,
   }) : super(key: key);
 
   Widget child(BuildContext context) {
@@ -47,15 +51,30 @@ class OfferDescriptionCardWidget extends StatelessWidget {
                   textAlign: TextAlign.justify,
                 ),
               ),
+              const Divider(),
               SizedBox(
                 width: double.infinity,
-                child: TextWidget(
-                  'Precio: S/ ${price?.toStringAsFixed(2)}',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                  textAlign: TextAlign.right,
+                child: Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextWidget(
+                      'Listo $count de $maxCount',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                      textAlign: TextAlign.right,
+                    ),
+                    TextWidget(
+                      'Total: S/ ${total?.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -33,8 +33,9 @@ export const handler = (event: any) => {
           // console.log("offerDocument : ", offerDocument);
 
           const requestQuantity = parseInt(orderRequest.count);
-          const counter = parseInt(offerDocument!.count);
-          const availableQuantity = parseInt(offerDocument!.max_count) - counter;
+          const currentCounter = parseInt(offerDocument!.count);
+          const currentTotal = parseFloat(offerDocument!.total);
+          const availableQuantity = parseInt(offerDocument!.max_count) - currentCounter;
           const maxCounter = parseInt(offerDocument!.max_count);
 
           // console.log("routeQuantity <= availableQuantity : ");
@@ -43,7 +44,7 @@ export const handler = (event: any) => {
           if (requestQuantity <= availableQuantity) {
           // STATUS
           // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
-            const newOfferCount = counter + requestQuantity;
+            const newOfferCount = currentCounter + requestQuantity;
             const newStatus = {state_id: "-1", state_description: "Esperando"};
 
             console.log("newOfferCount == max_counter", newOfferCount, " == ", maxCounter);
@@ -53,21 +54,23 @@ export const handler = (event: any) => {
             }
 
             // Update offer
-            const newData = {count: newOfferCount, updated_at: currentDate, way_points: "[]", orders: "[]"};
+            const newData = {count: newOfferCount, total: 0.0, updated_at: currentDate, way_points: "[]", orders: "[]"};
 
             const clientInformation = {
-              userId: orderRequest.user_id,
-              orderId: orderId,
-              fullName: orderRequest.user_name,
-              phoneNumber: orderRequest.userPhone,
+              user_id: orderRequest.user_id,
+              order_id: orderId,
+              full_name: orderRequest.user_name,
+              phone_number: orderRequest.user_phone,
               avatar: orderRequest.user_avatar ||
                 "https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png",
               count: requestQuantity,
-              pickPointLat: orderRequest.user_pick_point_lat,
-              pickPointLng: orderRequest.user_pick_point_lng,
-              dropPointLat: orderRequest.user_drop_point_lat,
-              dropPointLng: orderRequest.user_drop_point_lng,
-              tokenMessaging: orderRequest.user_token_messaging,
+              subtotal: orderRequest.subtotal,
+              total: orderRequest.total,
+              pick_point_lat: orderRequest.user_pick_point_lat,
+              pick_point_lng: orderRequest.user_pick_point_lng,
+              drop_point_lat: orderRequest.user_drop_point_lat,
+              drop_point_lng: orderRequest.user_drop_point_lng,
+              token_messaging: orderRequest.user_token_messaging,
             };
 
             const wayPoints = JSON.parse(offerDocument!.way_points);
@@ -78,6 +81,9 @@ export const handler = (event: any) => {
             const clientsInformation = JSON.parse(offerDocument!.orders);
             clientsInformation.push(clientInformation);
             newData.orders = JSON.stringify(clientsInformation);
+
+            const newTotal = currentTotal + clientInformation.total;
+            newData.total = newTotal;
 
             offersCollection
                 .doc(orderRequest.offer_id)
@@ -122,7 +128,7 @@ export const handler = (event: any) => {
                       sendNotificationMessage(orderRequest.driver_token_messaging, {
                         notification: {
                           title: `¡${requestQuantity} asiento${plural} vendido${plural}!`,
-                          body: `${clientInformation.fullName}, compro ${requestQuantity} asiento${plural}`,
+                          body: `${clientInformation.full_name}, compro ${requestQuantity} asiento${plural}`,
                           imageUrl: clientInformation.avatar,
                         },
                         data: {
@@ -137,9 +143,9 @@ export const handler = (event: any) => {
                       );
                       // message to clients, notify that the offer is in the way
                       clientsInformation.forEach((client: any) => {
-                        const orderId = client.orderId;
-                        const tokenMessaging = client.tokenMessaging;
-                        const fullName = client.fullName;
+                        const orderId = client.order_id;
+                        const tokenMessaging = client.token_messaging;
+                        const fullName = client.full_name;
 
                         sendNotificationMessage(tokenMessaging, {
                           notification: {

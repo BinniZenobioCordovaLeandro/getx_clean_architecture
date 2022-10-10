@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -66,10 +65,15 @@ class OrderController extends GetxController {
   var listWayPoints = <LatLng>[].obs;
   var distanceTaxi = 0.0.obs;
   var userPosition = LatLng(-12.0, -76.0).obs;
+
   var taxiPosition = LatLng(-12.0, -76.0).obs;
+  var taxiStateId =
+      ''.obs; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
 
   var orderId = ''.obs;
   var orderStateId = ''.obs;
+  var orderCount = 0.obs;
+  var orderTotal = 0.0.obs;
 
   var routeTo = ''.obs;
   var routeFrom = ''.obs;
@@ -121,8 +125,7 @@ class OrderController extends GetxController {
       vehicleId: '${abstractOrderEntity.driverCarPlate}',
     )
         .listen((AbstractVehicleEntity abstractVehicleEntity) {
-      print(
-          'taxiPosition: ${abstractVehicleEntity.latitude}, ${abstractVehicleEntity.longitude}');
+      taxiStateId.value = '${abstractVehicleEntity.stateId}';
       taxiPosition.value = LatLng(
         double.parse(abstractVehicleEntity.latitude!),
         double.parse(abstractVehicleEntity.longitude!),
@@ -174,6 +177,8 @@ class OrderController extends GetxController {
   void initialize(AbstractOrderEntity abstractOrderEntity) {
     orderId.value = abstractOrderEntity.id!;
     orderStateId.value = abstractOrderEntity.stateId!;
+    orderCount.value = abstractOrderEntity.count!;
+    orderTotal.value = abstractOrderEntity.total!;
     abstractOrderEntity = abstractOrderEntity;
     if (abstractOrderEntity.stateId == '1' ||
         abstractOrderEntity.stateId == '0') {

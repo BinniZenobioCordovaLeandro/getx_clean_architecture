@@ -28,9 +28,9 @@ export const handler = (event: any) => {
       if (offerDocument.state_id === "-1") {
         // message to clients, notify that the offer is in the way
         clientsInformation.forEach((client: any) => {
-          const orderId = client.orderId;
-          const tokenMessaging = client.tokenMessaging;
-          const fullName = client.fullName;
+          const orderId = client.order_id;
+          const tokenMessaging = client.token_messaging;
+          const fullName = client.full_name;
 
           ordersCollection.doc(orderId).update({
             ...newData,

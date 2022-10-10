@@ -202,6 +202,13 @@ class RoutesPage extends StatelessWidget {
                 color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
               ),
             ),
+            IconButton(
+              onPressed: () => routesController.moveToMyLocation(),
+              tooltip: 'Ir a mi ubicación',
+              icon: const Icon(
+                Icons.my_location,
+              ),
+            ),
           ],
         ),
         body: Stack(
@@ -289,18 +296,6 @@ class RoutesPage extends StatelessWidget {
                 right: 0,
                 child: LinearProgressIndicatorWidget(),
               ),
-            if (!routesController.isLoading.value)
-              Positioned(
-                top: 0.0,
-                right: 0.0,
-                child: IconButton(
-                  onPressed: () => routesController.moveToMyLocation(),
-                  tooltip: 'Ir a mi ubicación',
-                  icon: const Icon(
-                    Icons.my_location,
-                  ),
-                ),
-              ),
             if (routesController.errorMessage.value.length >= 3)
               Positioned(
                 top: 16,
@@ -317,7 +312,7 @@ class RoutesPage extends StatelessWidget {
               ),
             if (routesController.filteredRoutes.isNotEmpty)
               Positioned(
-                top: 50,
+                top: 16,
                 left: 0,
                 right: 0,
                 child: SafeAreaWidget(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -9,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/http_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
+import 'package:pickpointer/packages/offer_package/domain/entities/offer_order_entity.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/finish_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/start_offer_usecase.dart';
@@ -73,15 +73,21 @@ class OfferController extends GetxController {
   var errorMessage = ''.obs;
   var positionTaxi = LatLng(-12.0, -76.0).obs;
   var userCarPlate = ''.obs;
-  var offerEnd = LatLng(0, 0).obs;
-  var listWayPoints = <LatLng>[].obs;
   var listOrders = [].obs;
+  var travelTime = const Duration().obs;
+  var travelDistance = 0.0.obs;
   var polylineListLatLng = <LatLng>[].obs;
 
   var offerId = ''.obs;
   var offerTo = ''.obs;
   var offerFrom = ''.obs;
-  var offerPrice = 0.0.obs;
+  var offerTotal = 0.0.obs;
+  var offerCount = 0.obs;
+  var offerMaxCount = 0.obs;
+  var offerEndLatLng = LatLng(0, 0).obs;
+  var offerStartLatLng = LatLng(0, 0).obs;
+  var offerListWayPoints = <LatLng>[].obs;
+  var offerOrders = <OfferOrderEntity>[].obs;
 
   var offerStateId =
       ''.obs; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
@@ -98,7 +104,7 @@ class OfferController extends GetxController {
     );
   }
 
-  move(LatLng latLng) {
+  moveMapToLocation(LatLng latLng) {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
       mapController!.move(latLng, 15.0);
     });
@@ -120,61 +126,62 @@ class OfferController extends GetxController {
       List<LatLng> listLatLng =
           polylineProvider!.convertPointToLatLng(polylineResult.points);
       polylineListLatLng.value = listLatLng;
+      travelTime.value = polylineResult.duration;
+      travelDistance.value = polylineResult.meters;
       isLoading.value = false;
       return true;
+    }).catchError((error) {
+      errorMessage.value = error.toString();
+      isLoading.value = false;
     });
     return futureListLatLng;
   }
 
-  prepareStreamCurrentPosition(AbstractOfferEntity abstractOfferEntity) {
-    print('prepareStreamCurrentPosition');
+  prepareStreamCurrentPosition() {
     streamPosition =
         geolocatorProvider!.onPositionChanged.listen((Position position) {
-      print('position: $position');
       positionTaxi.value = LatLng(position.latitude, position.longitude);
-      move(positionTaxi.value);
+      moveMapToLocation(positionTaxi.value);
       _updateVehicleUsecase
           .call(
               vehicle: VehicleModel(
-        id: '${abstractOfferEntity.userCarPlate}',
+        id: userCarPlate.value,
         latitude: '${position.latitude}',
         longitude: '${position.longitude}',
+        offerId: offerId.value,
+        stateId: offerStateId.value,
       ))
           .then((AbstractVehicleEntity abstractVehicleEntity) {
+        errorMessage.value = '';
         print('value: ${abstractVehicleEntity.latitude}');
       }).catchError((error) {
+        errorMessage.value = 'Activa tu conección a internet.';
         print('error: $error');
       });
     });
   }
 
-  showOfferPolylineMarkers(AbstractOfferEntity abstractOfferEntity) {
-    List<LatLng> listLatLng = [];
-    String? wayPoints = abstractOfferEntity.wayPoints;
-    if (wayPoints != null && wayPoints.length > 10) {
-      listLatLng = decodeListWaypoints(wayPoints);
-    }
-    listWayPoints.value = listLatLng;
-    getPolylineBetweenCoordinates(
-      origin: LatLng(
-        double.parse('${abstractOfferEntity.startLat}'),
-        double.parse('${abstractOfferEntity.startLng}'),
-      ),
-      destination: LatLng(
-        double.parse('${abstractOfferEntity.endLat}'),
-        double.parse('${abstractOfferEntity.endLng}'),
-      ),
-      wayPoints: listLatLng,
-    );
-  }
-
-  showDynamicsMarkers(AbstractOfferEntity abstractOfferEntity) {
-    List localListOrders = [];
-    String? orders = abstractOfferEntity.orders;
-    if (orders != null && orders.length > 10) {
-      localListOrders = jsonDecode(orders);
-    }
-    listOrders.value = localListOrders;
+  getCurrentPosition() {
+    geolocatorProvider?.getCurrentPosition()?.then((Position? position) {
+      if (position != null) {
+        positionTaxi.value = LatLng(
+          position.latitude,
+          position.longitude,
+        );
+        moveMapToLocation(positionTaxi.value);
+        prepareStreamCurrentPosition();
+        getPolylineBetweenCoordinates(
+          origin: positionTaxi.value,
+          destination: offerEndLatLng.value,
+          wayPoints: offerListWayPoints,
+        );
+      }
+      isLoading.value = false;
+    }).catchError((error) {
+      print(error);
+      errorMessage.value = error.toString();
+      print('error trying get position');
+    });
   }
 
   Future<bool> startTrip() async {
@@ -260,8 +267,11 @@ class OfferController extends GetxController {
     offerId.value = abstractOfferEntity.id!;
     offerTo.value = abstractOfferEntity.routeTo!;
     offerFrom.value = abstractOfferEntity.routeFrom!;
-    offerPrice.value = abstractOfferEntity.price!;
+    offerCount.value = abstractOfferEntity.count!;
+    offerTotal.value = abstractOfferEntity.total!;
+    offerMaxCount.value = abstractOfferEntity.maxCount!;
     offerStateId.value = abstractOfferEntity.stateId!;
+    offerOrders.value = abstractOfferEntity.orders!;
     userCarPlate.value = abstractOfferEntity.userCarPlate!;
     if (abstractOfferEntity.stateId == '1' ||
         abstractOfferEntity.stateId == '0') {
@@ -279,13 +289,21 @@ class OfferController extends GetxController {
         }
       });
     } else {
-      offerEnd.value = LatLng(
+      offerEndLatLng.value = LatLng(
         double.parse('${abstractOfferEntity.endLat}'),
         double.parse('${abstractOfferEntity.endLng}'),
       );
-      prepareStreamCurrentPosition(abstractOfferEntity);
-      showOfferPolylineMarkers(abstractOfferEntity);
-      showDynamicsMarkers(abstractOfferEntity);
+      offerStartLatLng.value = LatLng(
+        double.parse('${abstractOfferEntity.startLat}'),
+        double.parse('${abstractOfferEntity.startLng}'),
+      );
+      List<LatLng> listLatLng = [];
+      String? wayPoints = abstractOfferEntity.wayPoints;
+      if (wayPoints != null && wayPoints.length > 10) {
+        listLatLng = decodeListWaypoints(wayPoints);
+      }
+      offerListWayPoints.value = listLatLng;
+      getCurrentPosition();
       streamPosition?.resume();
     }
   }

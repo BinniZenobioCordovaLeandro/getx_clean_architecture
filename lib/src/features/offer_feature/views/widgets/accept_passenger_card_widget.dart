@@ -9,9 +9,10 @@ import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class AcceptPassengerCardWidget extends StatelessWidget {
-  final String avatar;
-  final String fullName;
+  final String? avatar;
+  final String? fullName;
   final String? phoneNumber;
+  final int? count;
   final Function()? onPressed;
 
   const AcceptPassengerCardWidget({
@@ -19,6 +20,7 @@ class AcceptPassengerCardWidget extends StatelessWidget {
     required this.avatar,
     required this.fullName,
     required this.phoneNumber,
+    this.count,
     required this.onPressed,
   }) : super(key: key);
 
@@ -35,14 +37,15 @@ class AcceptPassengerCardWidget extends StatelessWidget {
               Flex(
                 direction: Axis.horizontal,
                 children: [
-                  Column(
-                    children: [
-                      CircleAvatarImageWidget(
-                        urlSvgOrImage: avatar,
-                        radius: 30,
-                      ),
-                    ],
-                  ),
+                  if (avatar != null)
+                    Column(
+                      children: [
+                        CircleAvatarImageWidget(
+                          urlSvgOrImage: avatar,
+                          radius: 30,
+                        ),
+                      ],
+                    ),
                   const SizedBox(
                     width: 8,
                   ),
@@ -52,7 +55,7 @@ class AcceptPassengerCardWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextWidget(
-                          fullName,
+                          '$fullName',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
@@ -75,7 +78,9 @@ class AcceptPassengerCardWidget extends StatelessWidget {
                 ],
               ),
               ElevatedButtonWidget(
-                title: 'Pasajero a bordo',
+                title: (count != null && count! > 1)
+                    ? '+$count Pasajeros a bordo'
+                    : '+1 Pasajero a bordo',
                 onPressed: onPressed,
               ),
             ],

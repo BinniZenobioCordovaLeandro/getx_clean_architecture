@@ -1,16 +1,18 @@
 import 'package:equatable/equatable.dart';
+import 'package:pickpointer/packages/offer_package/domain/entities/offer_order_entity.dart';
 
 abstract class AbstractOfferEntity extends Equatable {
   final String? id;
   final int? count;
   final int? maxCount;
   final double? price;
+  final double? total;
   final String? startLat;
   final String? startLng;
   final String? endLat;
   final String? endLng;
   final String? wayPoints;
-  final String? orders;
+  final List<OfferOrderEntity>? orders;
   final String? stateId;
   final String? stateDescription;
   final String? userId;
@@ -42,6 +44,7 @@ abstract class AbstractOfferEntity extends Equatable {
     this.count,
     this.maxCount,
     this.price,
+    this.total,
     this.startLat,
     this.startLng,
     this.endLat,

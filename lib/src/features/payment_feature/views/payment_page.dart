@@ -351,6 +351,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                         ? ButtonState.loading
                                         : ButtonState.success,
                                     success: 'CONTRATAR',
+                                    loading: 'CONTRATANDO',
                                     onPressed: () {
                                       if (paymentController.payMethod.value !=
                                           0) {

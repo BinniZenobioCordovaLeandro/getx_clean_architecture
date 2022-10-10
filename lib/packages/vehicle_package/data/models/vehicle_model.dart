@@ -11,12 +11,16 @@ class VehicleModel extends AbstractVehicleEntity {
   final String? longitude;
   @override
   final String? offerId;
+  @override
+  final String?
+      stateId; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
 
   const VehicleModel({
     this.id,
     this.latitude,
     this.longitude,
     this.offerId,
+    this.stateId,
   });
 
   factory VehicleModel.fromMap(Map<String, dynamic> data) => VehicleModel(
@@ -24,6 +28,7 @@ class VehicleModel extends AbstractVehicleEntity {
         latitude: data['latitude'] as String?,
         longitude: data['longitude'] as String?,
         offerId: data['offer_id'] as String?,
+        stateId: data['state_id'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -31,6 +36,7 @@ class VehicleModel extends AbstractVehicleEntity {
         'latitude': latitude,
         'longitude': longitude,
         'offer_id': offerId,
+        'state_id': stateId,
       };
 
   /// `dart:convert`
@@ -47,15 +53,17 @@ class VehicleModel extends AbstractVehicleEntity {
 
   VehicleModel copyWith({
     String? id,
-    String? lat,
-    String? lng,
+    String? latitude,
+    String? longitude,
     String? offerId,
+    String? stateId,
   }) {
     return VehicleModel(
       id: id ?? this.id,
-      latitude: lat ?? this.latitude,
-      longitude: lng ?? this.longitude,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       offerId: offerId ?? this.offerId,
+      stateId: stateId ?? this.stateId,
     );
   }
 
@@ -68,5 +76,6 @@ class VehicleModel extends AbstractVehicleEntity {
         latitude,
         longitude,
         offerId,
+        stateId,
       ];
 }

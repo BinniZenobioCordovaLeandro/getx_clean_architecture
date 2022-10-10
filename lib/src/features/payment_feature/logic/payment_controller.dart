@@ -216,6 +216,7 @@ class PaymentController extends GetxController {
                 orderId: '123456789',
                 price: offerPrice.value,
                 count: seats.value,
+                subtotal: subtotal.value,
                 total: total.value,
                 stateId:
                     '- 1', // Esperando -1, enCarretera 0 , Completado 1, Cancelado 2

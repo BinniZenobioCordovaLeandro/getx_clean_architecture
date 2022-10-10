@@ -34,7 +34,8 @@ class GeolocatorProvider {
         .getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 1,
+        distanceFilter: 100,
+        timeLimit: Duration(seconds: 10),
       ),
     )
         .listen(handlerOnPositionChanged, onError: (err) {
@@ -45,19 +46,18 @@ class GeolocatorProvider {
 
   Future<bool> checkPermission() async {
     bool? serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!(serviceEnabled == true)) {
-      // throw Exception('Location service is not enabled');
-      LocationPermission? permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.deniedForever) {
-        throw Exception('Location permission is denied forever');
-      }
+    if (!(serviceEnabled == true)) {}
+    // throw Exception('Location service is not enabled');
+    LocationPermission? permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception('Location permission is denied forever');
+    }
 
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission != LocationPermission.whileInUse &&
-            permission != LocationPermission.always) {
-          throw Exception('Location permission is denied');
-        }
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        throw Exception('Location permission is denied');
       }
     }
 
@@ -77,6 +77,8 @@ class GeolocatorProvider {
     ).then((Position? position) {
       return position;
     }, onError: (dynamic error) {
+      print('getCurrentPosition');
+      print(error);
       throw Exception(error.toString());
     });
   }

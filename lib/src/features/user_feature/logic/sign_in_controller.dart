@@ -11,6 +11,7 @@ import 'package:pickpointer/packages/user_package/domain/entities/abstract_user_
 import 'package:pickpointer/packages/user_package/domain/usecases/get_user_usecase.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/set_user_usecase.dart';
 import 'package:pickpointer/packages/user_package/domain/usecases/user_exists_usecase.dart';
+import 'package:pickpointer/src/core/providers/facebook_sign_in_provider.dart';
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/google_sign_in_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
@@ -21,6 +22,9 @@ class SignInController extends GetxController {
   final GoogleSignInProvider? _googleSignInProvider =
       GoogleSignInProvider.getInstance();
 
+  final FacebookSignInProvider _facebookSignInProvider =
+      FacebookSignInProvider();
+
   final NotificationProvider? notificationProvider =
       NotificationProvider.getInstance();
 
@@ -29,6 +33,7 @@ class SignInController extends GetxController {
 
   var isSigned = false.obs;
   var googleIsLoading = false.obs;
+  var facebookIsLoading = false.obs;
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
@@ -61,63 +66,109 @@ class SignInController extends GetxController {
     return futureBool;
   }
 
-  Future<bool> signIn(number) async {
-    if (number == 0) {
-      googleIsLoading.value = true;
-      GoogleSignInAccount? googleSignInAccount =
-          await _googleSignInProvider?.handleSignIn();
-      if (googleSignInAccount != null) {
-        _verifySessionUsecase
-            .call()
-            .then((AbstractSessionEntity abstractSessionEntity) async {
-          final SessionModel sessionModel =
-              abstractSessionEntity as SessionModel;
-          final tokenMessaging = await firebaseNotificationProvider?.getToken();
-          final SessionModel newSessionModel = sessionModel.copyWith(
-            isSigned: true,
-            idUsers: googleSignInAccount.id,
-            tokenMessaging: tokenMessaging,
+  Future<bool> registerUser({
+    required String signId,
+    required String? signDisplayName,
+    required String? signEmail,
+    required String? signPhotoUrl,
+  }) async {
+    AbstractSessionEntity abstractSessionEntity =
+        await _verifySessionUsecase.call();
+
+    final SessionModel sessionModel = abstractSessionEntity as SessionModel;
+    final tokenMessaging = await firebaseNotificationProvider?.getToken();
+
+    final SessionModel newSessionModel = sessionModel.copyWith(
+      isSigned: true,
+      idUsers: signId,
+      tokenMessaging: tokenMessaging,
+    );
+
+    try {
+      AbstractUserEntity? abstractUserEntity =
+          await _getUserUsecase.call(userId: signId);
+      final UserModel userModel = abstractUserEntity as UserModel;
+      _updateSessionUsecase.call(
+          abstractSessionEntity: newSessionModel.copyWith(
+        isDriver: userModel.isDriver == '1',
+      ));
+      return Future.value(true);
+    } catch (e) {
+      await _userExistsUsecase.call(userId: signId)?.then((boolean) {
+        if (boolean == false) {
+          final UserModel userModel = UserModel(
+            id: signId,
+            name: signDisplayName,
+            email: signEmail,
+            avatar: signPhotoUrl,
           );
-          _getUserUsecase
-              .call(userId: googleSignInAccount.id)
-              ?.then((AbstractUserEntity abstractUserEntity) {
-            final UserModel userModel = abstractUserEntity as UserModel;
-            _updateSessionUsecase.call(
-                abstractSessionEntity: newSessionModel.copyWith(
-              isDriver: userModel.isDriver == '1',
-            ));
-          }).catchError((error) {
-            _userExistsUsecase
-                .call(userId: googleSignInAccount.id)
-                ?.then((boolean) {
-              if (boolean == false) {
-                final UserModel userModel = UserModel(
-                  id: googleSignInAccount.id,
-                  name: googleSignInAccount.displayName,
-                  email: googleSignInAccount.email,
-                  avatar: googleSignInAccount.photoUrl,
-                );
-                _setUserUsecase.call(abstractUserEntity: userModel);
-              }
-              _updateSessionUsecase.call(
-                  abstractSessionEntity: newSessionModel);
-            });
-          });
-          googleIsLoading.value = false;
-          isSigned.value = true;
-        });
-        sendNotification();
-        return true;
-      } else {
-        googleIsLoading.value = false;
-        return false;
-      }
-    } else {
-      return false;
+          _setUserUsecase.call(abstractUserEntity: userModel);
+        }
+        _updateSessionUsecase.call(abstractSessionEntity: newSessionModel);
+      });
+      return Future.value(true);
+    }
+  }
+
+  Future<bool> signIn(number) async {
+    switch (number) {
+      case 0:
+        GoogleSignInAccount? googleSignInAccount =
+            await _googleSignInProvider?.handleSignIn();
+        if (googleSignInAccount != null) {
+          bool registedUser = await registerUser(
+            signId: googleSignInAccount.id,
+            signDisplayName: googleSignInAccount.displayName,
+            signEmail: googleSignInAccount.email,
+            signPhotoUrl: googleSignInAccount.photoUrl,
+          );
+          if (registedUser) return Future.value(true);
+          return Future.value(false);
+        } else {
+          return Future.value(false);
+        }
+      case 1:
+        FacebookUserModel? facebookUserModel =
+            await _facebookSignInProvider.handleSignIn();
+        if (facebookUserModel != null) {
+          bool registedUser = await registerUser(
+            signId: facebookUserModel.id!,
+            signDisplayName:
+                '${facebookUserModel.firstName} ${facebookUserModel.lastName}',
+            signEmail: facebookUserModel.email,
+            signPhotoUrl: facebookUserModel.picture?.data?.url,
+          );
+          if (registedUser) return Future.value(true);
+          return Future.value(true);
+        } else {
+          return Future.value(false);
+        }
+      default:
+        return Future.value(false);
     }
   }
 
   Future<bool> signInWithGoogle() {
-    return signIn(0);
+    googleIsLoading.value = true;
+    return signIn(0).then((bool boolean) {
+      googleIsLoading.value = false;
+      if (boolean) {
+        isSigned.value = true;
+        sendNotification();
+      }
+      return boolean;
+    });
+  }
+
+  Future<bool> signInWithFacebook() {
+    facebookIsLoading.value = true;
+    return signIn(1).then((bool boolean) {
+      facebookIsLoading.value = false;
+      if (boolean) {
+        isSigned.value = true;
+        sendNotification();
+      }
+      return boolean;
+    });
   }
 }

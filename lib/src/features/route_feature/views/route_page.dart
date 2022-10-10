@@ -283,6 +283,8 @@ class _RoutePageState extends State<RoutePage> {
                     child: RouteCardWidget(
                       to: routeController.routeTo.value,
                       from: routeController.routeFrom.value,
+                      duration: routeController.travelTime.value,
+                      meters: routeController.travelDistance.value,
                     ),
                   ),
                 ),

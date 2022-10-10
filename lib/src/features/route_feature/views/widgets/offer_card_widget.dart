@@ -82,7 +82,7 @@ class OfferCardWidget extends StatelessWidget {
                               child: Opacity(
                                 opacity: 0,
                                 child: OutlinedButtonWidget(
-                                  title: 'S/. ${abstractOfferEntity.price}',
+                                  title: 'S/ ${abstractOfferEntity.price}',
                                   onPressed: () {},
                                 ),
                               ),
@@ -153,7 +153,7 @@ class OfferCardWidget extends StatelessWidget {
                             Expanded(
                               flex: 1,
                               child: OutlinedButtonWidget(
-                                title: 'S/. ${abstractOfferEntity.price}',
+                                title: 'S/ ${abstractOfferEntity.price}',
                                 onPressed: () {
                                   onPressed!(abstractOfferEntity);
                                 },

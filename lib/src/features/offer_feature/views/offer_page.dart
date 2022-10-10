@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
@@ -19,9 +18,9 @@ import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offe
 import 'package:pickpointer/src/features/offer_feature/views/widgets/accept_passenger_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/offer_card_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/widgets/order_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/start_trip_card_widget.dart';
-import 'package:pickpointer/src/features/route_feature/views/widgets/offer_card_widget.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {
@@ -111,6 +110,16 @@ class _OfferPageState extends State<OfferPage> {
                 }
               },
             ),
+            IconButton(
+              onPressed: () {
+                offerController
+                    .moveMapToLocation(offerController.positionTaxi.value);
+              },
+              tooltip: 'Ir a mi ubicación',
+              icon: const Icon(
+                Icons.my_location,
+              ),
+            ),
           ],
         ),
         body: Stack(
@@ -146,8 +155,32 @@ class _OfferPageState extends State<OfferPage> {
                   MarkerLayerWidget(
                     options: MarkerLayerOptions(
                       markers: [
+                        Marker(
+                          width: 50,
+                          height: 50,
+                          anchorPos: AnchorPos.align(AnchorAlign.center),
+                          point: offerController.positionTaxi.value,
+                          builder: (BuildContext context) => Icon(
+                            Icons.local_taxi_rounded,
+                            color: Theme.of(context).primaryColor,
+                            size: 50,
+                          ),
+                        ),
+                        Marker(
+                          width: 50,
+                          height: 50,
+                          anchorPos: AnchorPos.align(
+                            AnchorAlign.top,
+                          ),
+                          point: offerController.offerEndLatLng.value,
+                          builder: (BuildContext context) => const Icon(
+                            Icons.location_pin,
+                            color: Colors.red,
+                            size: 50,
+                          ),
+                        ),
                         for (var wayPoint
-                            in offerController.listWayPoints.value)
+                            in offerController.offerListWayPoints.value)
                           Marker(
                             width: 10,
                             height: 10,
@@ -162,7 +195,7 @@ class _OfferPageState extends State<OfferPage> {
                       ],
                     ),
                   ),
-                  for (var order in offerController.listOrders.value)
+                  for (var order in offerController.offerOrders.value)
                     PopupMarkerLayerWidget(
                       options: PopupMarkerLayerOptions(
                         markers: [
@@ -171,12 +204,26 @@ class _OfferPageState extends State<OfferPage> {
                             height: 50,
                             anchorPos: AnchorPos.align(AnchorAlign.top),
                             point: LatLng(
-                              double.parse(order["pickPointLat"]),
-                              double.parse(order["pickPointLng"]),
+                              double.parse(order.pickPointLat!),
+                              double.parse(order.pickPointLng!),
                             ),
                             builder: (BuildContext context) => Icon(
                               Icons.person_pin,
                               color: Theme.of(context).primaryColor,
+                              size: 50,
+                            ),
+                          ),
+                          Marker(
+                            width: 50,
+                            height: 50,
+                            anchorPos: AnchorPos.align(AnchorAlign.top),
+                            point: LatLng(
+                              double.parse(order.dropPointLat!),
+                              double.parse(order.dropPointLng!),
+                            ),
+                            builder: (BuildContext context) => const Icon(
+                              Icons.person_pin,
+                              color: Colors.red,
                               size: 50,
                             ),
                           ),
@@ -186,79 +233,64 @@ class _OfferPageState extends State<OfferPage> {
                             meters: offerController.distanceBetween(
                               start: offerController.positionTaxi.value,
                               end: LatLng(
-                                double.parse(order["pickPointLat"]),
-                                double.parse(order["pickPointLng"]),
+                                double.parse(order.pickPointLat!),
+                                double.parse(order.pickPointLng!),
                               ),
                             ),
-                            avatar: order['avatar'],
-                            fullName: order['fullName'],
+                            avatar: order.avatar,
+                            fullName: order.fullName,
+                            phoneNumber: order.phoneNumber,
                           );
                         },
                       ),
                     ),
-                  PopupMarkerLayerWidget(
-                    options: PopupMarkerLayerOptions(
-                      markers: [
-                        Marker(
-                          width: 50,
-                          height: 50,
-                          anchorPos: AnchorPos.align(AnchorAlign.center),
-                          point: offerController.positionTaxi.value,
-                          builder: (BuildContext context) => Icon(
-                            Icons.local_taxi_rounded,
-                            color: Theme.of(context).primaryColor,
-                            size: 50,
-                          ),
-                        ),
-                      ],
-                      popupBuilder: (BuildContext context, Marker marker) {
-                        return const PopupMarkerPassengerWidget(
-                          meters: 0,
-                          avatar:
-                              'https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png',
-                          fullName: 'Driver position',
-                        );
-                      },
-                    ),
-                  ),
                 ],
               ),
             ),
-            if (!offerController.isLoading.value)
-              Positioned(
-                top: 0.0,
-                right: 0.0,
-                child: IconButton(
-                  onPressed: () {
-                    offerController.move(offerController.positionTaxi.value);
-                  },
-                  tooltip: 'Ir a mi ubicación',
-                  icon: const Icon(
-                    Icons.my_location,
-                  ),
-                ),
-              ),
             Positioned(
-              top: 40,
+              top: 16,
               left: 0,
               right: 0,
               child: SafeAreaWidget(
                 child: FractionallySizedBoxWidget(
                   child: ShimmerWidget(
                     enabled: offerController.isLoading.value,
-                    child: OfferDescriptionCardWidget(
-                      to: offerController.offerTo.value,
-                      from: offerController.offerFrom.value,
-                      price: offerController.offerPrice.value,
+                    child: WrapWidget(
+                      spacing: 2,
+                      runSpacing: 2,
+                      children: [
+                        OfferDescriptionCardWidget(
+                          to: offerController.offerTo.value,
+                          from: offerController.offerFrom.value,
+                          count: offerController.offerCount.value,
+                          maxCount: offerController.offerMaxCount.value,
+                          total: offerController.offerTotal.value,
+                        ),
+                        for (var order in offerController.offerOrders.value)
+                          SizedBox(
+                            child: OfferOrderCardWidget(
+                              fullname: '${order.fullName}',
+                              count: order.count,
+                              subtotal: order.subtotal,
+                              total: order.total,
+                              onTap: () {
+                                offerController.moveMapToLocation(LatLng(
+                                  double.parse(order.pickPointLat!),
+                                  double.parse(order.pickPointLng!),
+                                ));
+                              },
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
             Positioned(
-              bottom: 16.0,
-              left: 0.0,
-              right: 0.0,
+              bottom: 16,
+              left: 0,
+              right: 0,
               child: SafeAreaWidget(
                 child: SizedBox(
                   child: ConstrainedBox(
@@ -271,37 +303,38 @@ class _OfferPageState extends State<OfferPage> {
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            for (var order in offerController.listOrders.value)
+                            for (var order in offerController.offerOrders.value)
                               (offerController.distanceBetween(
                                         start:
                                             offerController.positionTaxi.value,
                                         end: LatLng(
-                                          double.parse(order["pickPointLat"]),
-                                          double.parse(order["pickPointLng"]),
+                                          double.parse(order.pickPointLat!),
+                                          double.parse(order.pickPointLng!),
                                         ),
                                       ) <
                                       1000)
                                   ? AcceptPassengerCardWidget(
-                                      avatar: order['avatar'],
-                                      fullName: order['fullName'],
-                                      phoneNumber: order['phoneNumber'],
+                                      avatar: order.avatar,
+                                      fullName: order.fullName,
+                                      phoneNumber: order.phoneNumber,
+                                      count: order.count,
                                       onPressed: () {
                                         offerController
                                             .firebaseNotificationProvider
                                             ?.sendMessage(
-                                          to: [order['tokenMessaging']],
+                                          to: ['${order.tokenMessaging}'],
                                           title: '¡Bienvenido a bordo!',
                                           body:
-                                              'Procura usar mascarilla y saludar, ${order['fullName']}',
+                                              'Usar el cinturon y mascarilla es OBLIGATORIO, ${order.fullName}',
                                           isMessage: true,
-                                          link: '/order/${order["orderId"]}',
+                                          link: '/order/${order.orderId}',
                                         );
                                       },
                                     )
                                   : const SizedBox(),
                             if (offerController.distanceBetween(
                                   start: offerController.positionTaxi.value,
-                                  end: offerController.offerEnd.value,
+                                  end: offerController.offerEndLatLng.value,
                                 ) <
                                 2000)
                               FinishTripCardWidget(
@@ -313,11 +346,6 @@ class _OfferPageState extends State<OfferPage> {
                             if (offerController.offerStateId.value == '-1')
                               StartTripCardWidget(
                                 isLoading: offerController.isLoading.value,
-                                customersAvatar: [
-                                  for (var order
-                                      in offerController.listOrders.value)
-                                    order['avatar'],
-                                ],
                                 onPressed: () {
                                   offerController
                                       .startTrip()

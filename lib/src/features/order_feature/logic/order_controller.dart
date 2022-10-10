@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -19,6 +19,7 @@ import 'package:pickpointer/packages/vehicle_package/domain/usecases/stream_vehi
 import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
+import 'package:pickpointer/src/core/util/decode_list_waypoints.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
@@ -64,10 +65,15 @@ class OrderController extends GetxController {
   var listWayPoints = <LatLng>[].obs;
   var distanceTaxi = 0.0.obs;
   var userPosition = LatLng(-12.0, -76.0).obs;
+
   var taxiPosition = LatLng(-12.0, -76.0).obs;
+  var taxiStateId =
+      ''.obs; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
 
   var orderId = ''.obs;
   var orderStateId = ''.obs;
+  var orderCount = 0.obs;
+  var orderTotal = 0.0.obs;
 
   var routeTo = ''.obs;
   var routeFrom = ''.obs;
@@ -81,21 +87,24 @@ class OrderController extends GetxController {
   var driverCarPlate = ''.obs;
   var driverPhoneNumber = ''.obs;
 
-  Future<List<LatLng>> getPolylineBetweenCoordinates({
+  Future<bool> getPolylineBetweenCoordinates({
     required LatLng origin,
     required LatLng destination,
     List<LatLng>? wayPoints,
   }) {
     isLoading.value = true;
-    Future<List<LatLng>> futureListLatLng = polylineProvider!
+    Future<bool> futureListLatLng = polylineProvider!
         .getPolylineBetweenCoordinates(
       origin: origin,
       destination: destination,
       wayPoints: wayPoints,
     )
-        .then((List<LatLng> listLatLng) {
+        .then((PolylineResult polylineResult) {
+      List<LatLng> listLatLng =
+          polylineProvider!.convertPointToLatLng(polylineResult.points);
+      polylineListLatLng.value = listLatLng;
       isLoading.value = false;
-      return listLatLng;
+      return true;
     });
     return futureListLatLng;
   }
@@ -116,8 +125,7 @@ class OrderController extends GetxController {
       vehicleId: '${abstractOrderEntity.driverCarPlate}',
     )
         .listen((AbstractVehicleEntity abstractVehicleEntity) {
-      print(
-          'taxiPosition: ${abstractVehicleEntity.latitude}, ${abstractVehicleEntity.longitude}');
+      taxiStateId.value = '${abstractVehicleEntity.stateId}';
       taxiPosition.value = LatLng(
         double.parse(abstractVehicleEntity.latitude!),
         double.parse(abstractVehicleEntity.longitude!),
@@ -142,15 +150,7 @@ class OrderController extends GetxController {
     List<LatLng> listLatLng = [];
     String? wayPoints = abstractOrderEntity.offerWayPoints;
     if (wayPoints != null && wayPoints.length > 10) {
-      List list = jsonDecode(wayPoints);
-      listLatLng = list.map((string) {
-        var split = string.split(',');
-        LatLng latLng = LatLng(
-          double.parse(split[0].trim()),
-          double.parse(split[1].trim()),
-        );
-        return latLng;
-      }).toList();
+      listLatLng = decodeListWaypoints(wayPoints);
     }
     listWayPoints.value = listLatLng;
     getPolylineBetweenCoordinates(
@@ -163,8 +163,6 @@ class OrderController extends GetxController {
         double.parse('${abstractOrderEntity.routeEndLng}'),
       ),
       wayPoints: listLatLng,
-    ).then(
-      (value) => polylineListLatLng.value = value,
     );
   }
 
@@ -179,6 +177,8 @@ class OrderController extends GetxController {
   void initialize(AbstractOrderEntity abstractOrderEntity) {
     orderId.value = abstractOrderEntity.id!;
     orderStateId.value = abstractOrderEntity.stateId!;
+    orderCount.value = abstractOrderEntity.count!;
+    orderTotal.value = abstractOrderEntity.total!;
     abstractOrderEntity = abstractOrderEntity;
     if (abstractOrderEntity.stateId == '1' ||
         abstractOrderEntity.stateId == '0') {

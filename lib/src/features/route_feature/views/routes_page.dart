@@ -3,17 +3,16 @@ import 'package:get/get.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
-import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
+import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
-import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
+import 'package:pickpointer/src/core/widgets/expandable_fab_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
-import 'package:pickpointer/src/core/widgets/svg_or_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
@@ -127,6 +126,39 @@ class RoutesPage extends StatelessWidget {
 
     return Obx(() {
       return Scaffold(
+        floatingActionButton: ExpandableFab(
+          distance: 80.0,
+          children: [
+            ActionButton(
+              icon: const Icon(Icons.mail_outline_outlined),
+              onPressed: () {
+                LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
+                  url: 'pickpointer@gmail.com',
+                  isMail: true,
+                );
+                launcherLinkHelper.sendEmail();
+              },
+            ),
+            ActionButton(
+              icon: const Icon(Icons.facebook_outlined),
+              onPressed: () {
+                LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
+                  url: 'https://m.me/100085260664181',
+                );
+                launcherLinkHelper.launchInBrowser();
+              },
+            ),
+            ActionButton(
+              icon: const Icon(Icons.tiktok_outlined),
+              onPressed: () {
+                LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
+                  url: 'https://tiktok.com/@pickpointer',
+                );
+                launcherLinkHelper.launchInBrowser();
+              },
+            ),
+          ],
+        ),
         appBar: AppBarWidget(
           title: 'PickPointer',
           actions: [
@@ -168,6 +200,13 @@ class RoutesPage extends StatelessWidget {
                     ? Icons.login_outlined
                     : Icons.co_present_outlined,
                 color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+              ),
+            ),
+            IconButton(
+              onPressed: () => routesController.moveToMyLocation(),
+              tooltip: 'Ir a mi ubicación',
+              icon: const Icon(
+                Icons.my_location,
               ),
             ),
           ],
@@ -257,18 +296,6 @@ class RoutesPage extends StatelessWidget {
                 right: 0,
                 child: LinearProgressIndicatorWidget(),
               ),
-            if (!routesController.isLoading.value)
-              Positioned(
-                top: 0.0,
-                right: 0.0,
-                child: IconButton(
-                  onPressed: () => routesController.moveToMyLocation(),
-                  tooltip: 'Ir a mi ubicación',
-                  icon: const Icon(
-                    Icons.my_location,
-                  ),
-                ),
-              ),
             if (routesController.errorMessage.value.length >= 3)
               Positioned(
                 top: 16,
@@ -285,7 +312,7 @@ class RoutesPage extends StatelessWidget {
               ),
             if (routesController.filteredRoutes.isNotEmpty)
               Positioned(
-                top: 50,
+                top: 16,
                 left: 0,
                 right: 0,
                 child: SafeAreaWidget(

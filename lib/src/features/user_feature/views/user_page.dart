@@ -8,6 +8,7 @@ import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/rank_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
 import 'package:pickpointer/src/core/widgets/switch_widget.dart';
+import 'package:pickpointer/src/core/widgets/text_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
@@ -39,6 +40,11 @@ class _UserPageState extends State<UserPage> {
             RankWidget(
               value: userController.rank.value,
             ),
+            if (userController.observation.value.isNotEmpty)
+              CardAlertWidget(
+                title: 'HEY!',
+                message: userController.observation.value,
+              ),
             TextFieldWidget(
               labelText: 'Nombre Completo',
               initialValue: userController.name.value,
@@ -158,6 +164,45 @@ class _UserPageState extends State<UserPage> {
                 },
                 onChanged: (value) => userController.carColor.value = value,
               ),
+            if (userController.isDriver.value)
+              TextFieldWidget(
+                labelText: 'Descripcion de Carro',
+                initialValue: userController.carDescription.value,
+                helperText:
+                    'Ej. Camioneta 4x4, 4 pasajeros, extra confort, aire acondicionado',
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es requerido';
+                  }
+                  return null;
+                },
+                onChanged: (value) =>
+                    userController.carDescription.value = value,
+              ),
+            if (userController.isDriver.value)
+              const SizedBox(
+                width: double.infinity,
+                child: TextWidget('Foto de Licencia'),
+              ),
+            if (userController.isDriver.value)
+              PickImageCard(
+                urlSvgOrImage: userController.licensePhoto.value,
+                onChanged: (String? string) {
+                  userController.licensePhoto.value = string!;
+                },
+              ),
+            if (userController.isDriver.value)
+              TextFieldWidget(
+                labelText: 'Licencia de conducir',
+                initialValue: userController.license.value,
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es requerido';
+                  }
+                  return null;
+                },
+                onChanged: (value) => userController.license.value = value,
+              ),
             const SizedBox(
               width: double.infinity,
               child: SwitchWidget(
@@ -190,6 +235,9 @@ class _UserPageState extends State<UserPage> {
                     if (boolean == true) {
                       ModalBottomSheetHelper(
                         context: context,
+                        complete: () {
+                          userController.stopTimer();
+                        },
                         title: 'PickPointer!',
                         child: Obx(() {
                           return FormWidget(
@@ -202,11 +250,20 @@ class _UserPageState extends State<UserPage> {
                                       const EdgeInsets.symmetric(vertical: 8.0),
                                   child: WrapWidget(
                                     children: [
-                                      SizedBox(
-                                        child: TextWidget(
-                                          'Te hemos enviado el código de verificación al número ${userController.phoneNumber.value}',
+                                      if (userController
+                                          .errorMessage.value.isEmpty)
+                                        SizedBox(
+                                          child: TextWidget(
+                                            userController.message.value,
+                                          ),
                                         ),
-                                      ),
+                                      if (userController
+                                          .errorMessage.value.isNotEmpty)
+                                        CardAlertWidget(
+                                          title: 'HEY!',
+                                          message:
+                                              userController.errorMessage.value,
+                                        ),
                                       SizedBox(
                                         child: TextFieldWidget(
                                           labelText: 'Codigo de verificación',
@@ -223,12 +280,22 @@ class _UserPageState extends State<UserPage> {
                                               .phoneCode.value = value,
                                         ),
                                       ),
-                                      if (userController
-                                          .errorMessage.value.isNotEmpty)
-                                        CardAlertWidget(
-                                          title: 'HEY!',
-                                          message:
-                                              userController.errorMessage.value,
+                                      if (!userController.isLoadingSave.value)
+                                        SizedBox(
+                                          child: TextButtonWidget(
+                                            title: userController
+                                                        .timerTracker.value !=
+                                                    userController
+                                                        .timerResetValue
+                                                ? 'Reenviar código en ${userController.timerTracker.value} seg.'
+                                                : 'Reenviar código',
+                                            onPressed: (userController
+                                                        .timerTracker.value !=
+                                                    userController
+                                                        .timerResetValue)
+                                                ? null
+                                                : userController.resendCode,
+                                          ),
                                         ),
                                       SizedBox(
                                         child: ProgressStateButtonWidget(
@@ -259,6 +326,9 @@ class _UserPageState extends State<UserPage> {
                         }),
                       );
                     }
+                  }).catchError((error) {
+                    print('error');
+                    print(error);
                   });
                 }
               },

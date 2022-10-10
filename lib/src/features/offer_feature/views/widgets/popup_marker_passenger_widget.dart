@@ -1,5 +1,6 @@
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
+import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/circle_avatar_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
@@ -8,12 +9,14 @@ class PopupMarkerPassengerWidget extends StatelessWidget {
   final double meters;
   final String? avatar;
   final String? fullName;
+  final String? phoneNumber;
 
   const PopupMarkerPassengerWidget({
     Key? key,
     required this.meters,
-    required this.avatar,
-    required this.fullName,
+    this.avatar,
+    this.fullName,
+    this.phoneNumber,
   }) : super(key: key);
 
   child(BuildContext context) {
@@ -32,9 +35,7 @@ class PopupMarkerPassengerWidget extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(
-              width: 8,
-            ),
+            const VerticalDivider(),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -59,6 +60,20 @@ class PopupMarkerPassengerWidget extends StatelessWidget {
                 ],
               ),
             ),
+            const VerticalDivider(),
+            if (phoneNumber != null)
+              IconButton(
+                onPressed: () {
+                  LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
+                    url: phoneNumber!,
+                    isPhone: true,
+                  );
+                  launcherLinkHelper.makePhoneCall();
+                },
+                icon: const Icon(
+                  Icons.phone,
+                ),
+              ),
           ],
         ),
       ),
@@ -68,7 +83,7 @@ class PopupMarkerPassengerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
+      width: 250,
       height: 80,
       child: Stack(
         children: [

@@ -11,7 +11,6 @@ import 'package:pickpointer/packages/route_package/domain/entities/abstract_rout
 import 'package:pickpointer/packages/route_package/domain/usecases/get_routes_usecase.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
-import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
@@ -99,24 +98,20 @@ class RoutesController extends GetxController {
   }
 
   getCurrentPosition() {
-    geolocatorProvider?.checkPermission().then((bool boolean) {
-      if (boolean) {
-        geolocatorProvider?.getCurrentPosition()?.then((Position? position) {
-          if (position != null) {
-            this.position.value = LatLng(
-              position.latitude,
-              position.longitude,
-            );
-            moveToMyLocation();
-            prepareStreamCurrentPosition();
-          }
-          isLoading.value = false;
-        });
-      } else {
-        isLoading.value = false;
+    geolocatorProvider?.getCurrentPosition()?.then((Position? position) {
+      if (position != null) {
+        this.position.value = LatLng(
+          position.latitude,
+          position.longitude,
+        );
+        moveToMyLocation();
+        prepareStreamCurrentPosition();
       }
-    }, onError: (dynamic error) {
+      isLoading.value = false;
+    }).catchError((error) {
+      print(error);
       errorMessage.value = error.toString();
+      print('error trying get position');
     });
   }
 

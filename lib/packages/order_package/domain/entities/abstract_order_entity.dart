@@ -25,6 +25,7 @@ abstract class AbstractOrderEntity extends Equatable {
   final int? offerCount;
   final int? offerMaxCount;
   final double? offerPrice;
+  final DateTime? offerDateTime;
   final String? offerStartLat;
   final String? offerStartLng;
   final String? offerEndLat;
@@ -78,6 +79,7 @@ abstract class AbstractOrderEntity extends Equatable {
     this.offerCount,
     this.offerMaxCount,
     this.offerPrice,
+    this.offerDateTime,
     this.offerStartLat,
     this.offerStartLng,
     this.offerEndLat,

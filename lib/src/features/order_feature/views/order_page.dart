@@ -75,15 +75,15 @@ class _OrderPageState extends State<OrderPage> {
                   );
                 },
               ),
-              IconButton(
-                tooltip: 'Mensajes',
-                icon: const Icon(
-                  Icons.message_rounded,
-                ),
-                onPressed: () {
-                  orderController.scaffoldKey.currentState!.openEndDrawer();
-                },
-              ),
+              // IconButton(
+              //   tooltip: 'Mensajes',
+              //   icon: const Icon(
+              //     Icons.message_rounded,
+              //   ),
+              //   onPressed: () {
+              //     orderController.scaffoldKey.currentState!.openEndDrawer();
+              //   },
+              // ),
               PopupMenuButton(
                 itemBuilder: (context) {
                   return [
@@ -281,6 +281,7 @@ class _OrderPageState extends State<OrderPage> {
                     child: OrderCardWidget(
                       routeTo: orderController.routeTo.value,
                       routeFrom: orderController.routeFrom.value,
+                      dateTime: orderController.offerDateTime,
                       userPickPointLat: orderController.userPickPointLat.value,
                       userPickPointLng: orderController.userPickPointLng.value,
                       count: orderController.orderCount.value,

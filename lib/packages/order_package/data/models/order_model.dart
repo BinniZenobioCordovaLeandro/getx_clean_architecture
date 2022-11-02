@@ -51,6 +51,8 @@ class OrderModel implements AbstractOrderEntity {
   @override
   final double? offerPrice;
   @override
+  final DateTime? offerDateTime;
+  @override
   final String? offerStartLat;
   @override
   final String? offerStartLng;
@@ -132,6 +134,7 @@ class OrderModel implements AbstractOrderEntity {
     this.offerCount,
     this.offerMaxCount,
     this.offerPrice,
+    this.offerDateTime,
     this.offerStartLat,
     this.offerStartLng,
     this.offerEndLat,
@@ -186,6 +189,9 @@ class OrderModel implements AbstractOrderEntity {
         offerCount: data['offer_count'] as int?,
         offerMaxCount: data['offer_max_count'] as int?,
         offerPrice: double.parse('${data['offer_price']}'),
+        offerDateTime: data['offer_date_time'] != null
+            ? DateTime.parse(data['offer_date_time'])
+            : null,
         offerStartLat: data['offer_start_lat'] as String?,
         offerStartLng: data['offer_start_lng'] as String?,
         offerEndLat: data['offer_end_lat'] as String?,
@@ -246,6 +252,7 @@ class OrderModel implements AbstractOrderEntity {
         'offer_count': offerCount,
         'offer_max_count': offerMaxCount,
         'offer_price': offerPrice,
+        'offer_date_time': offerDateTime?.toIso8601String(),
         'offer_start_lat': offerStartLat,
         'offer_start_lng': offerStartLng,
         'offer_end_lat': offerEndLat,
@@ -319,6 +326,7 @@ class OrderModel implements AbstractOrderEntity {
     int? offerCount,
     int? offerMaxCount,
     double? offerPrice,
+    DateTime? offerDateTime,
     String? offerStartLat,
     String? offerStartLng,
     String? offerEndLat,
@@ -372,6 +380,7 @@ class OrderModel implements AbstractOrderEntity {
       offerCount: offerCount ?? this.offerCount,
       offerMaxCount: offerMaxCount ?? this.offerMaxCount,
       offerPrice: offerPrice ?? this.offerPrice,
+      offerDateTime: offerDateTime ?? this.offerDateTime,
       offerStartLat: offerStartLat ?? this.offerStartLat,
       offerStartLng: offerStartLng ?? this.offerStartLng,
       offerEndLat: offerEndLat ?? this.offerEndLat,
@@ -432,6 +441,7 @@ class OrderModel implements AbstractOrderEntity {
       offerCount,
       offerMaxCount,
       offerPrice,
+      offerDateTime,
       offerStartLat,
       offerStartLng,
       offerEndLat,

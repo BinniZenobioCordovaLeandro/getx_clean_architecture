@@ -88,6 +88,7 @@ class OfferController extends GetxController {
   var offerStartLatLng = LatLng(0, 0).obs;
   var offerListWayPoints = <LatLng>[].obs;
   var offerOrders = <OfferOrderEntity>[].obs;
+  DateTime? offerDateTime;
 
   var offerStateId =
       ''.obs; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
@@ -272,6 +273,7 @@ class OfferController extends GetxController {
     offerMaxCount.value = abstractOfferEntity.maxCount!;
     offerStateId.value = abstractOfferEntity.stateId!;
     offerOrders.value = abstractOfferEntity.orders!;
+    offerDateTime = abstractOfferEntity.dateTime!;
     userCarPlate.value = abstractOfferEntity.userCarPlate!;
     if (abstractOfferEntity.stateId == '1' ||
         abstractOfferEntity.stateId == '0') {

@@ -12,7 +12,7 @@ class ElevatedButtonIconWidget extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.title,
-    required this.onPressed,
+    this.onPressed,
     this.color,
     this.enabled = true,
     this.shape,

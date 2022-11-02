@@ -4,6 +4,7 @@ import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 
 class ModalBottomSheetHelper {
+  final Key? key;
   final String? title;
   final BuildContext? context;
   final Widget? child;
@@ -18,6 +19,7 @@ class ModalBottomSheetHelper {
   final EdgeInsetsGeometry? padding;
 
   ModalBottomSheetHelper({
+    this.key,
     this.title,
     required this.context,
     this.child,
@@ -50,6 +52,7 @@ class ModalBottomSheetHelper {
                   (title != null ? 60 + (childFooter != null ? 60 : 0) : 0)) -
               MediaQuery.of(context).viewInsets.bottom);
           return Container(
+            key: key,
             margin: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),

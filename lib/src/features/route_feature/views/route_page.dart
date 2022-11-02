@@ -22,6 +22,7 @@ import 'package:pickpointer/src/features/offer_feature/views/new_offer_page.dart
 import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
 import 'package:pickpointer/src/features/payment_feature/views/payment_page.dart';
 import 'package:pickpointer/src/features/route_feature/logic/route_controller.dart';
+import 'package:pickpointer/src/features/route_feature/views/widgets/new_offer_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/offer_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/offers_empty_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_card_widget.dart';
@@ -45,6 +46,21 @@ class RoutePage extends StatefulWidget {
 
 class _RoutePageState extends State<RoutePage> {
   final RouteController routeController = RouteController.instance;
+
+  newOfferModal() {
+    ModalBottomSheetHelper(
+      key: const Key('newOfferModal'),
+      context: context,
+      title: 'Realizar ruta',
+      child: NewOfferPage(
+        key: const Key('newOfferPageModal'),
+        abstractRouteEntity: routeController.abstractRouteEntity!,
+      ),
+      complete: () {
+        routeController.onReady();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,17 +106,7 @@ class _RoutePageState extends State<RoutePage> {
                         ),
                       );
                     } else {
-                      ModalBottomSheetHelper(
-                        context: context,
-                        title: 'Realizar ruta',
-                        child: NewOfferPage(
-                          abstractRouteEntity:
-                              routeController.abstractRouteEntity!,
-                        ),
-                        complete: () {
-                          routeController.onReady();
-                        },
-                      );
+                      newOfferModal();
                     }
                   } else {
                     Get.to(
@@ -291,6 +297,7 @@ class _RoutePageState extends State<RoutePage> {
               ),
             ),
             if (routeController.listAbstractOfferEntity.isEmpty &&
+                !routeController.isDriver.value &&
                 !routeController.isLoading.value)
               Positioned(
                 bottom: 16,
@@ -303,6 +310,23 @@ class _RoutePageState extends State<RoutePage> {
                       onPressed: () {
                         routeController.subscribeToRouteTopic();
                       },
+                    ),
+                  ),
+                ),
+              ),
+            if (routeController.listAbstractOfferEntity.isEmpty &&
+                routeController.isDriver.value &&
+                !routeController.isLoading.value)
+              Positioned(
+                bottom: 16,
+                left: 0,
+                right: 0,
+                child: SafeAreaWidget(
+                  child: FractionallySizedBoxWidget(
+                    child: NewOfferCardWidget(
+                      price: routeController.routePrice.value,
+                      isLoading: routeController.isLoading.value,
+                      onPressed: newOfferModal,
                     ),
                   ),
                 ),

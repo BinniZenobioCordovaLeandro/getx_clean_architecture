@@ -228,6 +228,9 @@ class DarkTheme {
           return colorBrand;
         }),
       ),
+      timePickerTheme: const TimePickerThemeData(
+        dialHandColor: colorBrand,
+      ),
       textTheme: const TextTheme(
         headline1: TextStyle(
           color: Color(0xFFEEEEEE),

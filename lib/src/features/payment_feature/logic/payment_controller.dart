@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
@@ -66,6 +67,7 @@ class PaymentController extends GetxController {
   var offerStartLatLng = LatLng(0, 0).obs;
   var offerEndLatLng = LatLng(0, 0).obs;
   var offerWayPoints = <LatLng>[].obs;
+  DateTime? offerDateTime;
   var userOriginLatLng = LatLng(0, 0).obs;
   var userDestinationLatLng = LatLng(0, 0).obs;
   var payMethod = 1.obs;
@@ -149,6 +151,32 @@ class PaymentController extends GetxController {
           body: 'Su orden ha sido creada con exito',
         )
         .then((value) => value);
+    if (offerDateTime != null) {
+      final String dateString =
+          DateFormat('dd/MM/yyyy kk:mm a').format(offerDateTime!);
+      notificationProvider?.sendLocalNotification(
+        title: 'TU VIAJE ES EN 3 DIAS',
+        body: 'Preparate, alista todo para $dateString',
+        dateTime: offerDateTime?.subtract(
+          const Duration(days: 3),
+        ),
+      );
+      notificationProvider?.sendLocalNotification(
+        title: 'TU VIAJE ES MAÑANA',
+        body: 'Preparate, alista todo para $dateString',
+        dateTime: offerDateTime?.subtract(
+          const Duration(days: 1),
+        ),
+      );
+      notificationProvider?.sendLocalNotification(
+        title: '¡TU VIAJE ES EN 1 HORA!',
+        body:
+            'Revisa tu equipaje, documentos y dinero, PRONTO LLEGAREMOS A TU DOMICILIO',
+        dateTime: offerDateTime?.subtract(
+          const Duration(hours: 1),
+        ),
+      );
+    }
     return futureBool;
   }
 
@@ -170,6 +198,7 @@ class PaymentController extends GetxController {
       listLatLng = decodeListWaypoints(wayPoints);
     }
     offerWayPoints.value = listLatLng;
+    offerDateTime = abstractOfferEntity.dateTime;
     offerAvailableSeats.value =
         (abstractOfferEntity.maxCount! - abstractOfferEntity.count!);
   }
@@ -236,6 +265,7 @@ class PaymentController extends GetxController {
                 offerCount: abstractOfferEntity.count,
                 offerMaxCount: abstractOfferEntity.maxCount,
                 offerPrice: abstractOfferEntity.price,
+                offerDateTime: abstractOfferEntity.dateTime,
                 offerStartLat: abstractOfferEntity.startLat,
                 offerStartLng: abstractOfferEntity.startLng,
                 offerEndLat: abstractOfferEntity.endLat,
@@ -288,7 +318,7 @@ class PaymentController extends GetxController {
                     abstractOrderEntity.offerCount! -
                     abstractOrderEntity.count!;
                 message +=
-                    '\nEspera un poco, estamos trabajando en completar los $pendingComplete pasajero(s) restantes';
+                    '\nTe notificaremos cuando todo este listo..., estamos trabajando en completar los $pendingComplete pasajero(s) restantes';
               }
               GetxSnackbarWidget(
                 title: 'ORDEN CREADA!',

@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pickpointer/src/core/widgets/blur_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
-import 'package:pickpointer/src/core/widgets/circle_avatar_image_widget.dart';
+import 'package:pickpointer/src/core/widgets/elevated_button_icon_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
-import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class StartTripCardWidget extends StatelessWidget {
   final bool isLoading;
+  final DateTime? dateTime;
   final Function()? onPressed;
 
   const StartTripCardWidget({
     Key? key,
     this.isLoading = false,
+    this.dateTime,
     this.onPressed,
   }) : super(key: key);
 
   child(BuildContext context) {
+    bool isOnDate = dateTime != null && DateTime.now().isBefore(dateTime!);
+    String? dateString = DateFormat('dd/MM/yyyy kk:mm a').format(dateTime!);
     return CardWidget(
       color: Colors.transparent,
       child: FractionallySizedBoxWidget(
@@ -29,19 +33,31 @@ class StartTripCardWidget extends StatelessWidget {
           ),
           child: WrapWidget(
             children: [
+              if (isOnDate)
+                TextWidget(
+                  '¡Esperando a que completen los pasajeros!',
+                  style: Theme.of(context).textTheme.headline6,
+                )
+              else
+                TextWidget(
+                  '¡Estamos buscando pasajeros!',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
               TextWidget(
-                '¡Esperando a que completen los pasajeros!',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              TextWidget(
-                'Si decides iniciar YA!, no se buscaran mas pasajeros para tu viaje y TENDRAS QUE INICIAR EL VIAJE.',
+                'Estamos trabajando para vender los asientos para tu viaje del dia y hora',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              ProgressStateButtonWidget(
-                state: isLoading ? ButtonState.loading : ButtonState.success,
-                success: 'Iniciar viaje YA!',
-                onPressed: onPressed,
-              )
+              if (isOnDate)
+                ProgressStateButtonWidget(
+                  state: isLoading ? ButtonState.loading : ButtonState.success,
+                  success: 'Iniciar viaje YA!',
+                  onPressed: onPressed,
+                )
+              else
+                ElevatedButtonIconWidget(
+                  icon: Icons.alarm_rounded,
+                  title: dateString,
+                )
             ],
           ),
         ),

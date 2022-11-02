@@ -15,6 +15,8 @@ class OfferModel implements AbstractOfferEntity {
   @override
   final double? total;
   @override
+  final DateTime? dateTime;
+  @override
   final String? startLat;
   @override
   final String? startLng;
@@ -84,6 +86,7 @@ class OfferModel implements AbstractOfferEntity {
     this.maxCount,
     this.price,
     this.total,
+    this.dateTime,
     this.startLat,
     this.startLng,
     this.endLat,
@@ -123,6 +126,9 @@ class OfferModel implements AbstractOfferEntity {
         maxCount: data['max_count'] as int?,
         price: double.tryParse('${data['price']}'),
         total: double.tryParse('${data['total']}'),
+        dateTime: data['date_time'] != null
+            ? DateTime.parse(data['date_time'])
+            : null,
         startLat: data['start_lat'] as String?,
         startLng: data['start_lng'] as String?,
         endLat: data['end_lat'] as String?,
@@ -167,6 +173,7 @@ class OfferModel implements AbstractOfferEntity {
         'max_count': maxCount,
         'price': price,
         'total': total,
+        'date_time': dateTime?.toIso8601String(),
         'start_lat': startLat,
         'start_lng': startLng,
         'end_lat': endLat,
@@ -219,6 +226,7 @@ class OfferModel implements AbstractOfferEntity {
     int? maxCount,
     double? price,
     double? total,
+    DateTime? dateTime,
     String? startLat,
     String? startLng,
     String? endLat,
@@ -257,6 +265,7 @@ class OfferModel implements AbstractOfferEntity {
       maxCount: maxCount ?? this.maxCount,
       price: price ?? this.price,
       total: total ?? this.total,
+      dateTime: dateTime ?? this.dateTime,
       startLat: startLat ?? this.startLat,
       startLng: startLng ?? this.startLng,
       endLat: endLat ?? this.endLat,
@@ -302,6 +311,7 @@ class OfferModel implements AbstractOfferEntity {
       maxCount,
       price,
       total,
+      dateTime,
       startLat,
       startLng,
       endLat,

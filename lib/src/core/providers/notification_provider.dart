@@ -39,6 +39,7 @@ class NotificationProvider {
     String? title,
     String? body,
     String? bigPicture,
+    DateTime? dateTime,
   }) async {
     if (!notificationEnabled) checkPermission();
     if (notificationEnabled) {
@@ -52,6 +53,11 @@ class NotificationProvider {
               ? NotificationLayout.BigPicture
               : NotificationLayout.Default,
           bigPicture: bigPicture,
+        ),
+        schedule: NotificationCalendar.fromDate(
+          date: dateTime ?? DateTime.now(),
+          preciseAlarm: true,
+          allowWhileIdle: true,
         ),
       );
       return true;

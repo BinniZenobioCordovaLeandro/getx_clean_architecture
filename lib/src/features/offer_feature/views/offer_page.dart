@@ -54,15 +54,15 @@ class _OfferPageState extends State<OfferPage> {
               ),
               onPressed: () => offerController.refreshOffer(),
             ),
-            IconButton(
-              tooltip: 'Mensajes',
-              icon: const Icon(
-                Icons.message_rounded,
-              ),
-              onPressed: () {
-                offerController.scaffoldKey.currentState!.openEndDrawer();
-              },
-            ),
+            // IconButton(
+            //   tooltip: 'Mensajes',
+            //   icon: const Icon(
+            //     Icons.message_rounded,
+            //   ),
+            //   onPressed: () {
+            //     offerController.scaffoldKey.currentState!.openEndDrawer();
+            //   },
+            // ),
             PopupMenuButton(
               itemBuilder: (context) {
                 return [
@@ -265,6 +265,7 @@ class _OfferPageState extends State<OfferPage> {
                           count: offerController.offerCount.value,
                           maxCount: offerController.offerMaxCount.value,
                           total: offerController.offerTotal.value,
+                          dateTime: offerController.offerDateTime,
                         ),
                         for (var order in offerController.offerOrders.value)
                           SizedBox(
@@ -346,6 +347,7 @@ class _OfferPageState extends State<OfferPage> {
                             if (offerController.offerStateId.value == '-1')
                               StartTripCardWidget(
                                 isLoading: offerController.isLoading.value,
+                                dateTime: offerController.offerDateTime,
                                 onPressed: () {
                                   offerController
                                       .startTrip()

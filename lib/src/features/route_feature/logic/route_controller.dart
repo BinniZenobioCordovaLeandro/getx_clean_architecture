@@ -58,6 +58,7 @@ class RouteController extends GetxController {
 
   var routeTo = ''.obs;
   var routeFrom = ''.obs;
+  var routePrice = 0.0.obs;
 
   Future<bool> getPolylineBetweenCoordinates({
     required LatLng origin,
@@ -187,6 +188,7 @@ class RouteController extends GetxController {
     routeId.value = abstractRouteEntity.id!;
     routeTo.value = abstractRouteEntity.to!;
     routeFrom.value = abstractRouteEntity.from!;
+    routePrice.value = abstractRouteEntity.price!;
     this.abstractRouteEntity = abstractRouteEntity;
     centerRouteMap(abstractRouteEntity);
     getPolylineBetweenCoordinates(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/firebase_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/data/models/offer_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
@@ -54,6 +55,10 @@ class NewOfferController extends GetxController {
   var maxCount = 0.obs;
   var price = 0.0.obs;
   var showImmediately = false.obs;
+  var dateTimeString = ''.obs;
+  var timeOfDayString = ''.obs;
+  DateTime dateTime = DateTime.now();
+  TimeOfDay timeOfDay = TimeOfDay.now();
 
   Future<bool>? sendLocalNotification({
     required AbstractRouteEntity abstractRouteEntity,
@@ -65,6 +70,47 @@ class NewOfferController extends GetxController {
               'Ahora eres visible para los usuarios en esta ruta:\nDestino: ${abstractRouteEntity.to}\nOrigen: ${abstractRouteEntity.from}',
         )
         .then((value) => value);
+    if (dateTime != null) {
+      DateTime offerDateTime = dateTime.add(
+        Duration(
+          hours: timeOfDay.hour,
+          minutes: timeOfDay.minute,
+        ),
+      );
+      final String dateString =
+          DateFormat('dd/MM/yyyy kk:mm a').format(offerDateTime!);
+      notificationProvider?.sendLocalNotification(
+        title: 'TU VIAJE ES EN 3 DIAS, destino "${abstractRouteEntity.to}"',
+        body: 'Preparate, alista todo para salir PUNTUAL el $dateString',
+        dateTime: offerDateTime.subtract(
+          const Duration(days: 3),
+        ),
+      );
+      notificationProvider?.sendLocalNotification(
+        title: 'TU VIAJE ES MAÑANA, destino "${abstractRouteEntity.to}"',
+        body: 'Preparate, alista todo para salir PUNTUAL el $dateString',
+        dateTime: offerDateTime.subtract(
+          const Duration(days: 1),
+        ),
+      );
+      notificationProvider?.sendLocalNotification(
+        title: '¡TU VIAJE ES EN 1 HORA!, destino "${abstractRouteEntity.to}"',
+        body:
+            'Revisa tu nivel de combustible, documentos y estado del vehiculo. COMIENZA A CALENTAR MOTORES',
+        dateTime: offerDateTime.subtract(
+          const Duration(hours: 1),
+        ),
+      );
+      notificationProvider?.sendLocalNotification(
+        title:
+            '¡LLEGO LA HORA DE TU VIAJE A destino "${abstractRouteEntity.to}"!',
+        body:
+            'Llego la hora, revisa el estado de los asientos vendidos, al destino "${abstractRouteEntity.to}"',
+        dateTime: offerDateTime.subtract(
+          const Duration(hours: 1),
+        ),
+      );
+    }
     return futureBool;
   }
 
@@ -96,12 +142,19 @@ class NewOfferController extends GetxController {
               .call(userId: abstractSessionEntity.idUsers!)!
               .then((AbstractUserEntity abstractUserEntity) {
             if (abstractUserEntity.isDriver == '1') {
+              print(dateTime);
               AbstractOfferEntity abstractOfferEntity = OfferModel(
                 id: _uuid.v1(),
                 count: 0,
                 maxCount: maxCount.value,
                 price: price.value,
                 total: 0.0,
+                dateTime: dateTime.add(
+                  Duration(
+                    hours: timeOfDay.hour,
+                    minutes: timeOfDay.minute,
+                  ),
+                ),
                 startLat: abstractRouteEntity.startLat,
                 startLng: abstractRouteEntity.startLng,
                 endLat: abstractRouteEntity.endLat,

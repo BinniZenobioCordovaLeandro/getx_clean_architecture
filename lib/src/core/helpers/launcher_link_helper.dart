@@ -13,7 +13,7 @@ class LauncherLinkHelper {
         scheme: 'tel',
         path: url,
       );
-    } else if (isPhone == true) {
+    } else if (isMail == true) {
       _uri = Uri(
         scheme: 'mailto',
         path: url,

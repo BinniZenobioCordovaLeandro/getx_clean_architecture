@@ -77,6 +77,7 @@ class OrderController extends GetxController {
 
   var routeTo = ''.obs;
   var routeFrom = ''.obs;
+  DateTime? offerDateTime;
   var userPickPointLat = ''.obs;
   var userPickPointLng = ''.obs;
 
@@ -206,6 +207,7 @@ class OrderController extends GetxController {
       orderId.value = abstractOrderEntity.id!;
       routeTo.value = abstractOrderEntity.routeTo!;
       routeFrom.value = abstractOrderEntity.routeFrom!;
+      offerDateTime = abstractOrderEntity.offerDateTime;
 
       userPickPointLat.value = abstractOrderEntity.userPickPointLat!;
       userPickPointLng.value = abstractOrderEntity.userPickPointLng!;

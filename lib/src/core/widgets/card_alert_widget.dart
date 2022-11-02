@@ -11,14 +11,14 @@ class CardAlertWidget extends StatelessWidget {
     Key? key,
     this.title,
     this.message,
-    this.color = const Color(0x33f44336),
+    this.color = Colors.red,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CardWidget(
       elevation: 0,
-      color: color,
+      color: color?.withOpacity(0.3),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: FractionallySizedBoxWidget(
@@ -26,7 +26,7 @@ class CardAlertWidget extends StatelessWidget {
             text: TextSpan(
               text: (title != null) ? '$title ' : null,
               style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                    color: Colors.red,
+                    color: color,
                   ),
               children: [
                 if (message != null)

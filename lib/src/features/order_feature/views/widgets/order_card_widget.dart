@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pickpointer/src/core/widgets/blur_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
@@ -8,6 +9,7 @@ import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 class OrderCardWidget extends StatelessWidget {
   final String routeTo;
   final String routeFrom;
+  final DateTime? dateTime;
   final String userPickPointLat;
   final String userPickPointLng;
   final int? count;
@@ -17,6 +19,7 @@ class OrderCardWidget extends StatelessWidget {
     Key? key,
     required this.routeTo,
     required this.routeFrom,
+    this.dateTime,
     required this.userPickPointLat,
     required this.userPickPointLng,
     this.count = 1,
@@ -24,6 +27,9 @@ class OrderCardWidget extends StatelessWidget {
   }) : super(key: key);
 
   child(BuildContext context) {
+    String? dateString = (dateTime != null)
+        ? DateFormat('dd/MM/yyyy kk:mm a').format(dateTime!)
+        : null;
     return CardWidget(
       color: Colors.transparent,
       child: FractionallySizedBoxWidget(
@@ -35,11 +41,24 @@ class OrderCardWidget extends StatelessWidget {
             spacing: 2,
             runSpacing: 2,
             children: <Widget>[
+              if (dateTime != null)
+                SizedBox(
+                  width: double.infinity,
+                  child: TextWidget(
+                    'Fecha de salida: $dateString',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              if (dateTime != null) const Divider(),
               SizedBox(
                 width: double.infinity,
                 child: TextWidget(
                   'Destino: $routeTo',
-                  style: Theme.of(context).textTheme.headline6?.copyWith(
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,
                       ),

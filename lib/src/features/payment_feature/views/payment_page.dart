@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
@@ -40,11 +41,22 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      String? dateString = (paymentController.offerDateTime != null)
+          ? DateFormat('dd/MM/yyyy kk:mm a')
+              .format(paymentController.offerDateTime!)
+          : null;
       return FormWidget(
         key: paymentController.formKey,
         child: ScaffoldScrollWidget(
           title: 'Contratar viaje',
           children: [
+            if (dateString != null)
+              CardAlertWidget(
+                color: Theme.of(context).primaryColor,
+                title: 'El vehiculo saldra en fecha y hora $dateString',
+                message:
+                    'Luego de comprar tu asiento, te notificaremos cuando la fecha y hora lleguen, y cuando el vehiculo este cerca a tu posición.',
+              ),
             SizedBox(
               width: double.infinity,
               child: TextWidget(

@@ -20,7 +20,7 @@ export const handler = (event: any) => {
       const offerDocument = doc.data();
       if (!offerDocument) reject(Error("offer not found"));
 
-      // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
+      // Esperando -1, enCarretera 2 , enListo 3, Completado 1, Cancelado 0
       const newStatus = {state_id: "1", state_description: "Completado"};
       const newData = {updated_at: currentDate};
 

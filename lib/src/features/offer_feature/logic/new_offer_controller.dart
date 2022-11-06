@@ -71,14 +71,16 @@ class NewOfferController extends GetxController {
         )
         .then((value) => value);
     if (dateTime != null) {
-      DateTime offerDateTime = dateTime.add(
-        Duration(
-          hours: timeOfDay.hour,
-          minutes: timeOfDay.minute,
-        ),
+      DateTime offerDateTime = DateTime(
+        dateTime.year,
+        dateTime.month,
+        dateTime.day,
+        timeOfDay.hour,
+        timeOfDay.minute,
       );
+
       final String dateString =
-          DateFormat('dd/MM/yyyy kk:mm a').format(offerDateTime!);
+          DateFormat('dd/MM/yyyy kk:mm a').format(offerDateTime);
       notificationProvider?.sendLocalNotification(
         title: 'TU VIAJE ES EN 3 DIAS, destino "${abstractRouteEntity.to}"',
         body: 'Preparate, alista todo para salir PUNTUAL el $dateString',
@@ -142,19 +144,21 @@ class NewOfferController extends GetxController {
               .call(userId: abstractSessionEntity.idUsers!)!
               .then((AbstractUserEntity abstractUserEntity) {
             if (abstractUserEntity.isDriver == '1') {
-              print(dateTime);
+              DateTime offerDateTime = DateTime(
+                dateTime.year,
+                dateTime.month,
+                dateTime.day,
+                timeOfDay.hour,
+                timeOfDay.minute,
+              );
+              print(offerDateTime.toIso8601String());
               AbstractOfferEntity abstractOfferEntity = OfferModel(
                 id: _uuid.v1(),
                 count: 0,
                 maxCount: maxCount.value,
                 price: price.value,
                 total: 0.0,
-                dateTime: dateTime.add(
-                  Duration(
-                    hours: timeOfDay.hour,
-                    minutes: timeOfDay.minute,
-                  ),
-                ),
+                dateTime: offerDateTime,
                 startLat: abstractRouteEntity.startLat,
                 startLng: abstractRouteEntity.startLng,
                 endLat: abstractRouteEntity.endLat,
@@ -163,7 +167,7 @@ class NewOfferController extends GetxController {
                 orders: [],
                 stateId: '-1',
                 stateDescription:
-                    'Esperando', // STATUS // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
+                    'Esperando', // STATUS // Esperando -1, enCarretera 2 , enListo 3, Completado 1, Cancelado 0
                 userId: abstractSessionEntity.idUsers,
                 userName: abstractUserEntity.name,
                 userEmail: abstractUserEntity.email,

@@ -41,6 +41,9 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      DateTime currentDateTime = DateTime.now();
+      bool? isOnDate =
+          paymentController.offerDateTime?.isBefore(currentDateTime);
       String? dateString = (paymentController.offerDateTime != null)
           ? DateFormat('dd/MM/yyyy kk:mm a')
               .format(paymentController.offerDateTime!)
@@ -50,7 +53,7 @@ class _PaymentPageState extends State<PaymentPage> {
         child: ScaffoldScrollWidget(
           title: 'Contratar viaje',
           children: [
-            if (dateString != null)
+            if (isOnDate == false)
               CardAlertWidget(
                 color: Theme.of(context).primaryColor,
                 title: 'El vehiculo saldra en fecha y hora $dateString',

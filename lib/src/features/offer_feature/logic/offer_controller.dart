@@ -90,8 +90,8 @@ class OfferController extends GetxController {
   var offerOrders = <OfferOrderEntity>[].obs;
   DateTime? offerDateTime;
 
-  var offerStateId =
-      ''.obs; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
+  var offerStateId = ''
+      .obs; // Esperando -1, enCarretera 2 , enListo 3, Completado 1, Cancelado 0
 
   double distanceBetween({
     required LatLng start,

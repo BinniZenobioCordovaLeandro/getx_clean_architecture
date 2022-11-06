@@ -18,14 +18,14 @@ export const handler = (event: any) => {
       const offerDocument = doc.data();
       if (!offerDocument) reject(Error("offer not found"));
 
-      // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
+      // Esperando -1, enCarretera 2 , enListo 3, Completado 1, Cancelado 0
       const newStatus = {state_id: "2", state_description: "En Carretera"};
       const newData = {updated_at: currentDate, max_count: offerDocument.count};
 
       // let orders = [];
       const clientsInformation = JSON.parse(offerDocument!.orders);
 
-      if (offerDocument.state_id === "-1") {
+      if (offerDocument.state_id === "-1" || offerDocument.state_id === "3") {
         // message to clients, notify that the offer is in the way
         clientsInformation.forEach((client: any) => {
           const orderId = client.order_id;

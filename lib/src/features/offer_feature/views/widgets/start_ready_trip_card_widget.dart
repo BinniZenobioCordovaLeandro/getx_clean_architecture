@@ -9,12 +9,12 @@ import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:progress_state_button/progress_button.dart';
 
-class StartTripCardWidget extends StatelessWidget {
+class StartReadyTripCardWidget extends StatelessWidget {
   final bool isLoading;
   final DateTime? dateTime;
   final Function()? onPressed;
 
-  const StartTripCardWidget({
+  const StartReadyTripCardWidget({
     Key? key,
     this.isLoading = false,
     this.dateTime,
@@ -22,7 +22,7 @@ class StartTripCardWidget extends StatelessWidget {
   }) : super(key: key);
 
   child(BuildContext context) {
-    bool isOnDate = dateTime != null && DateTime.now().isBefore(dateTime!);
+    bool isOnDate = dateTime != null && dateTime!.isBefore(DateTime.now());
     String? dateString = DateFormat('dd/MM/yyyy kk:mm a').format(dateTime!);
     return CardWidget(
       color: Colors.transparent,
@@ -35,22 +35,30 @@ class StartTripCardWidget extends StatelessWidget {
             children: [
               if (isOnDate)
                 TextWidget(
-                  '¡Esperando a que completen los pasajeros!',
+                  '¡Asientos vendidos!',
                   style: Theme.of(context).textTheme.headline6,
                 )
               else
                 TextWidget(
-                  '¡Estamos buscando pasajeros!',
+                  '¡Vendimos los asientos, espera la fecha para que puedas INICIAR!',
                   style: Theme.of(context).textTheme.headline6,
                 ),
-              TextWidget(
-                'Estamos trabajando para vender los asientos para tu viaje del dia y hora',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              if (isOnDate)
+                TextWidget(
+                  'Hurray!, todos los asientos se vendieron.\nAHORA pulsa el boton "Iniciar viaje YA!", para notificar a los usuarios que iniciaste el recorrido y estas en camino.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              if (isOnDate)
+                TextWidget(
+                  'RECUERDA MANTENERTE EN ESTA PAGINA DURANTE EL VIAJE Y CONECTADO A INTERNET, Para que podamos notificar a los usuarios de tu ubicación.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                ),
               if (isOnDate)
                 ProgressStateButtonWidget(
                   state: isLoading ? ButtonState.loading : ButtonState.success,
-                  success: 'Iniciar viaje YA!',
+                  success: 'Vendido, Iniciar viaje YA!',
                   onPressed: onPressed,
                 )
               else

@@ -20,7 +20,8 @@ import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip
 import 'package:pickpointer/src/features/offer_feature/views/widgets/offer_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/order_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
-import 'package:pickpointer/src/features/offer_feature/views/widgets/start_trip_card_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/widgets/start_ready_trip_card_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/widgets/start_waiting_trip_card_widget.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {
@@ -345,7 +346,7 @@ class _OfferPageState extends State<OfferPage> {
                                 },
                               ),
                             if (offerController.offerStateId.value == '-1')
-                              StartTripCardWidget(
+                              StartWaitingTripCardWidget(
                                 isLoading: offerController.isLoading.value,
                                 dateTime: offerController.offerDateTime,
                                 onPressed: () {
@@ -357,6 +358,23 @@ class _OfferPageState extends State<OfferPage> {
                                     }
                                   });
                                 },
+                              ),
+                            if (offerController.offerStateId.value == '3')
+                              SizedBox(
+                                width: double.infinity,
+                                child: StartReadyTripCardWidget(
+                                  isLoading: offerController.isLoading.value,
+                                  dateTime: offerController.offerDateTime,
+                                  onPressed: () {
+                                    offerController
+                                        .startTrip()
+                                        .then((bool boolean) {
+                                      if (boolean == true) {
+                                        offerController.refreshOffer();
+                                      }
+                                    });
+                                  },
+                                ),
                               ),
                           ],
                         ),

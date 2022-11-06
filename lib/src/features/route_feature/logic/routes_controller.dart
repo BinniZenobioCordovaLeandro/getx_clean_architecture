@@ -47,7 +47,7 @@ class RoutesController extends GetxController {
   );
 
   final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
-    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
   final GetRoutesUsecase _getRoutesUsecase = GetRoutesUsecase(

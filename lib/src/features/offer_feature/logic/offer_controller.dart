@@ -73,6 +73,7 @@ class OfferController extends GetxController {
   var errorMessage = ''.obs;
   var positionTaxi = LatLng(-12.0, -76.0).obs;
   var userCarPlate = ''.obs;
+  var userCarPhoto = ''.obs;
   var listOrders = [].obs;
   var travelTime = const Duration().obs;
   var travelDistance = 0.0.obs;
@@ -88,6 +89,8 @@ class OfferController extends GetxController {
   var offerStartLatLng = LatLng(0, 0).obs;
   var offerListWayPoints = <LatLng>[].obs;
   var offerOrders = <OfferOrderEntity>[].obs;
+  var closeOfferOrders = <OfferOrderEntity>[].obs;
+  var offerOrdersNotified = [];
   DateTime? offerDateTime;
 
   var offerStateId = ''
@@ -138,6 +141,40 @@ class OfferController extends GetxController {
     return futureListLatLng;
   }
 
+  filterCloseOrders({
+    int isCloseMetters = 1000,
+  }) {
+    var localCloseOfferOrders = <OfferOrderEntity>[];
+    if (offerStateId.value == '2') {
+      for (var order in offerOrders.value) {
+        if (distanceBetween(
+              start: positionTaxi.value,
+              end: LatLng(
+                double.parse(order.pickPointLat!),
+                double.parse(order.pickPointLng!),
+              ),
+            ) <
+            isCloseMetters) {
+          localCloseOfferOrders.add(order);
+          bool orderNotified = offerOrdersNotified.contains(order.orderId);
+          if (orderNotified == false) {
+            firebaseNotificationProvider?.sendMessage(
+              to: ['${order.tokenMessaging}'],
+              title: '¡Vehiculo ${userCarPlate.value} CERCA a ti!',
+              body:
+                  'Alistate!, estamos a poco de llegar, Auto PLACA ${userCarPlate.value}',
+              isMessage: true,
+              link: '/order/${order.orderId}',
+              image: userCarPhoto.value,
+            );
+            offerOrdersNotified.add(order.orderId);
+          }
+        }
+      }
+    }
+    closeOfferOrders.value = localCloseOfferOrders;
+  }
+
   prepareStreamCurrentPosition() {
     streamPosition =
         geolocatorProvider!.onPositionChanged.listen((Position position) {
@@ -155,6 +192,7 @@ class OfferController extends GetxController {
           .then((AbstractVehicleEntity abstractVehicleEntity) {
         errorMessage.value = '';
         print('value: ${abstractVehicleEntity.latitude}');
+        filterCloseOrders();
       }).catchError((error) {
         errorMessage.value = 'Activa tu conección a internet.';
         print('error: $error');
@@ -170,6 +208,7 @@ class OfferController extends GetxController {
           position.longitude,
         );
         moveMapToLocation(positionTaxi.value);
+        filterCloseOrders();
         prepareStreamCurrentPosition();
         getPolylineBetweenCoordinates(
           origin: positionTaxi.value,
@@ -241,6 +280,7 @@ class OfferController extends GetxController {
             abstractSessionEntity: SessionModel(
           isSigned: abstractSessionEntity.isSigned,
           isDriver: abstractSessionEntity.isDriver,
+          isPhoneVerified: abstractSessionEntity.isPhoneVerified,
           idSessions: abstractSessionEntity.idSessions,
           idUsers: abstractSessionEntity.idUsers,
           onRoad: false,
@@ -275,6 +315,7 @@ class OfferController extends GetxController {
     offerOrders.value = abstractOfferEntity.orders!;
     offerDateTime = abstractOfferEntity.dateTime!;
     userCarPlate.value = abstractOfferEntity.userCarPlate!;
+    userCarPhoto.value = abstractOfferEntity.userCarPhoto!;
     if (abstractOfferEntity.stateId == '1' ||
         abstractOfferEntity.stateId == '0') {
       cleanSession().then((bool boolean) {

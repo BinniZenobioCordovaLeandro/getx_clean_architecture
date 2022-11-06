@@ -5,7 +5,7 @@ import 'package:pickpointer/packages/route_package/data/datasources/route_dataso
 import 'package:pickpointer/packages/route_package/data/models/route_model.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/usecases/add_request_usecase.dart';
-import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
+import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
@@ -32,7 +32,7 @@ class NewRouteController extends GetxController {
   var destain = ''.obs;
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
-    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
   final AddRequestRouteUsecase _addRequestRouteUsecase = AddRequestRouteUsecase(

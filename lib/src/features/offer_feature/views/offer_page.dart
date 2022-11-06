@@ -305,35 +305,25 @@ class _OfferPageState extends State<OfferPage> {
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            for (var order in offerController.offerOrders.value)
-                              (offerController.distanceBetween(
-                                        start:
-                                            offerController.positionTaxi.value,
-                                        end: LatLng(
-                                          double.parse(order.pickPointLat!),
-                                          double.parse(order.pickPointLng!),
-                                        ),
-                                      ) <
-                                      1000)
-                                  ? AcceptPassengerCardWidget(
-                                      avatar: order.avatar,
-                                      fullName: order.fullName,
-                                      phoneNumber: order.phoneNumber,
-                                      count: order.count,
-                                      onPressed: () {
-                                        offerController
-                                            .firebaseNotificationProvider
-                                            ?.sendMessage(
-                                          to: ['${order.tokenMessaging}'],
-                                          title: '¡Bienvenido a bordo!',
-                                          body:
-                                              'Usar el cinturon y mascarilla es OBLIGATORIO, ${order.fullName}',
-                                          isMessage: true,
-                                          link: '/order/${order.orderId}',
-                                        );
-                                      },
-                                    )
-                                  : const SizedBox(),
+                            for (var order
+                                in offerController.closeOfferOrders.value)
+                              AcceptPassengerCardWidget(
+                                avatar: order.avatar,
+                                fullName: order.fullName,
+                                phoneNumber: order.phoneNumber,
+                                count: order.count,
+                                onPressed: () {
+                                  offerController.firebaseNotificationProvider
+                                      ?.sendMessage(
+                                    to: ['${order.tokenMessaging}'],
+                                    title: '¡Bienvenido a bordo!',
+                                    body:
+                                        'Usar el cinturon y mascarilla es OBLIGATORIO, ${order.fullName}',
+                                    isMessage: true,
+                                    link: '/order/${order.orderId}',
+                                  );
+                                },
+                              ),
                             if (offerController.distanceBetween(
                                   start: offerController.positionTaxi.value,
                                   end: offerController.offerEndLatLng.value,

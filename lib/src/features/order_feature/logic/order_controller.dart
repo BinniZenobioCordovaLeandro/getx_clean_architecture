@@ -235,6 +235,7 @@ class OrderController extends GetxController {
         await _updateSessionUsecase.call(
             abstractSessionEntity: SessionModel(
           isSigned: abstractSessionEntity.isSigned,
+          isPhoneVerified: abstractSessionEntity.isPhoneVerified,
           isDriver: abstractSessionEntity.isDriver,
           idSessions: abstractSessionEntity.idSessions,
           idUsers: abstractSessionEntity.idUsers,

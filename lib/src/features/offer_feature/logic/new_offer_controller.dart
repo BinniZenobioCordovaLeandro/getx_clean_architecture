@@ -33,7 +33,7 @@ class NewOfferController extends GetxController {
       FirebaseNotificationProvider.getInstance();
 
   final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
-    abstractSessionRepository: SharedPreferencesSessionDatasources(),
+    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
   final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(

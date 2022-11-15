@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pickpointer/src/app.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
@@ -10,17 +9,18 @@ import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dar
 import 'package:pickpointer/src/core/widgets/svg_or_image_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/video_player_widget.dart';
-import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
+import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class WebLayout extends StatelessWidget {
   const WebLayout({Key? key}) : super(key: key);
 
-  Widget rowPresentation({
+  Widget section({
     Widget? child,
     String? urlSvgOrImage,
     String? idYoutuveVideo,
     double? verticalPadding = 100.0,
     String? background,
+    bool isMobile = false,
   }) {
     return Container(
       width: double.infinity,
@@ -53,17 +53,68 @@ class WebLayout extends StatelessWidget {
                       sigmaY: 15.0,
                     ),
                     blendMode: BlendMode.color,
-                    child: Center(
-                      child: child,
+                    child: Column(
+                      children: [
+                        Center(
+                          child: child,
+                        ),
+                        if ((urlSvgOrImage != null || idYoutuveVideo != null) &&
+                            isMobile)
+                          const Divider(),
+                        if (urlSvgOrImage != null && isMobile)
+                          SizedBox(
+                            width: double.infinity,
+                            child: Center(
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 400,
+                                  minHeight: 200,
+                                ),
+                                child: AspectRatio(
+                                  aspectRatio: 16 / 9,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: SvgOrImageWidget(
+                                      urlSvgOrImage: urlSvgOrImage,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (idYoutuveVideo != null && isMobile)
+                          SizedBox(
+                            width: double.infinity,
+                            child: Center(
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 400,
+                                  minHeight: 200,
+                                ),
+                                child: AspectRatio(
+                                  aspectRatio: 9 / 16,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: VideoPlayerWidget(
+                                      initialVideoId: idYoutuveVideo,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              if (urlSvgOrImage != null || idYoutuveVideo != null)
+              if ((urlSvgOrImage != null || idYoutuveVideo != null) &&
+                  !isMobile)
                 const VerticalDivider(
                   width: 16,
                 ),
-              if (urlSvgOrImage != null)
+              if (urlSvgOrImage != null && !isMobile)
                 Flexible(
                   flex: 3,
                   child: Center(
@@ -85,7 +136,7 @@ class WebLayout extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (idYoutuveVideo != null)
+              if (idYoutuveVideo != null && !isMobile)
                 Flexible(
                   flex: 3,
                   child: Center(
@@ -129,6 +180,8 @@ class WebLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var media = MediaQuery.of(context).size;
+    bool isMobile = media.width <= 450;
     return Row(
       children: [
         Expanded(
@@ -137,43 +190,51 @@ class WebLayout extends StatelessWidget {
             body: SingleChildScrollViewWidget(
               child: Column(
                 children: [
-                  rowPresentation(
+                  section(
+                    isMobile: isMobile,
                     background:
                         "https://img.freepik.com/fotos-premium/taxi-ciudad-nueva-york-color-amarillo-semaforo_42667-507.jpg?w=2040",
                     verticalPadding: 300,
-                    child: Column(
-                      children: [
-                        const Divider(),
-                        TextWidget(
-                          'Para verdaderos conductores',
-                          style:
-                              Theme.of(context).textTheme.headline6?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                        ),
-                        TextWidget(
-                          'PICKPOINTER',
-                          style:
-                              Theme.of(context).textTheme.headline4?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                        ),
-                        const Divider(),
-                        SizedBox(
-                          width: 300,
-                          child: ElevatedButtonWidget(
-                            title: 'Unete a nosotros',
-                            onPressed: () {
-                              Get.to(
-                                () => const SignInUserPage(),
-                              );
-                            },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          const Divider(),
+                          TextWidget(
+                            'Para verdaderos conductores',
+                            style:
+                                Theme.of(context).textTheme.headline6?.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                      ],
+                          TextWidget(
+                            'PICKPOINTER',
+                            style:
+                                Theme.of(context).textTheme.headline4?.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                          ),
+                          const Divider(),
+                          SizedBox(
+                            width: 300,
+                            child: ElevatedButtonWidget(
+                              title: 'Unete a nosotros',
+                              onPressed: () {
+                                LauncherLinkHelper(
+                                  url:
+                                      "https://play.google.com/store/apps/details?id=com.pickpointer.app",
+                                ).launchInBrowser();
+                              },
+                            ),
+                          ),
+                          const Divider(),
+                        ],
+                      ),
                     ),
                   ),
-                  rowPresentation(
+                  section(
+                    isMobile: isMobile,
                     child: Column(
                       children: [
                         TextWidget(
@@ -190,30 +251,34 @@ class WebLayout extends StatelessWidget {
                     urlSvgOrImage:
                         'https://img.freepik.com/fotos-premium/joven-taxista-macho-feliz-sienta-al-volante-taxi-muestra-como_170532-3255.jpg',
                   ),
-                  rowPresentation(
+                  section(
+                    isMobile: isMobile,
                     background:
                         'https://img.freepik.com/fotos-premium/autos-estacionados-carretera_10541-812.jpg?w=1060',
-                    child: Column(
-                      children: [
-                        TextWidget(
-                          'Nuestros objetivos',
-                          style:
-                              Theme.of(context).textTheme.headline4?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                        ),
-                        const Divider(),
-                        TextWidget(
-                          'PickPointer\nFue creado debido a la necesidad de una app\nque busca mejorar el servicio colaborativo.',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        const Divider(),
-                        SizedBox(
-                          width: double.infinity,
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: CardWidget(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          TextWidget(
+                            'Nuestros objetivos',
+                            style:
+                                Theme.of(context).textTheme.headline4?.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                          ),
+                          const Divider(),
+                          TextWidget(
+                            'PickPointer\nFue creado debido a la necesidad de una app\nque busca mejorar el servicio colaborativo.',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          const Divider(),
+                          SizedBox(
+                            width: double.infinity,
+                            child: WrapWidget(
+                              alignment: WrapAlignment.spaceEvenly,
+                              children: [
+                                CardWidget(
+                                  width: 360,
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Center(
@@ -222,14 +287,13 @@ class WebLayout extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const VerticalDivider(),
-                              Flexible(
-                                child: CardWidget(
+                                CardWidget(
+                                  width: 360,
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Center(
@@ -238,14 +302,13 @@ class WebLayout extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const VerticalDivider(),
-                              Flexible(
-                                child: CardWidget(
+                                CardWidget(
+                                  width: 360,
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Center(
@@ -254,14 +317,13 @@ class WebLayout extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const VerticalDivider(),
-                              Flexible(
-                                child: CardWidget(
+                                CardWidget(
+                                  width: 360,
                                   child: Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Center(
@@ -270,18 +332,20 @@ class WebLayout extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                  rowPresentation(
+                  section(
+                    isMobile: isMobile,
                     verticalPadding: 30,
                     child: Column(
                       children: [
@@ -292,10 +356,8 @@ class WebLayout extends StatelessWidget {
                         const Divider(),
                         SizedBox(
                           width: double.infinity,
-                          child: Flex(
-                            direction: Axis.horizontal,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: WrapWidget(
+                            alignment: WrapAlignment.spaceEvenly,
                             children: [
                               InkWell(
                                 onTap: () => LauncherLinkHelper(
@@ -309,7 +371,6 @@ class WebLayout extends StatelessWidget {
                                       "https://d13xymm0hzzbsd.cloudfront.net/1/20200520/15900085160480.svg",
                                 ),
                               ),
-                              const VerticalDivider(),
                               InkWell(
                                 onTap: () => LauncherLinkHelper(
                                   url: "https://apps.apple.com/app/id109315351",
@@ -327,22 +388,27 @@ class WebLayout extends StatelessWidget {
                       ],
                     ),
                   ),
-                  rowPresentation(
+                  section(
+                    isMobile: isMobile,
                     background:
                         'https://img.freepik.com/foto-gratis/elegante-taxista-cliente-coche-mascaras-medicas_23-2149149622.jpg',
-                    child: Column(
-                      children: [
-                        TextWidget(
-                          '¿Como funciona la APP?',
-                          style:
-                              Theme.of(context).textTheme.headline4?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          TextWidget(
+                            '¿Como funciona la APP?',
+                            style:
+                                Theme.of(context).textTheme.headline4?.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  rowPresentation(
+                  section(
+                    isMobile: isMobile,
                     verticalPadding: 20,
                     idYoutuveVideo: 'w_Qn07zg-Kk',
                     child: Column(
@@ -354,7 +420,8 @@ class WebLayout extends StatelessWidget {
                       ],
                     ),
                   ),
-                  rowPresentation(
+                  section(
+                    isMobile: isMobile,
                     verticalPadding: 20,
                     idYoutuveVideo: 'b6F7M6Puxdg',
                     child: Column(
@@ -366,35 +433,8 @@ class WebLayout extends StatelessWidget {
                       ],
                     ),
                   ),
-                  rowPresentation(
-                    verticalPadding: 10,
-                    background:
-                        'https://img.freepik.com/foto-gratis/borrosa-trafico-luz-senderos-camino-noche_1359-413.jpg',
-                    child: Column(
-                      children: [
-                        TextWidget(
-                          'Comienza a usar PICKPOINTER!',
-                          style:
-                              Theme.of(context).textTheme.headline4?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const Divider(),
-                        Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(
-                            maxHeight: 500,
-                          ),
-                          child: const AspectRatio(
-                            aspectRatio: 9 / 16,
-                            child: App(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  rowPresentation(
+                  section(
+                    isMobile: isMobile,
                     verticalPadding: 20,
                     child: Column(
                       children: [
@@ -402,7 +442,7 @@ class WebLayout extends StatelessWidget {
                           'Siguenos en',
                           style: Theme.of(context).textTheme.headline4,
                         ),
-                        const Divider(),
+                        const SizedBox(height: 20),
                         Flex(
                           direction: Axis.horizontal,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -423,6 +463,18 @@ class WebLayout extends StatelessWidget {
                             const VerticalDivider(),
                             InkWell(
                               onTap: () => LauncherLinkHelper(
+                                url: "https://www.tiktok.com/@pickpointer",
+                              ).launchInBrowser(),
+                              child: const SvgOrImageWidget(
+                                height: 50,
+                                width: 50,
+                                urlSvgOrImage:
+                                    "https://d13xymm0hzzbsd.cloudfront.net/1/20220816/16606907004948.webp",
+                              ),
+                            ),
+                            const VerticalDivider(),
+                            InkWell(
+                              onTap: () => LauncherLinkHelper(
                                 url:
                                     "https://www.youtube.com/channel/UCNhVUpNu3gOuhyG7R-sjxNw",
                               ).launchInBrowser(),
@@ -433,7 +485,6 @@ class WebLayout extends StatelessWidget {
                                     "https://d13xymm0hzzbsd.cloudfront.net/1/20220816/16606907006301.webp",
                               ),
                             ),
-                            const VerticalDivider(),
                           ],
                         ),
                       ],

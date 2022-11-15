@@ -43,14 +43,14 @@ export const handler = (event: any) => {
 
           if (requestQuantity <= availableQuantity) {
           // STATUS
-          // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
+          // Esperando -1, enCarretera 2 , enListo 3, Completado 1, Cancelado 0
             const newOfferCount = currentCounter + requestQuantity;
             const newStatus = {state_id: "-1", state_description: "Esperando"};
 
             console.log("newOfferCount == max_counter", newOfferCount, " == ", maxCounter);
             if (newOfferCount == maxCounter) {
-              newStatus.state_id = "2";
-              newStatus.state_description = "En Carretera";
+              newStatus.state_id = "3";
+              newStatus.state_description = "En Listo";
             }
 
             // Update offer
@@ -135,7 +135,11 @@ export const handler = (event: any) => {
                           is_message: "true",
                           link: `/offer/${offerDocument.id}`,
                         },
-                      });
+                      }).then(() =>
+                        functions.logger.info(`Driver notified ${offerDocument.user_car_plate}`)
+                      ).catch(() =>
+                        functions.logger.warn(`error notifying Driver ${offerDocument.user_car_plate}`)
+                      );
                       break;
                     case "2": // enCarretera
                       console.log(
@@ -168,6 +172,29 @@ export const handler = (event: any) => {
                           title: "¡LISTO! Inicia la ruta",
                           body: `Los ${maxCounter} asientos fueron vendidos,
                             ponte en ruta con el vehiculo ${orderRequest.driver_car_plate}`,
+                          imageUrl: orderRequest.driver_car_photo,
+                        },
+                        data: {
+                          is_message: "true",
+                          link: `/offer/${offerDocument.id}`,
+                        },
+                      }).then(() =>
+                        functions.logger.info(`Driver notified ${offerDocument.user_car_plate}`)
+                      ).catch(() =>
+                        functions.logger.warn(`error notifying Driver ${offerDocument.user_car_plate}`)
+                      );
+                      break;
+                    case "3":
+                      console.log(
+                          "// TODO: send notification to user and driver, that the offer is \"On Ready to start\""
+                      );
+                      // message to driver, notify that the offer is ready to start
+                      console.log("orderRequest.driver_token_messaging: ", orderRequest.driver_token_messaging);
+                      sendNotificationMessage(orderRequest.driver_token_messaging, {
+                        notification: {
+                          title: "¡TODOS LOS ASIENTOS VENDIDOS! Inicia la ruta YA!",
+                          body: `Todos los ${maxCounter} asientos fueron vendidos,
+                            Inicia la ruta YA!, y ponte en ruta con el vehiculo ${orderRequest.driver_car_plate}`,
                           imageUrl: orderRequest.driver_car_photo,
                         },
                         data: {

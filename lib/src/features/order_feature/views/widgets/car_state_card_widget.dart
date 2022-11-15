@@ -7,7 +7,7 @@ import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class CarStateCardWidget extends StatelessWidget {
   final String?
-      carStateId; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
+      carStateId; // Esperando -1, enCarretera 2 , enListo 3, Completado 1, Cancelado 0
 
   const CarStateCardWidget({
     Key? key,

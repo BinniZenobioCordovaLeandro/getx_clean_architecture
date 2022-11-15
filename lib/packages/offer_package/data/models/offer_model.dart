@@ -30,7 +30,7 @@ class OfferModel implements AbstractOfferEntity {
   final List<OfferOrderEntity>? orders;
   @override
   final String?
-      stateId; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
+      stateId; // Esperando -1, enCarretera 2 , enListo 3, Completado 1, Cancelado 0
   @override
   final String? stateDescription;
   @override

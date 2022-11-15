@@ -22,7 +22,8 @@ class OfferCardWidget extends StatelessWidget {
   }) : super(key: key);
 
   child(BuildContext context) {
-    bool isOnDate = DateTime.now().isBefore(abstractOfferEntity.dateTime!);
+    DateTime currentDateTime = DateTime.now();
+    bool? isOnDate = abstractOfferEntity.dateTime?.isBefore(currentDateTime);
     String? dateString =
         DateFormat('dd/MM/yyyy kk:mm a').format(abstractOfferEntity.dateTime!);
     int? availableSeat =
@@ -40,7 +41,7 @@ class OfferCardWidget extends StatelessWidget {
             ),
             child: Column(
               children: <Widget>[
-                if (isOnDate)
+                if (isOnDate == true)
                   SizedBox(
                     width: double.infinity,
                     child: TextWidget(

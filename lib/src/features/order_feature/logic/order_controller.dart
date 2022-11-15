@@ -67,8 +67,8 @@ class OrderController extends GetxController {
   var userPosition = LatLng(-12.0, -76.0).obs;
 
   var taxiPosition = LatLng(-12.0, -76.0).obs;
-  var taxiStateId =
-      ''.obs; // Esperando -1, enCarretera 2 , Completado 1, Cancelado 0
+  var taxiStateId = ''
+      .obs; // Esperando -1, enCarretera 2 , enListo 3, Completado 1, Cancelado 0
 
   var orderId = ''.obs;
   var orderStateId = ''.obs;
@@ -235,6 +235,7 @@ class OrderController extends GetxController {
         await _updateSessionUsecase.call(
             abstractSessionEntity: SessionModel(
           isSigned: abstractSessionEntity.isSigned,
+          isPhoneVerified: abstractSessionEntity.isPhoneVerified,
           isDriver: abstractSessionEntity.isDriver,
           idSessions: abstractSessionEntity.idSessions,
           idUsers: abstractSessionEntity.idUsers,

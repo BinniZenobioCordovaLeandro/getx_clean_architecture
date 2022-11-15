@@ -20,7 +20,8 @@ import 'package:pickpointer/src/features/offer_feature/views/widgets/finish_trip
 import 'package:pickpointer/src/features/offer_feature/views/widgets/offer_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/order_card_widget.dart';
 import 'package:pickpointer/src/features/offer_feature/views/widgets/popup_marker_passenger_widget.dart';
-import 'package:pickpointer/src/features/offer_feature/views/widgets/start_trip_card_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/widgets/start_ready_trip_card_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/views/widgets/start_waiting_trip_card_widget.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class OfferPage extends StatefulWidget {
@@ -304,35 +305,25 @@ class _OfferPageState extends State<OfferPage> {
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            for (var order in offerController.offerOrders.value)
-                              (offerController.distanceBetween(
-                                        start:
-                                            offerController.positionTaxi.value,
-                                        end: LatLng(
-                                          double.parse(order.pickPointLat!),
-                                          double.parse(order.pickPointLng!),
-                                        ),
-                                      ) <
-                                      1000)
-                                  ? AcceptPassengerCardWidget(
-                                      avatar: order.avatar,
-                                      fullName: order.fullName,
-                                      phoneNumber: order.phoneNumber,
-                                      count: order.count,
-                                      onPressed: () {
-                                        offerController
-                                            .firebaseNotificationProvider
-                                            ?.sendMessage(
-                                          to: ['${order.tokenMessaging}'],
-                                          title: '¡Bienvenido a bordo!',
-                                          body:
-                                              'Usar el cinturon y mascarilla es OBLIGATORIO, ${order.fullName}',
-                                          isMessage: true,
-                                          link: '/order/${order.orderId}',
-                                        );
-                                      },
-                                    )
-                                  : const SizedBox(),
+                            for (var order
+                                in offerController.closeOfferOrders.value)
+                              AcceptPassengerCardWidget(
+                                avatar: order.avatar,
+                                fullName: order.fullName,
+                                phoneNumber: order.phoneNumber,
+                                count: order.count,
+                                onPressed: () {
+                                  offerController.firebaseNotificationProvider
+                                      ?.sendMessage(
+                                    to: ['${order.tokenMessaging}'],
+                                    title: '¡Bienvenido a bordo!',
+                                    body:
+                                        'Usar el cinturon y mascarilla es OBLIGATORIO, ${order.fullName}',
+                                    isMessage: true,
+                                    link: '/order/${order.orderId}',
+                                  );
+                                },
+                              ),
                             if (offerController.distanceBetween(
                                   start: offerController.positionTaxi.value,
                                   end: offerController.offerEndLatLng.value,
@@ -345,7 +336,7 @@ class _OfferPageState extends State<OfferPage> {
                                 },
                               ),
                             if (offerController.offerStateId.value == '-1')
-                              StartTripCardWidget(
+                              StartWaitingTripCardWidget(
                                 isLoading: offerController.isLoading.value,
                                 dateTime: offerController.offerDateTime,
                                 onPressed: () {
@@ -357,6 +348,23 @@ class _OfferPageState extends State<OfferPage> {
                                     }
                                   });
                                 },
+                              ),
+                            if (offerController.offerStateId.value == '3')
+                              SizedBox(
+                                width: double.infinity,
+                                child: StartReadyTripCardWidget(
+                                  isLoading: offerController.isLoading.value,
+                                  dateTime: offerController.offerDateTime,
+                                  onPressed: () {
+                                    offerController
+                                        .startTrip()
+                                        .then((bool boolean) {
+                                      if (boolean == true) {
+                                        offerController.refreshOffer();
+                                      }
+                                    });
+                                  },
+                                ),
                               ),
                           ],
                         ),

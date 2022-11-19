@@ -6,6 +6,7 @@ import * as sendNotificationToTopicPackage from "./functions/sendNotificationTop
 import * as startTripPackage from "./functions/startTripFunction";
 import * as finishTripPackage from "./functions/finishTripFunction";
 import * as triggers from "./triggers";
+import * as offersNotificationSchedule from "./schedules/offersNotificationSchedule";
 
 admin.initializeApp();
 
@@ -72,3 +73,13 @@ export const triggerOnUpdate = functions.firestore.document("{collection}/{id}")
   triggers.handler(change, context);
 }
 );
+
+// // Start writing Firebase schedules functions
+// // https://firebase.google.com/docs/functions/schedule-functions
+//
+
+export const scheduledFunction = functions.pubsub.schedule("every 6 hours").onRun((context) => {
+  functions.logger.info("SCHEDULED every 6 hours");
+  const handler = offersNotificationSchedule.handler(context);
+  return handler;
+});

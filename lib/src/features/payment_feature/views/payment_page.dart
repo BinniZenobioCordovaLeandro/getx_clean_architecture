@@ -179,213 +179,224 @@ class _PaymentPageState extends State<PaymentPage> {
                   : ButtonState.success,
               success: 'CONTINUAR',
               onPressed: () {
-                paymentController.calculateAditionalPrice()!.then((bool value) {
-                  if (value) {
-                    ModalBottomSheetHelper(
-                      context: context,
-                      title: '',
-                      child: Obx(() {
-                        return SizedBox(
-                          width: double.infinity,
-                          child: FractionallySizedBoxWidget(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: WrapWidget(
-                                children: [
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: TextWidget(
-                                      'Resumen de pago',
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
+                bool isValidForm =
+                    paymentController.formKey.currentState!.validate();
+                if (isValidForm) {
+                  paymentController
+                      .calculateAditionalPrice()!
+                      .then((bool value) {
+                    if (value) {
+                      ModalBottomSheetHelper(
+                        context: context,
+                        title: '',
+                        child: Obx(() {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: FractionallySizedBoxWidget(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: WrapWidget(
+                                  children: [
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: TextWidget(
+                                        'Resumen de pago',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
+                                      ),
                                     ),
-                                  ),
-                                  PaymentResumeWidget(
-                                    quantity: paymentController.seats.value,
-                                    subtotal: paymentController.subtotal.value,
-                                    aditional:
-                                        paymentController.aditionalCost.value,
-                                    total: paymentController.total.value,
-                                  ),
-                                  AspectRatio(
-                                    aspectRatio: 16 / 9,
-                                    child: FlutterMapWidget(
-                                      onMapCreated: (MapController controller) {
-                                        paymentController.mapController =
-                                            controller;
-                                      },
-                                      children: [
-                                        MarkerLayerWidget(
-                                          options: MarkerLayerOptions(
-                                            markers: [
-                                              Marker(
-                                                width: 50,
-                                                height: 50,
-                                                anchorPos: AnchorPos.align(
-                                                  AnchorAlign.center,
-                                                ),
-                                                point: paymentController
-                                                    .offerStartLatLng.value,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        const Icon(
-                                                  Icons.taxi_alert_outlined,
-                                                  color: Colors.blue,
-                                                  size: 50,
-                                                ),
-                                              ),
-                                              Marker(
-                                                width: 50,
-                                                height: 50,
-                                                anchorPos: AnchorPos.align(
-                                                  AnchorAlign.top,
-                                                ),
-                                                point: paymentController
-                                                    .offerEndLatLng.value,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        const Icon(
-                                                  Icons.location_pin,
-                                                  color: Colors.red,
-                                                  size: 50,
-                                                ),
-                                              ),
-                                              Marker(
-                                                width: 50,
-                                                height: 50,
-                                                anchorPos: AnchorPos.align(
-                                                    AnchorAlign.top),
-                                                point: paymentController
-                                                    .userOriginLatLng.value,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        Icon(
-                                                  Icons.person_pin,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  size: 50,
-                                                ),
-                                              ),
-                                              Marker(
-                                                width: 50,
-                                                height: 50,
-                                                anchorPos: AnchorPos.align(
-                                                    AnchorAlign.top),
-                                                point: paymentController
-                                                    .userDestinationLatLng
-                                                    .value,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        const Icon(
-                                                  Icons.person_pin,
-                                                  color: Colors.red,
-                                                  size: 50,
-                                                ),
-                                              ),
-                                              for (var wayPoint
-                                                  in paymentController
-                                                      .offerWayPoints.value)
+                                    PaymentResumeWidget(
+                                      quantity: paymentController.seats.value,
+                                      subtotal:
+                                          paymentController.subtotal.value,
+                                      aditional:
+                                          paymentController.aditionalCost.value,
+                                      total: paymentController.total.value,
+                                    ),
+                                    AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: FlutterMapWidget(
+                                        onMapCreated:
+                                            (MapController controller) {
+                                          paymentController.mapController =
+                                              controller;
+                                        },
+                                        children: [
+                                          MarkerLayerWidget(
+                                            options: MarkerLayerOptions(
+                                              markers: [
                                                 Marker(
-                                                  width: 10,
-                                                  height: 10,
+                                                  width: 50,
+                                                  height: 50,
                                                   anchorPos: AnchorPos.align(
-                                                      AnchorAlign.center),
-                                                  point: wayPoint,
+                                                    AnchorAlign.center,
+                                                  ),
+                                                  point: paymentController
+                                                      .offerStartLatLng.value,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          const Icon(
+                                                    Icons.taxi_alert_outlined,
+                                                    color: Colors.blue,
+                                                    size: 50,
+                                                  ),
+                                                ),
+                                                Marker(
+                                                  width: 50,
+                                                  height: 50,
+                                                  anchorPos: AnchorPos.align(
+                                                    AnchorAlign.top,
+                                                  ),
+                                                  point: paymentController
+                                                      .offerEndLatLng.value,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          const Icon(
+                                                    Icons.location_pin,
+                                                    color: Colors.red,
+                                                    size: 50,
+                                                  ),
+                                                ),
+                                                Marker(
+                                                  width: 50,
+                                                  height: 50,
+                                                  anchorPos: AnchorPos.align(
+                                                      AnchorAlign.top),
+                                                  point: paymentController
+                                                      .userOriginLatLng.value,
                                                   builder:
                                                       (BuildContext context) =>
                                                           Icon(
-                                                    Icons.circle,
+                                                    Icons.person_pin,
                                                     color: Theme.of(context)
                                                         .primaryColor,
-                                                    size: 10,
+                                                    size: 50,
                                                   ),
                                                 ),
-                                            ],
-                                          ),
-                                        ),
-                                        PolylineLayerWidget(
-                                          options: PolylineLayerOptions(
-                                            polylines: [
-                                              Polyline(
-                                                points: <LatLng>[
-                                                  ...paymentController
-                                                      .basePolylineListLatLng
+                                                Marker(
+                                                  width: 50,
+                                                  height: 50,
+                                                  anchorPos: AnchorPos.align(
+                                                      AnchorAlign.top),
+                                                  point: paymentController
+                                                      .userDestinationLatLng
                                                       .value,
-                                                ],
-                                                strokeWidth: 5,
-                                                color: Colors.black,
-                                                isDotted: true,
-                                                gradientColors: <Color>[
-                                                  Colors.grey,
-                                                ],
-                                              ),
-                                              Polyline(
-                                                points: <LatLng>[
-                                                  ...paymentController
-                                                      .userPolylineListLatLng
-                                                      .value,
-                                                ],
-                                                strokeWidth: 5,
-                                                color: Colors.black,
-                                                isDotted: true,
-                                                gradientColors: <Color>[
-                                                  Colors.blue,
-                                                  Colors.red,
-                                                  Colors.red,
-                                                  Colors.red,
-                                                  Colors.red,
-                                                  Colors.red,
-                                                ],
-                                              ),
-                                            ],
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          const Icon(
+                                                    Icons.person_pin,
+                                                    color: Colors.red,
+                                                    size: 50,
+                                                  ),
+                                                ),
+                                                for (var wayPoint
+                                                    in paymentController
+                                                        .offerWayPoints.value)
+                                                  Marker(
+                                                    width: 10,
+                                                    height: 10,
+                                                    anchorPos: AnchorPos.align(
+                                                        AnchorAlign.center),
+                                                    point: wayPoint,
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        Icon(
+                                                      Icons.circle,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      size: 10,
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          PolylineLayerWidget(
+                                            options: PolylineLayerOptions(
+                                              polylines: [
+                                                Polyline(
+                                                  points: <LatLng>[
+                                                    ...paymentController
+                                                        .basePolylineListLatLng
+                                                        .value,
+                                                  ],
+                                                  strokeWidth: 5,
+                                                  color: Colors.black,
+                                                  isDotted: true,
+                                                  gradientColors: <Color>[
+                                                    Colors.grey,
+                                                  ],
+                                                ),
+                                                Polyline(
+                                                  points: <LatLng>[
+                                                    ...paymentController
+                                                        .userPolylineListLatLng
+                                                        .value,
+                                                  ],
+                                                  strokeWidth: 5,
+                                                  color: Colors.black,
+                                                  isDotted: true,
+                                                  gradientColors: <Color>[
+                                                    Colors.blue,
+                                                    Colors.red,
+                                                    Colors.red,
+                                                    Colors.red,
+                                                    Colors.red,
+                                                    Colors.red,
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  TextWidget(
-                                    'Ruta sugerida para realizar el recorrido.\nEsta ruta puede cambiar, segun el trafico, accidentes vehiculares, o contrato de los asientos restantes.',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        ?.copyWith(
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                  ),
-                                  TextWidget(
-                                    'Luego de contratar, te enviaremos NOTIFICACIONES indicando cuando el vehiculo inicia la ruta y cuando esta cerca a tu PUNTO DE ORIGEN.\nTen un viaje SEGURO, COMODO, ACCESIBLE Y RAPIDO!',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        ?.copyWith(
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                  ),
-                                  ProgressStateButtonWidget(
-                                    state: paymentController.isLoading.value
-                                        ? ButtonState.loading
-                                        : ButtonState.success,
-                                    success: 'CONTRATAR',
-                                    loading: 'CONTRATANDO',
-                                    onPressed: () {
-                                      if (paymentController.payMethod.value !=
-                                          0) {
-                                        paymentController.onSubmit(
-                                          abstractOfferEntity:
-                                              widget.abstractOfferEntity!,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
+                                    TextWidget(
+                                      'Ruta sugerida para realizar el recorrido.\nEsta ruta puede cambiar, segun el trafico, accidentes vehiculares, o contrato de los asientos restantes.',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          ?.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                    ),
+                                    TextWidget(
+                                      'Luego de contratar, te enviaremos NOTIFICACIONES indicando cuando el vehiculo inicia la ruta y cuando esta cerca a tu PUNTO DE ORIGEN.\nTen un viaje SEGURO, COMODO, ACCESIBLE Y RAPIDO!',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          ?.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                    ),
+                                    ProgressStateButtonWidget(
+                                      state: paymentController.isLoading.value
+                                          ? ButtonState.loading
+                                          : ButtonState.success,
+                                      success: 'CONTRATAR',
+                                      loading: 'CONTRATANDO',
+                                      onPressed: () {
+                                        if (paymentController.payMethod.value !=
+                                            0) {
+                                          paymentController.onSubmit(
+                                            abstractOfferEntity:
+                                                widget.abstractOfferEntity!,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }),
-                    );
-                  }
-                });
+                          );
+                        }),
+                      );
+                    }
+                  });
+                }
               },
             ),
           ],

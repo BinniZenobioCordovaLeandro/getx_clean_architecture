@@ -65,7 +65,7 @@ class _RankWidgetState extends State<RankWidget> {
             right: 0,
             bottom: 0,
             child: Opacity(
-              opacity: 0.3,
+              opacity: 0.0,
               child: Slider(
                 activeColor: Colors.transparent,
                 inactiveColor: Colors.transparent,

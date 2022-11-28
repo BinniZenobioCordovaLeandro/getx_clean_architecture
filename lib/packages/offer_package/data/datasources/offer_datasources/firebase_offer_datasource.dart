@@ -12,7 +12,11 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
 
   @override
   Future<List<AbstractOfferEntity>>? getOffers() {
-    return offers?.get().then((snapshot) {
+    return offers
+        ?.where('state_id', isEqualTo: '-1')
+        .orderBy('created_at')
+        .get()
+        .then((snapshot) {
       List<AbstractOfferEntity> offers = [];
       for (DocumentSnapshot offer in snapshot.docs) {
         offers.add(OfferModel.fromMap(offer.data() as Map<String, dynamic>));

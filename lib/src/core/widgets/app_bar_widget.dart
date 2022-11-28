@@ -5,6 +5,7 @@ class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool? showGoback;
   final Function? onPressedGoBack;
+  final PreferredSizeWidget? bottom;
 
   const AppBarWidget({
     Key? key,
@@ -12,6 +13,7 @@ class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
     this.actions,
     this.showGoback = false,
     this.onPressedGoBack,
+    this.bottom,
   }) : super(key: key);
 
   @override
@@ -19,6 +21,7 @@ class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
+    if (bottom != null) return const Size.fromHeight(90.0);
     return const Size.fromHeight(56.0);
   }
 }
@@ -49,7 +52,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               },
             )
           : null,
-      toolbarHeight: 56,
+      // toolbarHeight: widget.bottom != null ? null : 56,
       elevation: 0,
       centerTitle: widget.title != null ? false : true,
       title: widget.title != null
@@ -58,6 +61,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             )
           : null,
       actions: widget.actions,
+      bottom: widget.bottom,
     );
   }
 }

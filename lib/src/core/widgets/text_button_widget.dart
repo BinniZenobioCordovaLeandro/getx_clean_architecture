@@ -33,6 +33,7 @@ class TextButtonWidget extends StatelessWidget {
                             ((onPressed != null)
                                 ? Theme.of(context).primaryColor
                                 : Theme.of(context).disabledColor),
+                        decoration: TextDecoration.underline,
                       ),
                 ),
               ),

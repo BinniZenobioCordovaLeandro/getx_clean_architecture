@@ -41,7 +41,7 @@ class StackOfferCardWidget extends StatelessWidget {
                               ?.copyWith(color: Theme.of(context).primaryColor),
                           children: [
                             TextSpan(
-                              text: '${listAbstractOfferEntity[1].routeTo}',
+                              text: '${listAbstractOfferEntity[0].routeTo}',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -54,7 +54,7 @@ class StackOfferCardWidget extends StatelessWidget {
                         ),
                       ),
                       TextWidget(
-                        'Origen: ${listAbstractOfferEntity[1].routeFrom}',
+                        'Origen: ${listAbstractOfferEntity[0].routeFrom}',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -67,7 +67,7 @@ class StackOfferCardWidget extends StatelessWidget {
                   title: 'Ver ruta',
                   onPressed: () {
                     if (onTapRoute != null) {
-                      onTapRoute!(listAbstractOfferEntity[1].routeId);
+                      onTapRoute!(listAbstractOfferEntity[0].routeId);
                     }
                   },
                 ),

@@ -35,7 +35,8 @@ class _NewRoutePageState extends State<NewRoutePage> {
             const SizedBox(
               width: double.infinity,
               child: TextWidget(
-                'TIP: Las rutas son rieles virtuales que los vehiculos pueden realizar.',
+                'TIP: Rellena el formulario con gran detalle y marca la posicion exacta de los puntos de origen y destino en los mapas.\nLa ruta que solicites sera realizada por varios vehiculos y tomada como referencia para el calculo de tiempo y costo de recojo a domicilio.',
+                textAlign: TextAlign.justify,
               ),
             ),
             TextFieldWidget(
@@ -133,7 +134,7 @@ class _NewRoutePageState extends State<NewRoutePage> {
             const SizedBox(
               width: double.infinity,
               child: TextWidget(
-                'TIP: El precio BASE debe considerar recojo a domicilio.\nLos clientes conocen que el recojo a domicilio esta permitido solo si se encuentra dentro de la ruta.',
+                'TIP: El precio BASE NO debe considerar recojo a domicilio, ese calculo lo realiza la aplicacion cuando el cliente compra el asiento.',
               ),
             ),
             TextFieldWidget(
@@ -145,7 +146,7 @@ class _NewRoutePageState extends State<NewRoutePage> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Especifique el precio por asiento. Ej. 4.00';
+                  return 'Ej. 3.50';
                 }
                 if (!(double.tryParse(value) != null)) {
                   return 'El precio debe ser un número';

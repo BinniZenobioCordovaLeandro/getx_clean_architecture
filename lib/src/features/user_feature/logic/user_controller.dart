@@ -17,7 +17,7 @@ import 'package:pickpointer/src/core/providers/firebase_authentication_provider.
 import 'package:pickpointer/src/core/providers/firebase_notification_provider.dart';
 import 'package:pickpointer/src/core/providers/storage_provider.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
-import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
+import 'package:pickpointer/src/features/home_page.dart';
 
 class UserController extends GetxController {
   static UserController get instance => Get.put(UserController());
@@ -314,7 +314,7 @@ class UserController extends GetxController {
           );
           isLoadingSave.value = false;
           Get.offAll(
-            () => const RoutesPage(),
+            () => const HomePage(),
           );
         });
       }

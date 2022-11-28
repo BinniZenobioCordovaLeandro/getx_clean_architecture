@@ -9,7 +9,7 @@ import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class RouteItemCardWidget extends StatelessWidget {
   final AbstractRouteEntity? abstractRouteEntity;
-  final void Function()? onTap;
+  final void Function(AbstractRouteEntity abstractRouteEntity)? onTap;
 
   const RouteItemCardWidget({
     Key? key,
@@ -20,7 +20,7 @@ class RouteItemCardWidget extends StatelessWidget {
   child(BuildContext context) {
     return CardWidget(
       child: InkWellWidget(
-        onTap: onTap,
+        onTap: onTap != null ? () => onTap!(abstractRouteEntity!) : null,
         child: FractionallySizedBoxWidget(
           child: Padding(
             padding: const EdgeInsets.symmetric(

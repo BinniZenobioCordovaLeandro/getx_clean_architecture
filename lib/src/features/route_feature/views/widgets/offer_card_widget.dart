@@ -97,7 +97,11 @@ class OfferCardWidget extends StatelessWidget {
                                     ),
                             textAlign: TextAlign.center,
                           ),
-                          TextWidget('${abstractOfferEntity.userName}'),
+                          TextWidget(
+                            '${abstractOfferEntity.userName}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
                     ),

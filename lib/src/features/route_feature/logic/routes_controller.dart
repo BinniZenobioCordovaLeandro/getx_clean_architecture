@@ -27,8 +27,6 @@ class RoutesController extends GetxController {
   final FirebaseNotificationProvider? firebaseNotificationProvider =
       FirebaseNotificationProvider.getInstance();
 
-  var isSigned = false.obs;
-  var isDriver = false.obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var routes = <AbstractRouteEntity>[].obs;
@@ -41,14 +39,6 @@ class RoutesController extends GetxController {
   var position = LatLng(-12.0, -76.0).obs;
   var predictions = <Prediction>[].obs;
   var version = 'x.x.x'.obs;
-
-  final VerifySessionUsecase _verifySessionUsecase = VerifySessionUsecase(
-    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
-  );
-
-  final UpdateSessionUsecase _updateSessionUsecase = UpdateSessionUsecase(
-    abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
-  );
 
   final GetRoutesUsecase _getRoutesUsecase = GetRoutesUsecase(
     abstractRouteRepository: FirebaseRouteDatasource(),
@@ -64,27 +54,6 @@ class RoutesController extends GetxController {
   moveToMyLocation() {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
       mapController?.move(position.value, 15.0);
-    });
-  }
-
-  Future<bool> verifySession() {
-    Future<bool> futureBool = _verifySessionUsecase
-        .call()
-        .then((AbstractSessionEntity abstractSessionEntity) {
-      isSigned.value = abstractSessionEntity.isSigned!;
-      isDriver.value = abstractSessionEntity.isDriver ?? false;
-      _updateSessionUsecase.call(abstractSessionEntity: abstractSessionEntity);
-      return isSigned.value;
-    });
-    return futureBool;
-  }
-
-  getVersion() {
-    PackageInfoProvider.getInstance()
-        .then((PackageInfoProvider? packageInfoProvider) {
-      if (packageInfoProvider != null) {
-        version.value = packageInfoProvider.getFullVersion();
-      }
     });
   }
 
@@ -261,9 +230,6 @@ class RoutesController extends GetxController {
 
       return listAbstractRouteEntity;
     });
-
-    verifySession();
-    getVersion();
     super.onReady();
   }
 

@@ -249,6 +249,10 @@ class LightTheme {
       timePickerTheme: const TimePickerThemeData(
         dialHandColor: colorBrand,
       ),
+      tabBarTheme: const TabBarTheme(
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.grey,
+      ),
       textTheme: const TextTheme(
         headline1: TextStyle(
           color: Color(0xFF424242),

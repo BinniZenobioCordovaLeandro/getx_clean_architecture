@@ -7,6 +7,7 @@ import * as startTripPackage from "./functions/startTripFunction";
 import * as finishTripPackage from "./functions/finishTripFunction";
 import * as triggers from "./triggers";
 import * as offersNotificationSchedule from "./schedules/offersNotificationSchedule";
+import * as driversNotificationSchedule from "./schedules/driversNotificationSchedule";
 
 admin.initializeApp();
 
@@ -80,6 +81,7 @@ export const triggerOnUpdate = functions.firestore.document("{collection}/{id}")
 
 export const scheduledFunction = functions.pubsub.schedule("every 6 hours").onRun((context) => {
   functions.logger.info("SCHEDULED every 6 hours");
+  driversNotificationSchedule.handler(context);
   const handler = offersNotificationSchedule.handler(context);
   return handler;
 });

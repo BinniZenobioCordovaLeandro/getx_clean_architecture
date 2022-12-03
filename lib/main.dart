@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
 import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
+import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
 import 'package:pickpointer/web_layout.dart';
 import 'firebase_options.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -31,6 +32,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      GetPage(
+        name: '/',
+        page: () => const App(),
+      ),
+      GetPage(
+        name: '/route/:abstractRouteEntityId',
+        page: () => const RoutePage(),
+      ),
+      GetPage(
+        name: '/order/:abstractOrderEntityId',
+        page: () => const OrderPage(),
+      ),
+      GetPage(
+        name: '/offer/:abstractOfferEntityId',
+        page: () => const OfferPage(),
+      ),
+      GetPage(
+        name: '/user',
+        page: () => const UserPage(),
+      ),
+    ];
     if (kIsWeb) {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
@@ -39,24 +62,7 @@ class MyApp extends StatelessWidget {
         darkTheme: DarkTheme().get(),
         defaultTransition: Transition.cupertino,
         initialRoute: '/',
-        getPages: [
-          GetPage(
-            name: '/',
-            page: () => const App(),
-          ),
-          GetPage(
-            name: '/route/:abstractRouteEntityId',
-            page: () => const RoutePage(),
-          ),
-          GetPage(
-            name: '/order/:abstractOrderEntityId',
-            page: () => const OrderPage(),
-          ),
-          GetPage(
-            name: '/offer/:abstractOfferEntityId',
-            page: () => const OfferPage(),
-          ),
-        ],
+        getPages: pages,
         home: Row(
           children: const [
             Expanded(
@@ -74,24 +80,7 @@ class MyApp extends StatelessWidget {
       darkTheme: DarkTheme().get(),
       defaultTransition: Transition.cupertino,
       initialRoute: '/',
-      getPages: [
-        GetPage(
-          name: '/',
-          page: () => const App(),
-        ),
-        GetPage(
-          name: '/route/:abstractRouteEntityId',
-          page: () => const RoutePage(),
-        ),
-        GetPage(
-          name: '/order/:abstractOrderEntityId',
-          page: () => const OrderPage(),
-        ),
-        GetPage(
-          name: '/offer/:abstractOfferEntityId',
-          page: () => const OfferPage(),
-        ),
-      ],
+      getPages: pages,
       home: const App(),
     );
   }

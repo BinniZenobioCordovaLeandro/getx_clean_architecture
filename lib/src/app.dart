@@ -89,54 +89,57 @@ class _AppState extends State<App> {
         platformProvider?.getPlatformEnum(context: context);
     if (platformEnum == PlatformEnum.android ||
         platformEnum == PlatformEnum.iOS) {
-      String? version =
-          firebaseConfigProvider!.getMinimalVersion(platformEnum!);
-      VersionUtil(version: version)
-          .isUpdateRequired()
-          .then((bool? isUpdateRequired) {
-        if (isUpdateRequired == true) {
-          ModalBottomSheetHelper(
-            context: context,
-            isDismissible: false,
-            child: SizedBox(
-              child: FractionallySizedBoxWidget(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: WrapWidget(
-                    children: [
-                      SizedBox(
-                        child: TextWidget(
-                          'Nueva version disponible',
-                          style: Theme.of(context).textTheme.headline6,
+      firebaseConfigProvider!
+          .getMinimalVersion(platformEnum!)
+          .then((version) => {
+                VersionUtil(version: version)
+                    .isUpdateRequired()
+                    .then((bool? isUpdateRequired) {
+                  if (isUpdateRequired == true) {
+                    ModalBottomSheetHelper(
+                      context: context,
+                      isDismissible: false,
+                      child: SizedBox(
+                        child: FractionallySizedBoxWidget(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: WrapWidget(
+                              children: [
+                                SizedBox(
+                                  child: TextWidget(
+                                    'Nueva version disponible',
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  child: TextWidget(
+                                      "Hemos mejorado para tí, es por ello que ahora tenemos una nueva version de la app.\n\nPor favor actualiza"),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(
-                        child: TextWidget(
-                            "Hemos mejorado para tí, es por ello que ahora tenemos una nueva version de la app.\n\nPor favor actualiza"),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            childFooter: SizedBox(
-                child: FractionallySizedBoxWidget(
-              child: ElevatedButtonWidget(
-                title: 'Ir a actualizar',
-                onPressed: () {
-                  LauncherLinkHelper launcherLinkHelper =
-                      LauncherLinkHelper(url: platformEnum.link!);
-                  if (platformEnum == PlatformEnum.android) {
-                    launcherLinkHelper.launchInBrowser();
-                  } else if (platformEnum == PlatformEnum.iOS) {
-                    launcherLinkHelper.launchUniversalLinkIos();
+                      childFooter: SizedBox(
+                          child: FractionallySizedBoxWidget(
+                        child: ElevatedButtonWidget(
+                          title: 'Ir a actualizar',
+                          onPressed: () {
+                            LauncherLinkHelper launcherLinkHelper =
+                                LauncherLinkHelper(url: platformEnum.link!);
+                            if (platformEnum == PlatformEnum.android) {
+                              launcherLinkHelper.launchInBrowser();
+                            } else if (platformEnum == PlatformEnum.iOS) {
+                              launcherLinkHelper.launchUniversalLinkIos();
+                            }
+                          },
+                        ),
+                      )),
+                    );
                   }
-                },
-              ),
-            )),
-          );
-        }
-      });
+                })
+              });
     }
   }
 

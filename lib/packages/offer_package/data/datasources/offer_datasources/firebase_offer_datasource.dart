@@ -26,6 +26,29 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
   }
 
   @override
+  Future<Map<String, List<AbstractOfferEntity>>>? getOffersGrouped() {
+    return offers
+        ?.where('state_id', isEqualTo: '-1')
+        .orderBy('created_at')
+        .get()
+        .then((snapshot) {
+      Map<String, List<AbstractOfferEntity>> mapStringList = {};
+      for (DocumentSnapshot offer in snapshot.docs) {
+        OfferModel offerModel =
+            OfferModel.fromMap(offer.data() as Map<String, dynamic>);
+        if (mapStringList[offerModel.routeId] != null &&
+            mapStringList[offerModel.routeId]!.isNotEmpty) {
+          mapStringList[offerModel.routeId!]!.add(offerModel);
+        } else {
+          mapStringList[offerModel.routeId!] = [];
+          mapStringList[offerModel.routeId!]!.add(offerModel);
+        }
+      }
+      return mapStringList;
+    });
+  }
+
+  @override
   Future<List<AbstractOfferEntity>>? getOffersByRoute({
     required String routeId,
   }) {

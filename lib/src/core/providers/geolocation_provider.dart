@@ -35,7 +35,7 @@ class GeolocatorProvider {
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 100,
-        timeLimit: Duration(seconds: 10),
+        // timeLimit: Duration(seconds: 10),
       ),
     )
         .listen(handlerOnPositionChanged, onError: (err) {

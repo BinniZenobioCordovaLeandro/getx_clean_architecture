@@ -119,12 +119,16 @@ class NewOfferController extends GetxController {
   Future<bool>? sendNotificationToRouteTopic({
     required AbstractOfferEntity abstractOfferEntity,
   }) {
+    int? availableSites = abstractOfferEntity.maxCount;
+    String? pluralSuffix =
+        availableSites != null && availableSites > 1 ? "s" : "";
+    String? price = abstractOfferEntity.price?.toStringAsFixed(2);
     Future<bool>? futureBool = firebaseNotificationProvider!.sendMessageToTopic(
-      topic: 'route_${abstractOfferEntity.routeId}',
-      title:
-          'S/ ${abstractOfferEntity.price?.toStringAsFixed(2)} => ${abstractOfferEntity.routeTitle}',
+      // topic: 'route_${abstractOfferEntity.routeId}',
+      topic: 'pickpointer_app',
+      title: '¡AUTO DISPONIBLE!, viaja a ${abstractOfferEntity.routeTo}',
       body:
-          'Viaja a ${abstractOfferEntity.routeTo} por solo S/${abstractOfferEntity.price?.toStringAsFixed(2)}!',
+          'AUTO "${abstractOfferEntity.userCarModel}", precio de S/ $price por pasajero.\nRecojo a domicilio\n$availableSites asiento$pluralSuffix disponible$pluralSuffix',
       link: '/route/${abstractOfferEntity.routeId}',
     )..then((value) => value);
     return futureBool;

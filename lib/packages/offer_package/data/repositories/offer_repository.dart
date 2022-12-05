@@ -15,6 +15,11 @@ class OfferRepository implements AbstractOfferRepository {
   }
 
   @override
+  Future<Map<String, List<AbstractOfferEntity>>>? getOffersGrouped() {
+    return _abstractOfferRepository!.getOffersGrouped();
+  }
+
+  @override
   Future<List<AbstractOfferEntity>>? getOffersByRoute({
     required String routeId,
   }) {

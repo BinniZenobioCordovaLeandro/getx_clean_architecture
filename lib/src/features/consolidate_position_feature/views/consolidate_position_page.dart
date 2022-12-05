@@ -105,7 +105,7 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                     child: WrapWidget(
                       children: [
                         if (consolidatePositionController
-                            .listAbstractOfferEntity.value.isNotEmpty)
+                            .mapStringListAbstractOfferEntity.value.isNotEmpty)
                           SizedBox(
                             width: double.infinity,
                             child: TextWidget(
@@ -114,24 +114,27 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                               textAlign: TextAlign.left,
                             ),
                           ),
-                        if (consolidatePositionController
-                            .filteredOffers.value.isNotEmpty)
-                          StackOfferCardWidget(
-                            listAbstractOfferEntity:
-                                consolidatePositionController
-                                    .filteredOffers.value,
-                            onTap: onTapOffer,
-                            onTapRoute: onTapOfferRoute,
-                          )
+                        if (consolidatePositionController.isFiltered.value)
+                          for (var listAbstractOfferEntity
+                              in consolidatePositionController
+                                  .filteredOffers.value.values)
+                            StackOfferCardWidget(
+                              listAbstractOfferEntity: listAbstractOfferEntity,
+                              onTap: onTapOffer,
+                              onTapRoute: onTapOfferRoute,
+                            )
                         else if (consolidatePositionController
-                            .listAbstractOfferEntity.value.isNotEmpty)
-                          StackOfferCardWidget(
-                            listAbstractOfferEntity:
-                                consolidatePositionController
-                                    .listAbstractOfferEntity.value,
-                            onTap: onTapOffer,
-                            onTapRoute: onTapOfferRoute,
-                          ),
+                            .mapStringListAbstractOfferEntity.value.isNotEmpty)
+                          for (var listAbstractOfferEntity
+                              in consolidatePositionController
+                                  .mapStringListAbstractOfferEntity
+                                  .value
+                                  .values)
+                            StackOfferCardWidget(
+                              listAbstractOfferEntity: listAbstractOfferEntity,
+                              onTap: onTapOffer,
+                              onTapRoute: onTapOfferRoute,
+                            ),
                         if (consolidatePositionController
                             .listAbstractRouteEntity.value.isNotEmpty)
                           SizedBox(
@@ -142,25 +145,22 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                               textAlign: TextAlign.left,
                             ),
                           ),
-                        if (consolidatePositionController
-                            .listAbstractRouteEntity.value.isNotEmpty)
-                          if (consolidatePositionController
-                              .filteredRoutes.value.isNotEmpty)
-                            for (var abstractRouteEntity
-                                in consolidatePositionController
-                                    .filteredRoutes.value)
-                              RouteItemCardWidget(
-                                abstractRouteEntity: abstractRouteEntity,
-                                onTap: onTapRoute,
-                              )
-                          else
-                            for (var abstractRouteEntity
-                                in consolidatePositionController
-                                    .listAbstractRouteEntity.value)
-                              RouteItemCardWidget(
-                                abstractRouteEntity: abstractRouteEntity,
-                                onTap: onTapRoute,
-                              ),
+                        if (consolidatePositionController.isFiltered.value)
+                          for (var abstractRouteEntity
+                              in consolidatePositionController
+                                  .filteredRoutes.value)
+                            RouteItemCardWidget(
+                              abstractRouteEntity: abstractRouteEntity,
+                              onTap: onTapRoute,
+                            )
+                        else
+                          for (var abstractRouteEntity
+                              in consolidatePositionController
+                                  .listAbstractRouteEntity.value)
+                            RouteItemCardWidget(
+                              abstractRouteEntity: abstractRouteEntity,
+                              onTap: onTapRoute,
+                            ),
                         // if (routesController.isDriver.value == true)
                         SizedBox(
                           width: double.infinity,

@@ -15,6 +15,9 @@ class HttpOfferDatasource implements AbstractOfferRepository {
   }) {}
 
   @override
+  Future<Map<String, List<AbstractOfferEntity>>>? getOffersGrouped() {}
+
+  @override
   Future<AbstractOfferEntity>? getOffer({
     required String offerId,
   }) {}

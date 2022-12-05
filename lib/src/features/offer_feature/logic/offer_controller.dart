@@ -110,7 +110,8 @@ class OfferController extends GetxController {
 
   moveMapToLocation(LatLng latLng) {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-      mapController!.move(latLng, 15.0);
+      mapController!
+          .move(latLng, closeOfferOrders.value.isNotEmpty ? 17.0 : 15.0);
     });
   }
 

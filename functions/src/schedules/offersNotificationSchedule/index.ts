@@ -14,14 +14,16 @@ export const handler = (event: any) => {
       querySnapshot.forEach((doc) => {
         const abstractOfferEntity = doc.data();
         const availableSites = abstractOfferEntity.max_count - abstractOfferEntity.count;
+        const pluralSuffix = availableSites > 1 ? "s" : "";
         const price = abstractOfferEntity.price.toFixed(2);
         sendNotificationToTopic("pickpointer_app", {
           notification: {
-            title: `S/ ${price} => ${abstractOfferEntity.route_title}`,
-            body: `${abstractOfferEntity.user_car_model}, por solo S/${price} el asiento!
-              \nhasta ${abstractOfferEntity.route_to}, ${availableSites} asientos disponibles!`,
+            title: `Colectivo disponible!, A ${abstractOfferEntity.route_to}`,
+            body: `AUTO "${abstractOfferEntity.user_car_model}", precio de S/ ${price} por pasajero
+              Recojo a domicilio
+              ${availableSites} asiento${pluralSuffix} disponible${pluralSuffix}`,
+            imageUrl: abstractOfferEntity.user_car_photo,
           }, data: {
-            is_message: "true",
             link: `/route/${abstractOfferEntity.route_id}`,
           },
         }).then(() => {

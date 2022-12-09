@@ -58,6 +58,27 @@ class HttpOfferDatasource implements AbstractOfferRepository {
   }
 
   @override
+  Future<AbstractOfferEntity>? cancelOffer({
+    required String offerId,
+  }) {
+    Future<AbstractOfferEntity> futureAbstractOfferEntity = http
+        .put(
+      Uri.parse(
+          'https://us-central1-pickpointer.cloudfunctions.net/cancelTrip'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: json.encode({
+        'offer_id': offerId,
+      }),
+    )
+        .then((http.Response value) {
+      return OfferModel.fromJson(value.body);
+    });
+    return futureAbstractOfferEntity;
+  }
+
+  @override
   Future<AbstractOfferEntity>? finishOffer({
     required String offerId,
   }) {

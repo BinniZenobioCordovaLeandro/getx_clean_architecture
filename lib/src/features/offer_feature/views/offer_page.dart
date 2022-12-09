@@ -67,14 +67,58 @@ class _OfferPageState extends State<OfferPage> {
             PopupMenuButton(
               itemBuilder: (context) {
                 return [
-                  const PopupMenuItem<int>(
-                    value: 0,
-                    child: Text("Finalizar viaje"),
-                  ),
+                  if (['-1', '2', '3']
+                      .contains(offerController.offerStateId.value))
+                    const PopupMenuItem<int>(
+                      value: 0,
+                      child: Text("CANCELAR viaje"),
+                    ),
+                  if (['2'].contains(offerController.offerStateId.value))
+                    const PopupMenuItem<int>(
+                      value: 1,
+                      child: Text("Finalizar viaje"),
+                    ),
                 ];
               },
               onSelected: (value) {
                 if (value == 0) {
+                  ModalBottomSheetHelper(
+                    context: context,
+                    title: 'Cancelar viaje',
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: FractionallySizedBoxWidget(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: WrapWidget(
+                            children: [
+                              TextWidget(
+                                '¿Confirmas CANCELAR el viaje?',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              TextWidget(
+                                'Estas a punto de cancelar tu salida.\nNotificaremos a todos los usuarios de la cancelación.',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              ProgressStateButtonWidget(
+                                color: Colors.white,
+                                background: Colors.redAccent,
+                                state: offerController.isLoading.value
+                                    ? ButtonState.loading
+                                    : ButtonState.success,
+                                success: 'CANCELAR VIAJE',
+                                onPressed: () {
+                                  offerController.cancelTrip();
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                if (value == 1) {
                   ModalBottomSheetHelper(
                     context: context,
                     title: 'Finalizar viaje',

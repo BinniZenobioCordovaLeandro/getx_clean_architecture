@@ -9,6 +9,7 @@ import 'package:pickpointer/packages/offer_package/data/datasources/offer_dataso
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/http_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/offer_order_entity.dart';
+import 'package:pickpointer/packages/offer_package/domain/usecases/cancel_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/finish_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/start_offer_usecase.dart';
@@ -46,6 +47,10 @@ class OfferController extends GetxController {
   );
 
   final StartOfferUsecase _startOfferUsecase = StartOfferUsecase(
+    abstractOfferRepository: HttpOfferDatasource(),
+  );
+
+  final CancelOfferUsecase _cancelOfferUsecase = CancelOfferUsecase(
     abstractOfferRepository: HttpOfferDatasource(),
   );
 
@@ -239,6 +244,27 @@ class OfferController extends GetxController {
           subtitle:
               'Recoge a todos los pasajeros, ellos ya fueron notificados.',
         );
+        initialize(abstractOfferEntity);
+        return true;
+      }
+      return false;
+    }).catchError((onError) {
+      isLoading.value = false;
+      errorMessage.value = onError.toString();
+      return false;
+    });
+    return futureBool!;
+  }
+
+  Future<bool> cancelTrip() {
+    isLoading.value = true;
+    Future<bool>? futureBool = _cancelOfferUsecase
+        .call(
+      offerId: offerId.value,
+    )
+        ?.then((AbstractOfferEntity abstractOfferEntity) {
+      isLoading.value = false;
+      if (abstractOfferEntity.stateId == '0') {
         initialize(abstractOfferEntity);
         return true;
       }

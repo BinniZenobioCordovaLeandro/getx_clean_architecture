@@ -29,6 +29,10 @@ abstract class AbstractOfferRepository {
     required String offerId,
   });
 
+  Future<AbstractOfferEntity>? cancelOffer({
+    required String offerId,
+  });
+
   Future<AbstractOfferEntity>? finishOffer({
     required String offerId,
   });

@@ -74,6 +74,15 @@ class OfferRepository implements AbstractOfferRepository {
   }
 
   @override
+  Future<AbstractOfferEntity>? cancelOffer({
+    required String offerId,
+  }) {
+    return _abstractOfferRepository!.cancelOffer(
+      offerId: offerId,
+    );
+  }
+
+  @override
   Future<AbstractOfferEntity>? finishOffer({
     required String offerId,
   }) {

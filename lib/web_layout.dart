@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
@@ -19,6 +18,7 @@ class WebLayout extends StatelessWidget {
     String? urlSvgOrImage,
     String? idYoutuveVideo,
     double? verticalPadding = 100.0,
+    double? horizontalPadding = 32.0,
     String? background,
     bool isMobile = false,
   }) {
@@ -38,7 +38,7 @@ class WebLayout extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(
             vertical: verticalPadding!,
-            horizontal: 32,
+            horizontal: horizontalPadding!,
           ),
           child: Flex(
             direction: Axis.horizontal,
@@ -410,11 +410,168 @@ class WebLayout extends StatelessWidget {
                   section(
                     isMobile: isMobile,
                     verticalPadding: 20,
+                    horizontalPadding: 0,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextWidget(
+                            'Login',
+                            style: Theme.of(context).textTheme.headline4,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Divider(),
+                        SingleChildScrollViewWidget(
+                          scrollDirection: Axis.horizontal,
+                          child: Builder(
+                            builder: (context) {
+                              const images = [
+                                'assets/images/login/location_permission.png',
+                                'assets/images/login/consolidate_position.png',
+                                'assets/images/login/login.png',
+                                'assets/images/login/profile.png',
+                                'assets/images/login/profile_code.png',
+                                'assets/images/login/profile_saved.png',
+                              ];
+                              List<Widget> imagesAsset = [];
+                              for (var element in images) {
+                                imagesAsset.add(ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20)),
+                                  child: Image.asset(
+                                    element,
+                                    height: 600,
+                                  ),
+                                ));
+                              }
+                              return WrapWidget(
+                                children: imagesAsset,
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  section(
+                    isMobile: isMobile,
+                    verticalPadding: 20,
+                    horizontalPadding: 0,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextWidget(
+                            'Pasajero',
+                            style: Theme.of(context).textTheme.headline4,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Divider(),
+                        SingleChildScrollViewWidget(
+                          scrollDirection: Axis.horizontal,
+                          child: Builder(
+                            builder: (context) {
+                              const images = [
+                                'assets/images/passenger/offers_active.png',
+                                'assets/images/passenger/offers_filtered.png',
+                                'assets/images/passenger/offers_open.png',
+                                'assets/images/passenger/payment_star.png',
+                                'assets/images/passenger/payment_trip_config.png',
+                                'assets/images/passenger/payment_sites.png',
+                                'assets/images/passenger/payment_resume.png',
+                                'assets/images/passenger/order_created.png',
+                                'assets/images/passenger/order_created_waiting.png',
+                                'assets/images/passenger/notification_vehicle_close.png',
+                                'assets/images/passenger/order_created_going.png',
+                                'assets/images/passenger/notification_vehicle_onboard.png',
+                                'assets/images/passenger/notification_vehicle_started.png',
+                              ];
+                              List<Widget> imagesAsset = [];
+                              for (var element in images) {
+                                imagesAsset.add(ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20)),
+                                  child: Image.asset(
+                                    element,
+                                    height: 600,
+                                  ),
+                                ));
+                              }
+                              return WrapWidget(
+                                children: imagesAsset,
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  section(
+                    isMobile: isMobile,
+                    verticalPadding: 20,
+                    horizontalPadding: 0,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextWidget(
+                            'Conductor',
+                            style: Theme.of(context).textTheme.headline4,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Divider(),
+                        SingleChildScrollViewWidget(
+                          scrollDirection: Axis.horizontal,
+                          child: Builder(
+                            builder: (context) {
+                              const images = [
+                                'assets/images/driver/offers_filtered.png',
+                                'assets/images/driver/route.png',
+                                'assets/images/driver/route_new_offer.png',
+                                'assets/images/driver/offer_created.png',
+                                'assets/images/driver/offer_sharing_passengers.png',
+                                'assets/images/driver/offer_1_passenger.png',
+                                'assets/images/driver/offer_1+3_passenger.png',
+                                'assets/images/driver/offer_ready.png',
+                                'assets/images/driver/offer_going.png',
+                                'assets/images/driver/passenger_1.png',
+                                'assets/images/driver/passenger_3.png',
+                                'assets/images/driver/passenger_-1_out.png',
+                                'assets/images/driver/offer_final.png',
+                                'assets/images/driver/offer_final_loading.png',
+                                'assets/images/driver/offer_done.png',
+                              ];
+                              List<Widget> imagesAsset = [];
+                              for (var element in images) {
+                                imagesAsset.add(ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20)),
+                                  child: Image.asset(
+                                    element,
+                                    height: 600,
+                                  ),
+                                ));
+                              }
+                              return WrapWidget(
+                                children: imagesAsset,
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  section(
+                    isMobile: isMobile,
+                    verticalPadding: 20,
                     idYoutuveVideo: 'w_Qn07zg-Kk',
                     child: Column(
                       children: [
                         TextWidget(
-                          'Conductor PICKPOINTER',
+                          'Video de Conductor PICKPOINTER',
                           style: Theme.of(context).textTheme.headline6,
                         ),
                       ],
@@ -427,7 +584,7 @@ class WebLayout extends StatelessWidget {
                     child: Column(
                       children: [
                         TextWidget(
-                          'Pasajero PICKPOINTER',
+                          'Video de Pasajero PICKPOINTER',
                           style: Theme.of(context).textTheme.headline6,
                         ),
                       ],

@@ -186,6 +186,7 @@ class OfferController extends GetxController {
         geolocatorProvider!.onPositionChanged.listen((Position position) {
       positionTaxi.value = LatLng(position.latitude, position.longitude);
       moveMapToLocation(positionTaxi.value);
+      print('offerStateId.value: ${offerStateId.value}');
       _updateVehicleUsecase
           .call(
               vehicle: VehicleModel(

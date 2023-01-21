@@ -296,17 +296,15 @@ class _OrderPageState extends State<OrderPage> {
                 right: 0,
                 child: SafeAreaWidget(
                   child: FractionallySizedBoxWidget(
-                    child: WrapWidget(
-                      spacing: 2,
-                      runSpacing: 2,
+                    child: Column(
                       children: [
-                        if (orderController.taxiStateId.value.isNotEmpty)
-                          SizedBox(
-                            width: double.infinity,
-                            child: CarStateCardWidget(
-                              carStateId: orderController.taxiStateId.value,
-                            ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: CarStateCardWidget(
+                            carStateId: orderController.taxiStateId.value,
                           ),
+                        ),
+                        const Divider(),
                         CallCardWidget(
                             avatarUrl: orderController.driverAvatar.value,
                             name: orderController.driverName.value,

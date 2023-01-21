@@ -108,10 +108,20 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                             .mapStringListAbstractOfferEntity.value.isNotEmpty)
                           SizedBox(
                             width: double.infinity,
-                            child: TextWidget(
-                              'Ofertas disponibles',
-                              style: Theme.of(context).textTheme.titleLarge,
-                              textAlign: TextAlign.left,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextWidget(
+                                  'Ofertas disponibles',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  textAlign: TextAlign.left,
+                                ),
+                                TextWidget(
+                                  'Estos vehiculos estan disponibles para viajar',
+                                  style: Theme.of(context).textTheme.caption,
+                                  textAlign: TextAlign.left,
+                                )
+                              ],
                             ),
                           ),
                         if (consolidatePositionController.isFiltered.value)
@@ -139,10 +149,20 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                             .listAbstractRouteEntity.value.isNotEmpty)
                           SizedBox(
                             width: double.infinity,
-                            child: TextWidget(
-                              'Rutas disponibles',
-                              style: Theme.of(context).textTheme.titleLarge,
-                              textAlign: TextAlign.left,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextWidget(
+                                  'Rutas disponibles',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  textAlign: TextAlign.left,
+                                ),
+                                TextWidget(
+                                  'Estas son paraderos fisicos a los cuales puedes acudir y encontrar autos para la ruta',
+                                  style: Theme.of(context).textTheme.caption,
+                                  textAlign: TextAlign.left,
+                                )
+                              ],
                             ),
                           ),
                         if (consolidatePositionController.isFiltered.value)

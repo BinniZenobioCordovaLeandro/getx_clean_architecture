@@ -72,34 +72,35 @@ class OrderCardWidget extends StatelessWidget {
                   textAlign: TextAlign.justify,
                 ),
               ),
-              Flex(
-                direction: Axis.horizontal,
-                children: [
-                  const Icon(
-                    Icons.person_pin_circle_sharp,
-                    color: Colors.blue,
-                  ),
-                  VerticalDivider(
-                    color: Theme.of(context).primaryColor,
-                    thickness: 2.00,
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: TextWidget(
-                        'Punto de encuentro: $userPickPointLat, $userPickPointLng',
-                        textAlign: TextAlign.justify,
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.person_pin_circle_sharp,
+                      color: Colors.blue,
+                    ),
+                    VerticalDivider(
+                      color: Theme.of(context).primaryColor,
+                      thickness: 2.00,
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: TextWidget(
+                          'Punto de encuentro: $userPickPointLat, $userPickPointLng',
+                          textAlign: TextAlign.justify,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               if (total != null) const Divider(),
               if (total != null)
                 SizedBox(
                   width: double.infinity,
-                  child: Flex(
-                    direction: Axis.horizontal,
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       if (count != null)

@@ -45,6 +45,7 @@ class _OfferPageState extends State<OfferPage> {
   Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
+        key: offerController.scaffoldKey,
         appBar: AppBarWidget(
           title: 'Offer ${offerController.offerId.value}',
           actions: [

@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
               indicatorColor: Theme.of(context).primaryColor,
               tabs: const [
                 Tab(
-                  text: 'Vista',
+                  text: 'Resumen',
                 ),
                 Tab(
                   text: 'Mapa',

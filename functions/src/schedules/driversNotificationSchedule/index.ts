@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {sendNotificationMessage} from "../../common/functions/sendNotificationMessage";
 
-export const handler = (event: any) => {
+export const handler = () => {
   return new Promise((resolve, reject) => {
     functions.logger.info("driversNotificationSchedule");
     const firebaseFirestore = admin.firestore();

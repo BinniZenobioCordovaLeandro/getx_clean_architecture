@@ -35,60 +35,65 @@ class CallCardWidget extends StatelessWidget {
           ),
           child: WrapWidget(
             children: [
-              Flex(
-                direction: Axis.horizontal,
-                children: [
-                  SizedBox(
-                    child: CircleAvatarImageWidget(
-                      urlSvgOrImage: avatarUrl ??
-                          'https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png',
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      child: CircleAvatarImageWidget(
+                        urlSvgOrImage: avatarUrl ??
+                            'https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png',
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      '$name',
-                      maxLines: 2,
-                      style: Theme.of(context).textTheme.bodyText2,
-                      textAlign: TextAlign.right,
-                      overflow: TextOverflow.ellipsis,
+                    Expanded(
+                      child: Text(
+                        '$name',
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.bodyText2,
+                        textAlign: TextAlign.right,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                  VerticalDivider(
-                    color: Theme.of(context).primaryColor,
-                    thickness: 2.00,
-                  ),
-                  SizedBox(
-                    child: CircleAvatarImageWidget(
-                      urlSvgOrImage: carPhoto ??
-                          'https://www.motorshow.me/uploadImages/GalleryPics/295000/B295521-2021-Peugeot-2008-GT--5-.jpg',
+                    VerticalDivider(
+                      color: Theme.of(context).primaryColor,
+                      thickness: 2.00,
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '$carModel',
-                          maxLines: 1,
-                          style:
-                              Theme.of(context).textTheme.bodyText2?.copyWith(),
-                          textAlign: TextAlign.right,
-                        ),
-                        TextWidget(
-                          '$carPlate',
-                          maxLines: 1,
-                          style:
-                              Theme.of(context).textTheme.headline6?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                          textAlign: TextAlign.right,
-                        ),
-                      ],
+                    SizedBox(
+                      child: CircleAvatarImageWidget(
+                        urlSvgOrImage: carPhoto ??
+                            'https://www.motorshow.me/uploadImages/GalleryPics/295000/B295521-2021-Peugeot-2008-GT--5-.jpg',
+                      ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '$carModel',
+                            maxLines: 1,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                ?.copyWith(),
+                            textAlign: TextAlign.right,
+                          ),
+                          TextWidget(
+                            '$carPlate',
+                            maxLines: 1,
+                            style:
+                                Theme.of(context).textTheme.headline6?.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Expanded(
+              SizedBox(
+                width: double.infinity,
                 child: ElevatedButtonIconWidget(
                   icon: Icons.call,
                   title: 'Llamar al vehiculo',

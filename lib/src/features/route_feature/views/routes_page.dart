@@ -20,6 +20,7 @@ import 'package:pickpointer/src/features/route_feature/logic/routes_controller.d
 import 'package:pickpointer/src/features/route_feature/views/new_route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/filter_destination_card_widget%20copy.dart';
+import 'package:pickpointer/src/features/route_feature/views/widgets/popup_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_marker_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/route_item_card_widget.dart';
 import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
@@ -163,6 +164,54 @@ class _RoutesPageState extends State<RoutesPage> {
                     options: PolylineLayerOptions(
                       // ignore: invalid_use_of_protected_member
                       polylines: routesController.polylines.value,
+                    ),
+                  ),
+                  PopupMarkerLayerWidget(
+                    options: PopupMarkerLayerOptions(
+                      markers: routesController.restrictedPointsMarkers.value,
+                      popupAnimation: const PopupAnimation.fade(
+                        duration: Duration(
+                          milliseconds: 700,
+                        ),
+                      ),
+                      markerTapBehavior: MarkerTapBehavior.togglePopup(),
+                      markerCenterAnimation: const MarkerCenterAnimation(),
+                      popupBuilder: (BuildContext context, Marker marker) {
+                        RegExp regExp = RegExp(r"([\d])");
+                        String? idRestrictedPoint = regExp
+                            .firstMatch('${marker.key.reactive.value}')
+                            ?.group(1);
+                        var restrictedPoint = routesController.restrictedPoints
+                            .value[int.parse(idRestrictedPoint!)];
+                        return PopupCardWidget(
+                          message: "${restrictedPoint.properties?.evento}",
+                          background: Colors.orange,
+                        );
+                      },
+                    ),
+                  ),
+                  PopupMarkerLayerWidget(
+                    options: PopupMarkerLayerOptions(
+                      markers: routesController.disruptedPointsMarkers.value,
+                      popupAnimation: const PopupAnimation.fade(
+                        duration: Duration(
+                          milliseconds: 700,
+                        ),
+                      ),
+                      markerTapBehavior: MarkerTapBehavior.togglePopup(),
+                      markerCenterAnimation: const MarkerCenterAnimation(),
+                      popupBuilder: (BuildContext context, Marker marker) {
+                        RegExp regExp = RegExp(r"([\d])");
+                        String? idDisruptedPoint = regExp
+                            .firstMatch('${marker.key.reactive.value}')
+                            ?.group(1);
+                        var disruptedPoint = routesController.disruptedPoints
+                            .value[int.parse(idDisruptedPoint!)];
+                        return PopupCardWidget(
+                          message: "${disruptedPoint.properties?.evento}",
+                          background: Colors.purple,
+                        );
+                      },
                     ),
                   ),
                   PopupMarkerLayerWidget(

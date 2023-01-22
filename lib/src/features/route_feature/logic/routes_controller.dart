@@ -19,6 +19,7 @@ import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/notification_provider.dart';
 import 'package:pickpointer/src/core/providers/package_info_provider.dart';
 import 'package:pickpointer/src/core/providers/places_provider.dart';
+import 'package:pickpointer/src/core/providers/sutran_data_provider.dart';
 
 class RoutesController extends GetxController {
   static RoutesController get instance => Get.put(RoutesController());
@@ -40,6 +41,11 @@ class RoutesController extends GetxController {
   var predictions = <Prediction>[].obs;
   var version = 'x.x.x'.obs;
 
+  var restrictedPoints = <ReportPoint>[].obs;
+  var restrictedPointsMarkers = <Marker>[].obs;
+  var disruptedPoints = <ReportPoint>[].obs;
+  var disruptedPointsMarkers = <Marker>[].obs;
+
   final GetRoutesUsecase _getRoutesUsecase = GetRoutesUsecase(
     abstractRouteRepository: FirebaseRouteDatasource(),
   );
@@ -50,6 +56,9 @@ class RoutesController extends GetxController {
       GeolocatorProvider.getInstance();
   final PlacesProvider? placesProvider = PlacesProvider.getInstance();
   StreamSubscription<Position>? streamPosition;
+
+  final SutranDataProvider? sutranDataProvider =
+      SutranDataProvider.getInstance();
 
   moveToMyLocation() {
     WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
@@ -143,9 +152,83 @@ class RoutesController extends GetxController {
     predictions.value = <Prediction>[];
   }
 
+  getSutranData() {
+    sutranDataProvider?.updateSutranData().then((bool isReady) {
+      if (isReady) {
+        restrictedPoints.value = sutranDataProvider!.restrictedPoints!;
+        disruptedPoints.value = sutranDataProvider!.disruptedPoints!;
+
+        List<Marker> listMarkerRestrictedPoints =
+            List<Marker>.empty(growable: true);
+
+        List<Marker> listMarkerDisruptedPoints =
+            List<Marker>.empty(growable: true);
+
+        for (var i = 0; i < sutranDataProvider!.restrictedPoints!.length; i++) {
+          var restrictedPoint = sutranDataProvider!.restrictedPoints![i];
+          listMarkerRestrictedPoints.add(
+            Marker(
+              key: Key('${i}_restrictedPoint'),
+              width: 15,
+              height: 15,
+              anchorPos: AnchorPos.align(
+                AnchorAlign.center,
+              ),
+              point: LatLng(
+                double.tryParse(
+                        '${restrictedPoint.geometry?.coordinates?[1]}') ??
+                    0,
+                double.tryParse(
+                        '${restrictedPoint.geometry?.coordinates?[0]}') ??
+                    0,
+              ),
+              builder: (BuildContext context) => const Icon(
+                Icons.warning_rounded,
+                color: Colors.orange,
+                size: 15,
+              ),
+            ),
+          );
+        }
+
+        for (var i = 0; i < sutranDataProvider!.disruptedPoints!.length; i++) {
+          var disruptedPoint = sutranDataProvider!.disruptedPoints![i];
+          listMarkerDisruptedPoints.add(
+            Marker(
+              key: Key('${i}_disruptedPoint'),
+              width: 15,
+              height: 15,
+              anchorPos: AnchorPos.align(
+                AnchorAlign.center,
+              ),
+              point: LatLng(
+                double.tryParse(
+                        '${disruptedPoint.geometry?.coordinates?[1]}') ??
+                    0,
+                double.tryParse(
+                        '${disruptedPoint.geometry?.coordinates?[0]}') ??
+                    0,
+              ),
+              builder: (BuildContext context) => const Icon(
+                Icons.error_rounded,
+                color: Colors.purple,
+                size: 15,
+              ),
+            ),
+          );
+        }
+
+        restrictedPointsMarkers.value = listMarkerRestrictedPoints;
+        disruptedPointsMarkers.value = listMarkerDisruptedPoints;
+      }
+    });
+  }
+
   @override
   void onReady() {
     isLoading.value = true;
+
+    getSutranData();
 
     notificationProvider?.checkPermission();
     getCurrentPosition();

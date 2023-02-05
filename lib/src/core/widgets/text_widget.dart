@@ -20,7 +20,7 @@ class TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       data,
-      style: style ?? Theme.of(context).textTheme.bodyText1,
+      style: style ?? Theme.of(context).textTheme.bodyLarge,
       overflow: overflow,
       maxLines: maxLines,
       textAlign: textAlign,

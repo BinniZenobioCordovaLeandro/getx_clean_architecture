@@ -23,7 +23,7 @@ class SwitchWidget extends StatelessWidget {
           Expanded(
             child: Text(
               '$title',
-              style: Theme.of(context).textTheme.caption,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
           Switch(

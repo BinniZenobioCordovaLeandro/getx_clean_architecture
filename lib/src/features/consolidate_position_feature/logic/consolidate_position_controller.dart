@@ -1,4 +1,3 @@
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offers_grouped_usecase.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/verify_session_usecase.dart';

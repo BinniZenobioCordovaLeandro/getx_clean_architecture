@@ -29,7 +29,7 @@ class FinishTripCardWidget extends StatelessWidget {
             children: [
               TextWidget(
                 'Excelente!, Estas cerca de tu destino',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               ProgressStateButtonWidget(
                 state: isLoading ? ButtonState.loading : ButtonState.success,

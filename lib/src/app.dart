@@ -18,11 +18,9 @@ import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
-import 'package:pickpointer/src/features/consolidate_position_feature/views/consolidate_position_page.dart';
 import 'package:pickpointer/src/features/home_page.dart';
 import 'package:pickpointer/src/features/offer_feature/views/offer_page.dart';
 import 'package:pickpointer/src/features/order_feature/views/order_page.dart';
-import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -109,7 +107,7 @@ class _AppState extends State<App> {
                                   child: TextWidget(
                                     'Nueva version disponible',
                                     style:
-                                        Theme.of(context).textTheme.headline6,
+                                        Theme.of(context).textTheme.titleLarge,
                                   ),
                                 ),
                                 const SizedBox(

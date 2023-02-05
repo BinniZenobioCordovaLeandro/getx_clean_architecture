@@ -103,5 +103,9 @@
 			</dict>
 		</array>
 		<!-- Deep linking -->
-	</dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+</dict>
 </plist>

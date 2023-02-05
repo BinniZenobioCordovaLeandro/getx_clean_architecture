@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                           : 'Perfil',
                       style: Theme.of(context)
                           .textTheme
-                          .button
+                          .labelLarge
                           ?.copyWith(color: Colors.white),
                       textAlign: TextAlign.left,
                     ),
@@ -93,7 +93,10 @@ class _HomePageState extends State<HomePage> {
             distance: 80.0,
             children: [
               ActionButton(
-                icon: const Icon(Icons.mail_outline_outlined),
+                icon: const Icon(
+                  Icons.mail_outline_outlined,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
                     url: 'pickpointer@gmail.com',
@@ -103,7 +106,10 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               ActionButton(
-                icon: const Icon(Icons.facebook_outlined),
+                icon: const Icon(
+                  Icons.facebook_outlined,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
                     url: 'https://m.me/100085260664181',
@@ -112,7 +118,10 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               ActionButton(
-                icon: const Icon(Icons.tiktok_outlined),
+                icon: const Icon(
+                  Icons.tiktok_outlined,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   LauncherLinkHelper launcherLinkHelper = LauncherLinkHelper(
                     url: 'https://tiktok.com/@pickpointer',

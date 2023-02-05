@@ -12,7 +12,6 @@ class DarkTheme {
       primaryColorLight: colorBrand,
       primaryColorDark: colorBrand,
       scaffoldBackgroundColor: const Color(0xFF000000),
-      backgroundColor: const Color(0xFF000000),
       iconTheme: const IconThemeData(
         color: colorBrand,
       ),
@@ -34,9 +33,7 @@ class DarkTheme {
         textTheme: ButtonTextTheme.accent,
         colorScheme: ColorScheme(
           primary: colorBrand,
-          primaryVariant: colorBrand,
           secondary: colorBrand,
-          secondaryVariant: colorBrand,
           surface: colorBrand,
           background: colorBrand,
           error: colorBrand,
@@ -236,58 +233,71 @@ class DarkTheme {
         unselectedLabelColor: Colors.grey,
       ),
       textTheme: const TextTheme(
-        headline1: TextStyle(
+        displayLarge: TextStyle(
           color: Color(0xFFEEEEEE),
           fontFamily: 'SFProDisplay',
         ),
-        headline2: TextStyle(
+        displayMedium: TextStyle(
           color: Color(0xFFEEEEEE),
           fontFamily: 'SFProDisplay',
         ),
-        headline3: TextStyle(
+        displaySmall: TextStyle(
           color: Color(0xFFEEEEEE),
           fontFamily: 'SFProDisplay',
         ),
-        headline4: TextStyle(
+        headlineMedium: TextStyle(
           color: Color(0xFFEEEEEE),
           fontFamily: 'SFProDisplay',
         ),
-        headline5: TextStyle(
+        headlineSmall: TextStyle(
           color: Color(0xFFEEEEEE),
           fontFamily: 'SFProDisplay',
         ),
-        headline6: TextStyle(
+        titleLarge: TextStyle(
           color: Color(0xFFEEEEEE),
           fontFamily: 'SFProDisplay',
         ),
-        subtitle1: TextStyle(
+        titleMedium: TextStyle(
           color: Color(0xFFBDBDBD),
           fontFamily: 'SFProDisplay',
         ),
-        subtitle2: TextStyle(
+        titleSmall: TextStyle(
           color: Color(0xFFBDBDBD),
           fontFamily: 'SFProDisplay',
         ),
-        bodyText1: TextStyle(
+        bodyLarge: TextStyle(
           color: Color(0xFFBDBDBD),
           fontFamily: 'SFProDisplay',
         ),
-        bodyText2: TextStyle(
+        bodyMedium: TextStyle(
           color: Color(0xFFBDBDBD),
           fontFamily: 'SFProDisplay',
         ),
-        button: TextStyle(
+        labelLarge: TextStyle(
           color: Color(0xFFBDBDBD),
           fontFamily: 'SFProDisplay',
         ),
-        caption: TextStyle(
+        bodySmall: TextStyle(
           color: Color(0xFFBDBDBD),
           fontFamily: 'SFProDisplay',
         ),
-        overline: TextStyle(
+        labelSmall: TextStyle(
           color: Colors.white,
           fontFamily: 'SFProDisplay',
         ),
+      ),
+      colorScheme: const ColorScheme(
+        primary: colorBrand,
+        secondary: colorBrand,
+        surface: colorBrand,
+        background: colorBrand,
+        error: colorBrand,
+        onPrimary: colorBrand,
+        onSecondary: colorBrand,
+        onSurface: colorBrand,
+        onBackground: colorBrand,
+        onError: colorBrand,
+        brightness: Brightness.light,
       ),
     );
   }

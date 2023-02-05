@@ -7,35 +7,49 @@ import 'package:pickpointer/packages/offer_package/domain/repositories/abstract_
 
 class HttpOfferDatasource implements AbstractOfferRepository {
   @override
-  Future<List<AbstractOfferEntity>>? getOffers() {}
+  Future<List<AbstractOfferEntity>>? getOffers() {
+    return null;
+  }
 
   @override
   Future<List<AbstractOfferEntity>>? getOffersByRoute({
     required String routeId,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
-  Future<Map<String, List<AbstractOfferEntity>>>? getOffersGrouped() {}
+  Future<Map<String, List<AbstractOfferEntity>>>? getOffersGrouped() {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? getOffer({
     required String offerId,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? setOffer({
     required AbstractOfferEntity abstractOfferEntity,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? addOffer({
     required AbstractOfferEntity abstractOfferEntity,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? updateOffer({
     required AbstractOfferEntity abstractOfferEntity,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? startOffer({

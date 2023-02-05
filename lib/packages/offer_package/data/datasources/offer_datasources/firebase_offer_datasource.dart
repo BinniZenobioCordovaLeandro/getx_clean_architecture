@@ -112,15 +112,21 @@ class FirebaseOfferDatasource implements AbstractOfferRepository {
   @override
   Future<AbstractOfferEntity>? startOffer({
     required String offerId,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? cancelOffer({
     required String offerId,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? finishOffer({
     required String offerId,
-  }) {}
+  }) {
+    return null;
+  }
 }

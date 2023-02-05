@@ -45,7 +45,7 @@ class PopupMarkerPassengerWidget extends StatelessWidget {
                     meters > 1000
                         ? (meters / 1000).toStringAsFixed(2)
                         : meters.toStringAsFixed(2),
-                    style: Theme.of(context).textTheme.headline6?.copyWith(
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                         ),

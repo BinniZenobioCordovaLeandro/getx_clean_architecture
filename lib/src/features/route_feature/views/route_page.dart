@@ -226,48 +226,43 @@ class _RoutePageState extends State<RoutePage> {
                     },
                   ),
                 ),
-                MarkerLayerWidget(
-                  options: MarkerLayerOptions(
-                    markers: [
-                      for (var wayPoint in routeController.listWayPoints.value)
-                        Marker(
-                          width: 20,
-                          height: 20,
-                          anchorPos: AnchorPos.align(
-                            AnchorAlign.top,
-                          ),
-                          point: wayPoint,
-                          builder: (BuildContext context) => Icon(
-                            Icons.person_pin,
-                            color: Theme.of(context).primaryColor,
-                            size: 20,
-                          ),
+                MarkerLayer(
+                  markers: [
+                    for (var wayPoint in routeController.listWayPoints.value)
+                      Marker(
+                        width: 20,
+                        height: 20,
+                        anchorPos: AnchorPos.align(
+                          AnchorAlign.top,
                         ),
-                    ],
-                  ),
-                ),
-                PolylineLayerWidget(
-                  options: PolylineLayerOptions(
-                    // ignore: invalid_use_of_protected_member
-                    polylines: [
-                      Polyline(
-                        points: <LatLng>[
-                          ...routeController.polylineListLatLng.value,
-                        ],
-                        strokeWidth: 5,
-                        color: Colors.black,
-                        isDotted: true,
-                        gradientColors: <Color>[
-                          Colors.blue,
-                          Colors.red,
-                          Colors.red,
-                          Colors.red,
-                          Colors.red,
-                          Colors.red,
-                        ],
+                        point: wayPoint,
+                        builder: (BuildContext context) => Icon(
+                          Icons.person_pin,
+                          color: Theme.of(context).primaryColor,
+                          size: 20,
+                        ),
                       ),
-                    ],
-                  ),
+                  ],
+                ),
+                PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points: <LatLng>[
+                        ...routeController.polylineListLatLng.value,
+                      ],
+                      strokeWidth: 5,
+                      color: Colors.black,
+                      isDotted: true,
+                      gradientColors: <Color>[
+                        Colors.blue,
+                        Colors.red,
+                        Colors.red,
+                        Colors.red,
+                        Colors.red,
+                        Colors.red,
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -358,7 +353,7 @@ class _RoutePageState extends State<RoutePage> {
                                     child: TextWidget(
                                       '${abstractOfferEntity.userName} esperando...',
                                       style:
-                                          Theme.of(context).textTheme.bodyText1,
+                                          Theme.of(context).textTheme.bodyLarge,
                                     ),
                                   )
                                 else

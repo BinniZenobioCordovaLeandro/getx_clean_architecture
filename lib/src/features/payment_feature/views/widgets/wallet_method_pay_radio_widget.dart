@@ -37,7 +37,7 @@ class WalletMethodPayRadioWidget extends StatelessWidget {
       ),
       title: TextWidget(
         '$title',
-        style: Theme.of(context).textTheme.bodyText1,
+        style: Theme.of(context).textTheme.bodyLarge,
       ),
       body: toRecharge
           ? SizedBox(

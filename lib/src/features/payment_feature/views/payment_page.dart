@@ -64,7 +64,7 @@ class _PaymentPageState extends State<PaymentPage> {
               width: double.infinity,
               child: TextWidget(
                 'Configuración de viaje',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             SizedBox(
@@ -118,7 +118,7 @@ class _PaymentPageState extends State<PaymentPage> {
               width: double.infinity,
               child: TextWidget(
                 'Asientos',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             SizedBox(
@@ -156,7 +156,7 @@ class _PaymentPageState extends State<PaymentPage> {
               width: double.infinity,
               child: TextWidget(
                 'Metodos de pago',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             CashMethodPayRadioWidget(
@@ -203,7 +203,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                         'Resumen de pago',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                       ),
                                     ),
                                     PaymentResumeWidget(
@@ -223,130 +223,126 @@ class _PaymentPageState extends State<PaymentPage> {
                                               controller;
                                         },
                                         children: [
-                                          MarkerLayerWidget(
-                                            options: MarkerLayerOptions(
-                                              markers: [
-                                                Marker(
-                                                  width: 50,
-                                                  height: 50,
-                                                  anchorPos: AnchorPos.align(
-                                                    AnchorAlign.center,
-                                                  ),
-                                                  point: paymentController
-                                                      .offerStartLatLng.value,
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          const Icon(
-                                                    Icons.taxi_alert_outlined,
-                                                    color: Colors.blue,
-                                                    size: 50,
-                                                  ),
+                                          MarkerLayer(
+                                            markers: [
+                                              Marker(
+                                                width: 50,
+                                                height: 50,
+                                                anchorPos: AnchorPos.align(
+                                                  AnchorAlign.center,
                                                 ),
-                                                Marker(
-                                                  width: 50,
-                                                  height: 50,
-                                                  anchorPos: AnchorPos.align(
-                                                    AnchorAlign.top,
-                                                  ),
-                                                  point: paymentController
-                                                      .offerEndLatLng.value,
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          const Icon(
-                                                    Icons.location_pin,
-                                                    color: Colors.red,
-                                                    size: 50,
-                                                  ),
+                                                point: paymentController
+                                                    .offerStartLatLng.value,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Icon(
+                                                  Icons.taxi_alert_outlined,
+                                                  color: Colors.blue,
+                                                  size: 50,
                                                 ),
+                                              ),
+                                              Marker(
+                                                width: 50,
+                                                height: 50,
+                                                anchorPos: AnchorPos.align(
+                                                  AnchorAlign.top,
+                                                ),
+                                                point: paymentController
+                                                    .offerEndLatLng.value,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Icon(
+                                                  Icons.location_pin,
+                                                  color: Colors.red,
+                                                  size: 50,
+                                                ),
+                                              ),
+                                              Marker(
+                                                width: 50,
+                                                height: 50,
+                                                anchorPos: AnchorPos.align(
+                                                    AnchorAlign.top),
+                                                point: paymentController
+                                                    .userOriginLatLng.value,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        Icon(
+                                                  Icons.person_pin,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  size: 50,
+                                                ),
+                                              ),
+                                              Marker(
+                                                width: 50,
+                                                height: 50,
+                                                anchorPos: AnchorPos.align(
+                                                    AnchorAlign.top),
+                                                point: paymentController
+                                                    .userDestinationLatLng
+                                                    .value,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Icon(
+                                                  Icons.person_pin,
+                                                  color: Colors.red,
+                                                  size: 50,
+                                                ),
+                                              ),
+                                              for (var wayPoint
+                                                  in paymentController
+                                                      .offerWayPoints.value)
                                                 Marker(
-                                                  width: 50,
-                                                  height: 50,
+                                                  width: 10,
+                                                  height: 10,
                                                   anchorPos: AnchorPos.align(
-                                                      AnchorAlign.top),
-                                                  point: paymentController
-                                                      .userOriginLatLng.value,
+                                                      AnchorAlign.center),
+                                                  point: wayPoint,
                                                   builder:
                                                       (BuildContext context) =>
                                                           Icon(
-                                                    Icons.person_pin,
+                                                    Icons.circle,
                                                     color: Theme.of(context)
                                                         .primaryColor,
-                                                    size: 50,
+                                                    size: 10,
                                                   ),
                                                 ),
-                                                Marker(
-                                                  width: 50,
-                                                  height: 50,
-                                                  anchorPos: AnchorPos.align(
-                                                      AnchorAlign.top),
-                                                  point: paymentController
-                                                      .userDestinationLatLng
-                                                      .value,
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          const Icon(
-                                                    Icons.person_pin,
-                                                    color: Colors.red,
-                                                    size: 50,
-                                                  ),
-                                                ),
-                                                for (var wayPoint
-                                                    in paymentController
-                                                        .offerWayPoints.value)
-                                                  Marker(
-                                                    width: 10,
-                                                    height: 10,
-                                                    anchorPos: AnchorPos.align(
-                                                        AnchorAlign.center),
-                                                    point: wayPoint,
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        Icon(
-                                                      Icons.circle,
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      size: 10,
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
+                                            ],
                                           ),
-                                          PolylineLayerWidget(
-                                            options: PolylineLayerOptions(
-                                              polylines: [
-                                                Polyline(
-                                                  points: <LatLng>[
-                                                    ...paymentController
-                                                        .basePolylineListLatLng
-                                                        .value,
-                                                  ],
-                                                  strokeWidth: 5,
-                                                  color: Colors.black,
-                                                  isDotted: true,
-                                                  gradientColors: <Color>[
-                                                    Colors.grey,
-                                                  ],
-                                                ),
-                                                Polyline(
-                                                  points: <LatLng>[
-                                                    ...paymentController
-                                                        .userPolylineListLatLng
-                                                        .value,
-                                                  ],
-                                                  strokeWidth: 5,
-                                                  color: Colors.black,
-                                                  isDotted: true,
-                                                  gradientColors: <Color>[
-                                                    Colors.blue,
-                                                    Colors.red,
-                                                    Colors.red,
-                                                    Colors.red,
-                                                    Colors.red,
-                                                    Colors.red,
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
+                                          PolylineLayer(
+                                            polylines: [
+                                              Polyline(
+                                                points: <LatLng>[
+                                                  ...paymentController
+                                                      .basePolylineListLatLng
+                                                      .value,
+                                                ],
+                                                strokeWidth: 5,
+                                                color: Colors.black,
+                                                isDotted: true,
+                                                gradientColors: <Color>[
+                                                  Colors.grey,
+                                                ],
+                                              ),
+                                              Polyline(
+                                                points: <LatLng>[
+                                                  ...paymentController
+                                                      .userPolylineListLatLng
+                                                      .value,
+                                                ],
+                                                strokeWidth: 5,
+                                                color: Colors.black,
+                                                isDotted: true,
+                                                gradientColors: <Color>[
+                                                  Colors.blue,
+                                                  Colors.red,
+                                                  Colors.red,
+                                                  Colors.red,
+                                                  Colors.red,
+                                                  Colors.red,
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -355,7 +351,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                       'Ruta sugerida para realizar el recorrido.\nEsta ruta puede cambiar, segun el trafico, accidentes vehiculares, o contrato de los asientos restantes.',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .caption
+                                          .bodySmall
                                           ?.copyWith(
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -365,7 +361,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                       'Luego de contratar, te enviaremos NOTIFICACIONES indicando cuando el vehiculo inicia la ruta y cuando esta cerca a tu PUNTO DE ORIGEN.\nTen un viaje SEGURO, COMODO, ACCESIBLE Y RAPIDO!',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .caption
+                                          .bodySmall
                                           ?.copyWith(
                                             color:
                                                 Theme.of(context).primaryColor,

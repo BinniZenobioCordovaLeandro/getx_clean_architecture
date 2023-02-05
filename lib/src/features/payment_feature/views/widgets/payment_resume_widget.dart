@@ -30,7 +30,7 @@ class PaymentResumeWidget extends StatelessWidget {
               const Divider(),
               TextWidget(
                 'Total',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
@@ -42,7 +42,7 @@ class PaymentResumeWidget extends StatelessWidget {
               const Divider(),
               TextWidget(
                 'S/ ${total?.toStringAsFixed(2)}',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           )

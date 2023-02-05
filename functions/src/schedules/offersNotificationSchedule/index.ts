@@ -11,7 +11,7 @@ export const handler = () => {
 
     offersCollection.where("state_id", "==", "-1").get().then((querySnapshot) => {
       functions.logger.info(`Offers filtered count ${querySnapshot.size}`);
-      querySnapshot.forEach((doc) => {
+      return querySnapshot.forEach((doc) => {
         const abstractOfferEntity = doc.data();
         const availableSites = abstractOfferEntity.max_count - abstractOfferEntity.count;
         const pluralSuffix = availableSites > 1 ? "s" : "";
@@ -28,13 +28,13 @@ export const handler = () => {
           },
         }).then(() => {
           functions.logger.info(`Topic pickpointer_app notified, offerId ${abstractOfferEntity.id}`);
-          resolve(`Topic pickpointer_app notified, offerId ${abstractOfferEntity.id}`);
         })
             .catch(() => {
               functions.logger.warn(`error notifying Topic pickpointer_app ${abstractOfferEntity.id}`);
               reject(Error(`error notifying Topic pickpointer_app ${abstractOfferEntity.id}`));
             });
       });
-    });
+    }).then(() => resolve("offersNotificationSchedule executed"))
+        .catch(() => reject(Error("error offersNotificationSchedule")));
   });
 };

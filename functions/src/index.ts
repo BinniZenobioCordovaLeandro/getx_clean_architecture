@@ -10,6 +10,7 @@ import * as triggers from "./triggers";
 import * as offersNotificationSchedule from "./schedules/offersNotificationSchedule";
 import * as driversNotificationSchedule from "./schedules/driversNotificationSchedule";
 import * as sutranDataSchedule from "./schedules/sutranDataSchedule";
+import * as driversOffersSchedule from "./schedules/driversOffersSchedule";
 
 admin.initializeApp();
 
@@ -92,23 +93,20 @@ export const triggerOnUpdate = functions.firestore.document("{collection}/{id}")
 
 export const scheduledFunction = functions.pubsub.schedule("every 6 hours").onRun((context) => {
   functions.logger.info("SCHEDULED every 6 hours");
-  return new Promise((resolve, reject) => {
-    Promise.all([
-      offersNotificationSchedule.handler(),
-      driversNotificationSchedule.handler(),
-      sutranDataSchedule.handler(),
-    ]).then((values) => {
-      functions.logger.info("values promise schedules : ", values);
-      resolve(values);
-    }).catch(reject);
-  });
+  return scheduleFunctions();
 });
 
 
 export const manualScheduledFunction = functions.https.onRequest((request, response) => {
   functions.logger.info("Manual SCHEDULED logs!", {structuredData: true});
-  return new Promise((resolve, reject) => {
+  return scheduleFunctions();
+});
+
+const scheduleFunctions = (): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
     Promise.all([
+      driversOffersSchedule.handler(),
+      // TODO: implement driversOffersSchedule inside offersNotificationSchedule, because query is the same.
       offersNotificationSchedule.handler(),
       driversNotificationSchedule.handler(),
       sutranDataSchedule.handler(),
@@ -117,4 +115,4 @@ export const manualScheduledFunction = functions.https.onRequest((request, respo
       resolve();
     }).catch(reject);
   });
-});
+};

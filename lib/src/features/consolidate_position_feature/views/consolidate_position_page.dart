@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pickpointer/packages/offer_package/data/models/offer_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
-import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/core/widgets/outline_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
-import 'package:pickpointer/src/core/widgets/scaffold_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
@@ -118,7 +115,7 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                                 ),
                                 TextWidget(
                                   'Estos vehiculos estan disponibles para viajar',
-                                  style: Theme.of(context).textTheme.caption,
+                                  style: Theme.of(context).textTheme.bodySmall,
                                   textAlign: TextAlign.left,
                                 )
                               ],
@@ -159,7 +156,7 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                                 ),
                                 TextWidget(
                                   'Estas son paraderos fisicos a los cuales puedes acudir y encontrar autos para la ruta',
-                                  style: Theme.of(context).textTheme.caption,
+                                  style: Theme.of(context).textTheme.bodySmall,
                                   textAlign: TextAlign.left,
                                 )
                               ],

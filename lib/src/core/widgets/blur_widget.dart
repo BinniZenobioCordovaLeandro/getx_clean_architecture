@@ -19,9 +19,9 @@ class BlurWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Blur(
       blur: blur,
-      blurColor: (color != null) ? color! : Theme.of(context).backgroundColor,
-      child: child,
+      blurColor: (color != null) ? color! : Theme.of(context).colorScheme.background,
       borderRadius: borderRadius ?? BorderRadius.circular(8),
+      child: child,
     );
   }
 }

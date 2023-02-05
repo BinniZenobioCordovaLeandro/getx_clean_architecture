@@ -16,6 +16,7 @@ class TextButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      onPressed: onPressed,
       child: ColoredBox(
         color: Colors.transparent,
         child: FractionallySizedBoxWidget(
@@ -28,7 +29,7 @@ class TextButtonWidget extends StatelessWidget {
                 child: Text(
                   '$title',
                   maxLines: 1,
-                  style: Theme.of(context).textTheme.button!.copyWith(
+                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
                         color: color ??
                             ((onPressed != null)
                                 ? Theme.of(context).primaryColor
@@ -41,7 +42,6 @@ class TextButtonWidget extends StatelessWidget {
           ),
         ),
       ),
-      onPressed: onPressed,
     );
   }
 }

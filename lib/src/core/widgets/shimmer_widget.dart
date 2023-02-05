@@ -16,9 +16,9 @@ class ShimmerWidget extends StatelessWidget {
     if (enabled == true) {
       return Shimmer.fromColors(
         enabled: enabled!,
-        child: child!,
-        baseColor: Theme.of(context).backgroundColor,
+        baseColor: Theme.of(context).colorScheme.background,
         highlightColor: Theme.of(context).primaryColor,
+        child: child!,
       );
     } else {
       return child!;

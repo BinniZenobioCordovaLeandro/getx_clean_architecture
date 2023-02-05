@@ -36,12 +36,12 @@ class StartReadyTripCardWidget extends StatelessWidget {
               if (isOnDate)
                 TextWidget(
                   '¡Asientos vendidos!',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 )
               else
                 TextWidget(
                   '¡Vendimos los asientos, espera la fecha para que puedas INICIAR!',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               if (isOnDate)
                 TextWidget(

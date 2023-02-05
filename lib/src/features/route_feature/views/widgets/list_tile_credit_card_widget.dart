@@ -26,7 +26,7 @@ class ListTileCreditCardWidget extends StatelessWidget {
         onChanged: onChanged,
         title: TextWidget(
           '511842** **** 4219',
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         body: const SizedBox(
           width: double.infinity,

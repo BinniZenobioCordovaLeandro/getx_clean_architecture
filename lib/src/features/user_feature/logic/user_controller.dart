@@ -280,7 +280,7 @@ class UserController extends GetxController {
         String licensePhotoNormalized =
             await filePathNormalizer(licensePhoto.value, name: 'licensePhoto');
 
-        final UserModel _userModel = UserModel(
+        final UserModel userModel = UserModel(
           id: userId.value,
           name: name.value,
           email: email.value,
@@ -305,7 +305,7 @@ class UserController extends GetxController {
 
         message.value = 'Actualizando, datos de perfil, espera...';
         _updateUserUsecase
-            .call(abstractUserEntity: _userModel)!
+            .call(abstractUserEntity: userModel)!
             .then((AbstractUserEntity abstractUserEntity) {
           updateSession(isPhoneVerified: true);
           GetxSnackbarWidget(

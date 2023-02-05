@@ -49,7 +49,7 @@ class CallCardWidget extends StatelessWidget {
                       child: Text(
                         '$name',
                         maxLines: 2,
-                        style: Theme.of(context).textTheme.bodyText2,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -73,7 +73,7 @@ class CallCardWidget extends StatelessWidget {
                             maxLines: 1,
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyText2
+                                .bodyMedium
                                 ?.copyWith(),
                             textAlign: TextAlign.right,
                           ),
@@ -81,7 +81,7 @@ class CallCardWidget extends StatelessWidget {
                             '$carPlate',
                             maxLines: 1,
                             style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
+                                Theme.of(context).textTheme.titleLarge?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                             textAlign: TextAlign.right,

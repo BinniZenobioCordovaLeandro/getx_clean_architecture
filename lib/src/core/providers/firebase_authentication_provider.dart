@@ -83,7 +83,7 @@ class FirebaseAuthenticationProvider {
         .signInWithCredential(credential)
         .then((UserCredential userCredential) {
       print('userCredential ${userCredential.toString()}');
-      return userCredential.user?.uid ?? null;
+      return userCredential.user?.uid;
     });
     return futureString;
   }

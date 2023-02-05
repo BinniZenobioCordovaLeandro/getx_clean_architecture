@@ -115,7 +115,7 @@ class OrderCardWidget extends StatelessWidget {
                         ),
                       TextWidget(
                         'Total: S/ ${total?.toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.headline6?.copyWith(
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold,
                             ),

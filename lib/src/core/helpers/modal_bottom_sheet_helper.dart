@@ -101,7 +101,7 @@ class ModalBottomSheetHelper {
                                           '$title',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6
+                                              .titleLarge
                                               ?.copyWith(
                                                 color: Theme.of(context)
                                                         .appBarTheme

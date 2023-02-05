@@ -131,7 +131,7 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
   }
 
   move(LatLng latLng) {
-    WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
       mapController!.move(latLng, 15.0);
     });
   }
@@ -154,7 +154,7 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
   @override
   Widget build(BuildContext context) {
     return CardWidget(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       shape: (!boolean)
           ? RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
@@ -172,7 +172,7 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
               leading: widget.leading,
               title: TextWidget(
                 widget.title,
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               value: boolean,
               onChanged: widget.disabled
@@ -255,13 +255,12 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                   },
                   interactiveFlags: boolean ? InteractiveFlag.none : null,
                   onPositionChanged: (mapPosition, boolean) => {
-                    WidgetsBinding.instance!
-                        .addPostFrameCallback((Duration duration) {
+                    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
                       setState(() {
-                        LatLng _latLng = mapPosition.center!;
-                        latLng = _latLng;
+                        LatLng latLng = mapPosition.center!;
+                        latLng = latLng;
                         if (widget.onChanged != null) {
-                          widget.onChanged!(_latLng);
+                          widget.onChanged!(latLng);
                         }
                         textEditingController.text =
                             '${latLng.latitude.toStringAsFixed(6)}, ${latLng.longitude.toStringAsFixed(6)}';
@@ -269,47 +268,45 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                     })
                   },
                   children: [
-                    MarkerLayerWidget(
-                      options: MarkerLayerOptions(
-                        markers: [
-                          Marker(
-                            width: 20.0,
-                            height: 20.0,
-                            point: myLatLng,
-                            anchorPos: AnchorPos.align(AnchorAlign.top),
-                            builder: (BuildContext context) => IconButton(
-                              tooltip: 'Mi ubicacion actual',
-                              icon: Center(
-                                child: Icon(
-                                  Icons.person_pin_circle_sharp,
-                                  color: Theme.of(context).primaryColor,
-                                  size: 20.0,
-                                ),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          width: 20.0,
+                          height: 20.0,
+                          point: myLatLng,
+                          anchorPos: AnchorPos.align(AnchorAlign.top),
+                          builder: (BuildContext context) => IconButton(
+                            tooltip: 'Mi ubicacion actual',
+                            icon: Center(
+                              child: Icon(
+                                Icons.person_pin_circle_sharp,
+                                color: Theme.of(context).primaryColor,
+                                size: 20.0,
                               ),
-                              onPressed: () {},
                             ),
+                            onPressed: () {},
                           ),
-                          Marker(
-                            width: 0,
-                            height: 0,
-                            point: latLng,
-                            anchorPos: AnchorPos.align(AnchorAlign.center),
-                            builder: (BuildContext context) => const Icon(
-                              Icons.circle,
-                              size: 5,
-                            ),
+                        ),
+                        Marker(
+                          width: 0,
+                          height: 0,
+                          point: latLng,
+                          anchorPos: AnchorPos.align(AnchorAlign.center),
+                          builder: (BuildContext context) => const Icon(
+                            Icons.circle,
+                            size: 5,
                           ),
-                          Marker(
-                            width: 45.0,
-                            height: 45.0,
-                            point: latLng,
-                            anchorPos: AnchorPos.align(AnchorAlign.top),
-                            builder: (BuildContext context) => Center(
-                              child: widget.iconMarker,
-                            ),
+                        ),
+                        Marker(
+                          width: 45.0,
+                          height: 45.0,
+                          point: latLng,
+                          anchorPos: AnchorPos.align(AnchorAlign.top),
+                          builder: (BuildContext context) => Center(
+                            child: widget.iconMarker,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

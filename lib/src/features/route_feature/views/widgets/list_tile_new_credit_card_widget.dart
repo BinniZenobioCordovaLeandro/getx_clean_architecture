@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/list_tile_radio_card_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/new_credit_card_widget.dart';
@@ -26,7 +25,7 @@ class ListTileNewCreditCardWidget extends StatelessWidget {
         onChanged: onChanged,
         title: TextWidget(
           'Nueva tarjeta',
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         body: const SizedBox(
           width: double.infinity,

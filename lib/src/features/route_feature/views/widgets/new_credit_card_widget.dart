@@ -23,7 +23,7 @@ class NewCreditCardWidget extends StatelessWidget {
               color: Colors.transparent,
               child: FractionallySizedBoxWidget(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   child: WrapWidget(
                     children: [
                       SizedBox(
@@ -31,7 +31,7 @@ class NewCreditCardWidget extends StatelessWidget {
                         child: TextFieldWidget(
                           labelText: 'Nombre del titular',
                           onChanged: (value) {
-                            print('$value');
+                            print(value);
                           },
                         ),
                       ),
@@ -54,7 +54,7 @@ class NewCreditCardWidget extends StatelessWidget {
                               child: TextFieldWidget(
                                 labelText: 'Documento',
                                 onChanged: (value) {
-                                  print('$value');
+                                  print(value);
                                 },
                               ),
                             ),
@@ -66,7 +66,7 @@ class NewCreditCardWidget extends StatelessWidget {
                         child: TextFieldWidget(
                           labelText: 'Numero de tarjeta',
                           onChanged: (value) {
-                            print('$value');
+                            print(value);
                           },
                         ),
                       ),
@@ -77,7 +77,7 @@ class NewCreditCardWidget extends StatelessWidget {
                             child: TextFieldWidget(
                               labelText: 'Mes',
                               onChanged: (value) {
-                                print('$value');
+                                print(value);
                               },
                             ),
                           ),
@@ -86,7 +86,7 @@ class NewCreditCardWidget extends StatelessWidget {
                             child: TextFieldWidget(
                               labelText: 'Año',
                               onChanged: (value) {
-                                print('$value');
+                                print(value);
                               },
                             ),
                           ),
@@ -95,7 +95,7 @@ class NewCreditCardWidget extends StatelessWidget {
                             child: TextFieldWidget(
                               labelText: 'CVV',
                               onChanged: (value) {
-                                print('$value');
+                                print(value);
                               },
                             ),
                           ),
@@ -129,7 +129,7 @@ class NewCreditCardWidget extends StatelessWidget {
                       child: TextFieldWidget(
                         labelText: 'Nombre del titular',
                         onChanged: (value) {
-                          print('$value');
+                          print(value);
                         },
                       ),
                     ),
@@ -152,7 +152,7 @@ class NewCreditCardWidget extends StatelessWidget {
                             child: TextFieldWidget(
                               labelText: 'Documento',
                               onChanged: (value) {
-                                print('$value');
+                                print(value);
                               },
                             ),
                           ),
@@ -164,7 +164,7 @@ class NewCreditCardWidget extends StatelessWidget {
                       child: TextFieldWidget(
                         labelText: 'Numero de tarjeta',
                         onChanged: (value) {
-                          print('$value');
+                          print(value);
                         },
                       ),
                     ),
@@ -175,7 +175,7 @@ class NewCreditCardWidget extends StatelessWidget {
                           child: TextFieldWidget(
                             labelText: 'Mes',
                             onChanged: (value) {
-                              print('$value');
+                              print(value);
                             },
                           ),
                         ),
@@ -184,7 +184,7 @@ class NewCreditCardWidget extends StatelessWidget {
                           child: TextFieldWidget(
                             labelText: 'Año',
                             onChanged: (value) {
-                              print('$value');
+                              print(value);
                             },
                           ),
                         ),
@@ -193,7 +193,7 @@ class NewCreditCardWidget extends StatelessWidget {
                           child: TextFieldWidget(
                             labelText: 'CVV',
                             onChanged: (value) {
-                              print('$value');
+                              print(value);
                             },
                           ),
                         ),

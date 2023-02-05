@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
-import 'package:pickpointer/src/core/widgets/outline_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/offer_card_widget.dart';

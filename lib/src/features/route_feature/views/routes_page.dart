@@ -3,28 +3,20 @@ import 'package:get/get.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
-import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
-import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
-import 'package:pickpointer/src/core/widgets/expandable_fab_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_widget.dart';
-import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
-import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
-import 'package:pickpointer/src/features/route_feature/views/new_route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/filter_destination_card_widget%20copy.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_marker_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/route_item_card_widget.dart';
-import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
-import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
 
 class RoutesPage extends StatefulWidget {
   const RoutesPage({
@@ -141,30 +133,26 @@ class _RoutesPageState extends State<RoutesPage> {
                 },
                 center: routesController.position.value,
                 children: [
-                  MarkerLayerWidget(
-                    options: MarkerLayerOptions(
-                      markers: [
-                        Marker(
-                          width: 20.0,
-                          height: 20.0,
-                          point: routesController.position.value,
-                          anchorPos: AnchorPos.align(
-                            AnchorAlign.top,
-                          ),
-                          builder: (BuildContext context) => Icon(
-                            Icons.person_pin_circle_sharp,
-                            color: Theme.of(context).primaryColor,
-                            size: 20.0,
-                          ),
-                        )
-                      ],
-                    ),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        width: 20.0,
+                        height: 20.0,
+                        point: routesController.position.value,
+                        anchorPos: AnchorPos.align(
+                          AnchorAlign.top,
+                        ),
+                        builder: (BuildContext context) => Icon(
+                          Icons.person_pin_circle_sharp,
+                          color: Theme.of(context).primaryColor,
+                          size: 20.0,
+                        ),
+                      )
+                    ],
                   ),
-                  PolylineLayerWidget(
-                    options: PolylineLayerOptions(
-                      // ignore: invalid_use_of_protected_member
-                      polylines: routesController.polylines.value,
-                    ),
+                  PolylineLayer(
+                    // ignore: invalid_use_of_protected_member
+                    polylines: routesController.polylines.value,
                   ),
                   PopupMarkerLayerWidget(
                     options: PopupMarkerLayerOptions(

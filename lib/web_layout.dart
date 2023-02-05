@@ -172,7 +172,7 @@ class WebLayout extends StatelessWidget {
       child: Center(
         child: TextWidget(
           'Hecho con inteligencia 🧠 por PickPointer',
-          style: Theme.of(context).textTheme.caption,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
       ),
     );
@@ -203,7 +203,7 @@ class WebLayout extends StatelessWidget {
                           TextWidget(
                             'Para verdaderos conductores',
                             style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
+                                Theme.of(context).textTheme.titleLarge?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                             textAlign: TextAlign.center,
@@ -211,7 +211,7 @@ class WebLayout extends StatelessWidget {
                           TextWidget(
                             'PICKPOINTER',
                             style:
-                                Theme.of(context).textTheme.headline4?.copyWith(
+                                Theme.of(context).textTheme.headlineMedium?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                           ),
@@ -239,12 +239,12 @@ class WebLayout extends StatelessWidget {
                       children: [
                         TextWidget(
                           'Sobre Nosotros',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         const Divider(),
                         TextWidget(
                           'PickPointer,\nEs la aplicación inovadora en el mercado de rutas realizadas por autos.\nCon viajes rastreados geográficamente y conductores identificados.',
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -262,14 +262,14 @@ class WebLayout extends StatelessWidget {
                           TextWidget(
                             'Nuestros objetivos',
                             style:
-                                Theme.of(context).textTheme.headline4?.copyWith(
+                                Theme.of(context).textTheme.headlineMedium?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                           ),
                           const Divider(),
                           TextWidget(
                             'PickPointer\nFue creado debido a la necesidad de una app\nque busca mejorar el servicio colaborativo.',
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const Divider(),
                           SizedBox(
@@ -286,7 +286,7 @@ class WebLayout extends StatelessWidget {
                                         'PROSPERIDAD SOCIAL',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -301,7 +301,7 @@ class WebLayout extends StatelessWidget {
                                         'CALIDAD DE VIDA',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -316,7 +316,7 @@ class WebLayout extends StatelessWidget {
                                         'CAPACITACION CONSTANTE',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -331,7 +331,7 @@ class WebLayout extends StatelessWidget {
                                         'OFERTA EQUILIBRADA',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -351,7 +351,7 @@ class WebLayout extends StatelessWidget {
                       children: [
                         TextWidget(
                           'Descarga PICKPOINTER APP',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         const Divider(),
                         SizedBox(
@@ -399,7 +399,7 @@ class WebLayout extends StatelessWidget {
                           TextWidget(
                             '¿Como funciona la APP?',
                             style:
-                                Theme.of(context).textTheme.headline4?.copyWith(
+                                Theme.of(context).textTheme.headlineMedium?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                           ),
@@ -417,7 +417,7 @@ class WebLayout extends StatelessWidget {
                           width: double.infinity,
                           child: TextWidget(
                             'Login',
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -464,7 +464,7 @@ class WebLayout extends StatelessWidget {
                           width: double.infinity,
                           child: TextWidget(
                             'Pasajero',
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -518,7 +518,7 @@ class WebLayout extends StatelessWidget {
                           width: double.infinity,
                           child: TextWidget(
                             'Conductor',
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -572,7 +572,7 @@ class WebLayout extends StatelessWidget {
                       children: [
                         TextWidget(
                           'Video de Conductor PICKPOINTER',
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -585,7 +585,7 @@ class WebLayout extends StatelessWidget {
                       children: [
                         TextWidget(
                           'Video de Pasajero PICKPOINTER',
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -597,7 +597,7 @@ class WebLayout extends StatelessWidget {
                       children: [
                         TextWidget(
                           'Siguenos en',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         const SizedBox(height: 20),
                         Flex(

@@ -18,7 +18,7 @@ class OutlinedButtonWidget extends StatelessWidget {
       child: Center(
         child: TextWidget(
           '$title',
-          style: Theme.of(context).textTheme.button?.copyWith(
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: Theme.of(context).primaryColor,
               ),
         ),

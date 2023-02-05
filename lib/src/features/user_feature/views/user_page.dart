@@ -215,7 +215,7 @@ class _UserPageState extends State<UserPage> {
               width: double.infinity,
               child: TextWidget(
                 'Al GUARDAR, verificaremos que no eres un ROBOT y luego te enviaremos un SMS con el código de verificación.',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
             ProgressStateButtonWidget(

@@ -31,15 +31,15 @@ class NewOfferCardWidget extends StatelessWidget {
             children: [
               TextWidget(
                 'Es hora de ganar extra ;) .',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               TextWidget(
                 'Realiza esta ruta desde S/. ${price?.toStringAsFixed(2)} por asiento.',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               TextWidget(
                 'Te eviaremos una notificación cada que un pasajero compre un asiento, para que puedas estar listo para iniciar tu viaje.',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               ProgressStateButtonWidget(
                 success: 'Realizar Ruta',

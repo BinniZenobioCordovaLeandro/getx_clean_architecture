@@ -27,7 +27,7 @@ class FlutterMapWidget extends StatelessWidget {
     return FlutterMap(
       mapController: mapController,
       options: MapOptions(
-        onMapCreated: onMapCreated,
+        // onMapCreated: onMapCreated, // TODO CHECK if works
         maxZoom: 18.3,
         zoom: 13.0,
         minZoom: 5.5,
@@ -43,11 +43,9 @@ class FlutterMapWidget extends StatelessWidget {
         onPositionChanged: onPositionChanged,
       ),
       children: [
-        TileLayerWidget(
-          options: TileLayerOptions(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: ['a', 'b', 'c'],
-          ),
+        TileLayer(
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: const ['a', 'b', 'c'],
         ),
         ...children,
       ],

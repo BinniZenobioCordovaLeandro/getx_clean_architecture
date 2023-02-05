@@ -91,7 +91,7 @@ class OfferCardWidget extends StatelessWidget {
                           TextWidget(
                             '${abstractOfferEntity.userCarModel} ${abstractOfferEntity.userCarColor}',
                             style:
-                                Theme.of(context).textTheme.bodyText1?.copyWith(
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                       fontWeight: FontWeight.bold,
                                     ),

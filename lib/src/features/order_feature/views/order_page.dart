@@ -147,9 +147,7 @@ class _OrderPageState extends State<OrderPage> {
             children: [
               SizedBox(
                 child: FlutterMapWidget(
-                  onMapCreated: (MapController controller) {
-                    orderController.mapController = controller;
-                  },
+                  mapController: orderController.mapController,
                   bounds: (orderController.userPickPoint.value != null)
                       ? LatLngBounds(
                           orderController.taxiPosition.value,

@@ -217,11 +217,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                     AspectRatio(
                                       aspectRatio: 16 / 9,
                                       child: FlutterMapWidget(
-                                        onMapCreated:
-                                            (MapController controller) {
-                                          paymentController.mapController =
-                                              controller;
-                                        },
+                                        mapController:
+                                            paymentController.mapController,
                                         children: [
                                           MarkerLayer(
                                             markers: [

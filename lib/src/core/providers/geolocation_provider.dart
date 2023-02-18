@@ -84,6 +84,7 @@ class GeolocatorProvider {
   }
 
   handlerOnPositionChanged(Position streamPosition) {
+    print(streamPosition);
     if (isLocationServiceEnabled) {
       _streamOnPositionChanged.sink.add(streamPosition);
     }

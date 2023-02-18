@@ -128,9 +128,7 @@ class _RoutesPageState extends State<RoutesPage> {
           children: [
             SizedBox(
               child: FlutterMapWidget(
-                onMapCreated: (MapController controller) {
-                  routesController.mapController = controller;
-                },
+                mapController: routesController.mapController,
                 center: routesController.position.value,
                 children: [
                   MarkerLayer(

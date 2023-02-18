@@ -37,7 +37,7 @@ class RouteController extends GetxController {
     abstractOfferRepository: FirebaseOfferDatasource(),
   );
 
-  MapController? mapController;
+  final MapController? mapController = MapController();
   AbstractRouteEntity? abstractRouteEntity;
 
   var isSigned = false.obs;

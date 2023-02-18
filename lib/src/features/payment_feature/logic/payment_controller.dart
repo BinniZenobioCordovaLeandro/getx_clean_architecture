@@ -56,7 +56,7 @@ class PaymentController extends GetxController {
     abstractUserRepository: FirebaseUserDatasource(),
   );
 
-  MapController? mapController;
+  final MapController? mapController = MapController();
   AbstractOfferEntity? abstractOfferEntity;
 
   var isLoading = false.obs;

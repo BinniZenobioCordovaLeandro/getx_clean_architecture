@@ -26,7 +26,7 @@ import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 class OrderController extends GetxController {
   static OrderController get instance => Get.put(OrderController());
 
-  MapController? mapController;
+  final MapController? mapController = MapController();
 
   final PolylineProvider? polylineProvider = PolylineProvider.getInstance();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

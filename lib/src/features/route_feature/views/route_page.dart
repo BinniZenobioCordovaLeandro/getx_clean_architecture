@@ -152,9 +152,7 @@ class _RoutePageState extends State<RoutePage> {
         body: Stack(
           children: [
             FlutterMapWidget(
-              onMapCreated: (MapController controller) {
-                routeController.mapController = controller;
-              },
+              mapController: routeController.mapController,
               children: [
                 PopupMarkerLayerWidget(
                   options: PopupMarkerLayerOptions(

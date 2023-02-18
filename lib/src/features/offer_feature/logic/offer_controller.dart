@@ -70,7 +70,7 @@ class OfferController extends GetxController {
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
-  MapController? mapController;
+  final MapController? mapController = MapController();
 
   StreamSubscription<Position>? streamPosition;
 

@@ -18,7 +18,7 @@ import 'package:pickpointer/src/core/providers/sutran_data_provider.dart';
 class RoutesController extends GetxController {
   static RoutesController get instance => Get.put(RoutesController());
 
-  MapController? mapController;
+  final MapController? mapController = MapController();
   final FirebaseNotificationProvider? firebaseNotificationProvider =
       FirebaseNotificationProvider.getInstance();
 

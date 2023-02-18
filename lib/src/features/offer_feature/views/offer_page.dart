@@ -172,9 +172,7 @@ class _OfferPageState extends State<OfferPage> {
           children: [
             SizedBox(
               child: FlutterMapWidget(
-                onMapCreated: (MapController mapController) {
-                  offerController.mapController = mapController;
-                },
+                mapController: offerController.mapController,
                 children: [
                   PolylineLayer(
                     polylines: [

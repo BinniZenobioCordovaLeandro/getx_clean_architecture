@@ -49,7 +49,7 @@ class SearchLocationCardWidget extends StatefulWidget {
 }
 
 class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
-  MapController? mapController;
+  final MapController? mapController = MapController();
 
   final GeolocatorProvider? geolocatorProvider =
       GeolocatorProvider.getInstance();
@@ -250,12 +250,11 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
             child: Stack(
               children: [
                 FlutterMapWidget(
-                  onMapCreated: (MapController controller) {
-                    mapController = controller;
-                  },
+                  mapController: mapController,
                   interactiveFlags: boolean ? InteractiveFlag.none : null,
                   onPositionChanged: (mapPosition, boolean) => {
-                    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((Duration duration) {
                       setState(() {
                         LatLng latLng = mapPosition.center!;
                         latLng = latLng;

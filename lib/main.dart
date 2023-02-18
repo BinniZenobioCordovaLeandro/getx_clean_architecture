@@ -44,12 +44,14 @@ class MyApp extends StatelessWidget {
       GetPage(
         name: '/order/:abstractOrderEntityId',
         page: () => const OrderPage(),
-        preventDuplicates: true,
+        preventDuplicates: false,
+        transition: Transition.upToDown,
       ),
       GetPage(
         name: '/offer/:abstractOfferEntityId',
         page: () => const OfferPage(),
-        preventDuplicates: true,
+        preventDuplicates: false,
+        transition: Transition.upToDown,
       ),
       GetPage(
         name: '/user',

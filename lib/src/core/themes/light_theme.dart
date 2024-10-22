@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 class LightTheme {
   ThemeData? lightTheme;
-  static const Color colorBrand = Color(0xff33512a);
+  static const Color colorBrand = Color(0xffebd93e);
 
   LightTheme() {
     lightTheme = ThemeData.light().copyWith(
@@ -244,7 +244,7 @@ class LightTheme {
         }),
       ),
       timePickerTheme: const TimePickerThemeData(
-        dialHandColor: colorBrand,
+        backgroundColor: Colors.white,
       ),
       tabBarTheme: const TabBarTheme(
         labelColor: Colors.white,

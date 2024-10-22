@@ -11,6 +11,7 @@ abstract class AbstractUserEntity extends Equatable {
   final String? carModel;
   final String? carColor;
   final String? carDescription;
+  final String? phoneCode;
   final String? phoneNumber;
   final String? licensePhoto;
   final String? license;
@@ -29,6 +30,7 @@ abstract class AbstractUserEntity extends Equatable {
     this.carModel,
     this.carColor,
     this.carDescription,
+    this.phoneCode,
     this.phoneNumber,
     this.licensePhoto,
     this.license,

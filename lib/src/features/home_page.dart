@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
         length: 2,
         child: ScaffoldWidget(
           appBar: AppBarWidget(
-            title: 'PickPointer',
+            title: 'Llega rapido a tu destino',
             actions: [
               Center(
                 child: TextWidget(

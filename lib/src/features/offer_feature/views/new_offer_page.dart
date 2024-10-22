@@ -82,7 +82,7 @@ class _NewOfferPageState extends State<NewOfferPage> {
                         }
                         double price = double.parse(value);
                         double minPrice = double.tryParse(
-                                '${widget.abstractRouteEntity.price}') ??
+                                '${widget.abstractRouteEntity.price! * 0.80}') ??
                             5.00;
                         double maxPrice = minPrice * 3;
                         if (price < minPrice) {

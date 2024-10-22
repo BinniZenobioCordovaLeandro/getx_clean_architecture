@@ -23,6 +23,8 @@ class UserModel implements AbstractUserEntity {
   @override
   final String? carDescription;
   @override
+  final String? phoneCode;
+  @override
   final String? phoneNumber;
   @override
   final String? licensePhoto;
@@ -46,6 +48,7 @@ class UserModel implements AbstractUserEntity {
     this.carModel,
     this.carColor,
     this.carDescription,
+    this.phoneCode,
     this.phoneNumber,
     this.licensePhoto,
     this.license,
@@ -65,6 +68,7 @@ class UserModel implements AbstractUserEntity {
         carModel: data['car_model'] as String?,
         carColor: data['car_color'] as String?,
         carDescription: data['car_description'] as String?,
+        phoneCode: data['phone_code'] as String?,
         phoneNumber: data['phone_number'] as String?,
         licensePhoto: data['license_photo'] as String?,
         license: data['license'] as String?,
@@ -84,6 +88,7 @@ class UserModel implements AbstractUserEntity {
         'car_model': carModel,
         'car_color': carColor,
         'car_description': carDescription,
+        'phone_code': phoneCode,
         'phone_number': phoneNumber,
         'license_photo': licensePhoto,
         'license': license,
@@ -109,6 +114,7 @@ class UserModel implements AbstractUserEntity {
     String? carModel,
     String? carColor,
     String? carDescription,
+    String? phoneCode,
     String? phoneNumber,
     String? licensePhoto,
     String? license,
@@ -127,6 +133,7 @@ class UserModel implements AbstractUserEntity {
       carModel: carModel ?? this.carModel,
       carColor: carColor ?? this.carColor,
       carDescription: carDescription ?? this.carDescription,
+      phoneCode: phoneCode ?? this.phoneCode,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       licensePhoto: licensePhoto ?? this.licensePhoto,
       license: license ?? this.license,
@@ -151,6 +158,7 @@ class UserModel implements AbstractUserEntity {
         carModel,
         carColor,
         carDescription,
+        phoneCode,
         phoneNumber,
         licensePhoto,
         license,

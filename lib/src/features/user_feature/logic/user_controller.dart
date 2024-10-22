@@ -55,10 +55,11 @@ class UserController extends GetxController {
   var carModel = ''.obs;
   var carColor = ''.obs;
   var carDescription = ''.obs;
+  var phoneCode = ''.obs;
   var phoneNumber = ''.obs;
   var licensePhoto = ''.obs;
   var license = ''.obs;
-  var phoneCode = ''.obs;
+  var validateCode = ''.obs;
   var rank = 5.0.obs;
   var observation = ''.obs;
   var isDriver = false.obs;
@@ -119,6 +120,7 @@ class UserController extends GetxController {
                   carColor.value = abstractUserEntity.carColor ?? '',
                   carDescription.value =
                       abstractUserEntity.carDescription ?? '',
+                  phoneCode.value = abstractUserEntity.phoneCode ?? '',
                   phoneNumber.value = abstractUserEntity.phoneNumber ?? '',
                   licensePhoto.value = abstractUserEntity.licensePhoto ?? '',
                   license.value = abstractUserEntity.license ?? '',
@@ -155,6 +157,7 @@ class UserController extends GetxController {
   resendCode() {
     startTimer();
     sendVerificationCode(
+      phoneCode: phoneCode.value,
       phoneNumber: phoneNumber.value,
     );
   }
@@ -192,6 +195,7 @@ class UserController extends GetxController {
   }
 
   Future<bool?> sendVerificationCode({
+    required String phoneCode,
     required String phoneNumber,
   }) {
     isLoadingSave.value = true;
@@ -199,7 +203,7 @@ class UserController extends GetxController {
     message.value = '';
     Future<bool> futureBool = firebaseAuthenticationProvider!
         .sendPhoneAuth(
-      phoneNumber: phoneNumber,
+      phoneNumber: '$phoneCode$phoneNumber',
       onError: (String? identifier) {
         switch (identifier) {
           case 'invalid-phone-number':
@@ -215,7 +219,7 @@ class UserController extends GetxController {
             break;
           default:
             errorMessage.value =
-                'Verifica tu conexion a internet, e intenta más tarde.';
+                'Verifica tu conexion a internet, e intenta más tarde.\n$identifier';
         }
         stopTimer();
         isLoadingSave.value = false;
@@ -291,6 +295,7 @@ class UserController extends GetxController {
           carModel: carModel.value,
           carColor: carColor.value,
           carDescription: carDescription.value,
+          phoneCode: phoneCode.value,
           phoneNumber: phoneNumber.value,
           licensePhoto: licensePhotoNormalized,
           license: license.value,

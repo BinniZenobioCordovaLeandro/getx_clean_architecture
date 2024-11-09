@@ -180,7 +180,8 @@ class _RoutePageState extends State<RoutePage> {
                         ),
                       ),
                     ],
-                    popupBuilder: (BuildContext context, Marker marker) {
+                    selectedMarkerBuilder:
+                        (BuildContext context, Marker marker) {
                       return PopupCardWidget(
                         message:
                             "Hasta:\n${routeController.abstractRouteEntity?.to}",
@@ -215,7 +216,8 @@ class _RoutePageState extends State<RoutePage> {
                         ),
                       ),
                     ],
-                    popupBuilder: (BuildContext context, Marker marker) {
+                    selectedMarkerBuilder:
+                        (BuildContext context, Marker marker) {
                       return PopupCardWidget(
                         message:
                             "Desde:\n${routeController.abstractRouteEntity?.from}",

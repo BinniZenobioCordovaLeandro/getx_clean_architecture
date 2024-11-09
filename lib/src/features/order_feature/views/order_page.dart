@@ -246,7 +246,8 @@ class _OrderPageState extends State<OrderPage> {
                             ),
                           ),
                         ],
-                        popupBuilder: (BuildContext context, Marker marker) {
+                        selectedMarkerBuilder:
+                            (BuildContext context, Marker marker) {
                           return PopupMarkerTaxiWidget(
                             meters: orderController.distanceTaxi.value,
                           );

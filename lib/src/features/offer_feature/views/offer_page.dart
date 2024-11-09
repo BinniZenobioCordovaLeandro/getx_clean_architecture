@@ -268,7 +268,8 @@ class _OfferPageState extends State<OfferPage> {
                             ),
                           ),
                         ],
-                        popupBuilder: (BuildContext context, Marker marker) {
+                        selectedMarkerBuilder:
+                            (BuildContext context, Marker marker) {
                           return PopupMarkerPassengerWidget(
                             meters: offerController.distanceBetween(
                               start: offerController.positionTaxi.value,

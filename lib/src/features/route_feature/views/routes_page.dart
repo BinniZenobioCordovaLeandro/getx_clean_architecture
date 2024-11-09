@@ -155,14 +155,10 @@ class _RoutesPageState extends State<RoutesPage> {
                   PopupMarkerLayerWidget(
                     options: PopupMarkerLayerOptions(
                       markers: routesController.restrictedPointsMarkers.value,
-                      popupAnimation: const PopupAnimation.fade(
-                        duration: Duration(
-                          milliseconds: 700,
-                        ),
-                      ),
                       markerTapBehavior: MarkerTapBehavior.togglePopup(),
                       markerCenterAnimation: const MarkerCenterAnimation(),
-                      popupBuilder: (BuildContext context, Marker marker) {
+                      selectedMarkerBuilder:
+                          (BuildContext context, Marker marker) {
                         RegExp regExp = RegExp(r"([\d])");
                         String? idRestrictedPoint = regExp
                             .firstMatch('${marker.key.reactive.value}')
@@ -179,14 +175,10 @@ class _RoutesPageState extends State<RoutesPage> {
                   PopupMarkerLayerWidget(
                     options: PopupMarkerLayerOptions(
                       markers: routesController.disruptedPointsMarkers.value,
-                      popupAnimation: const PopupAnimation.fade(
-                        duration: Duration(
-                          milliseconds: 700,
-                        ),
-                      ),
                       markerTapBehavior: MarkerTapBehavior.togglePopup(),
                       markerCenterAnimation: const MarkerCenterAnimation(),
-                      popupBuilder: (BuildContext context, Marker marker) {
+                      selectedMarkerBuilder:
+                          (BuildContext context, Marker marker) {
                         RegExp regExp = RegExp(r"([\d])");
                         String? idDisruptedPoint = regExp
                             .firstMatch('${marker.key.reactive.value}')
@@ -204,14 +196,10 @@ class _RoutesPageState extends State<RoutesPage> {
                     options: PopupMarkerLayerOptions(
                       // ignore: invalid_use_of_protected_member
                       markers: routesController.markers.value,
-                      popupAnimation: const PopupAnimation.fade(
-                        duration: Duration(
-                          milliseconds: 700,
-                        ),
-                      ),
                       markerTapBehavior: MarkerTapBehavior.togglePopup(),
                       markerCenterAnimation: const MarkerCenterAnimation(),
-                      popupBuilder: (BuildContext context, Marker marker) {
+                      selectedMarkerBuilder:
+                          (BuildContext context, Marker marker) {
                         RegExp regExp = RegExp(r"'(.*)'");
                         String? idAbstractRouteEntity = regExp
                             .firstMatch('${marker.key.reactive.value}')

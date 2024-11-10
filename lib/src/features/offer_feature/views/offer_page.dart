@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
+import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
@@ -93,6 +94,11 @@ class _OfferPageState extends State<OfferPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: WrapWidget(
                             children: [
+                              if (offerController.errorMessage.value.isNotEmpty)
+                                CardAlertWidget(
+                                  title: 'HEY!',
+                                  message: offerController.errorMessage.value,
+                                ),
                               TextWidget(
                                 '¿Confirmas CANCELAR el viaje?',
                                 style: Theme.of(context).textTheme.titleLarge,
@@ -107,6 +113,7 @@ class _OfferPageState extends State<OfferPage> {
                                 state: offerController.isLoading.value
                                     ? ButtonState.loading
                                     : ButtonState.success,
+                                loading: 'CANCELANDO...',
                                 success: 'CANCELAR VIAJE',
                                 onPressed: () {
                                   offerController.cancelTrip();

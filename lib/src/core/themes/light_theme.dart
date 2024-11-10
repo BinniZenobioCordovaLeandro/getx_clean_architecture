@@ -250,60 +250,6 @@ class LightTheme {
         labelColor: Colors.white,
         unselectedLabelColor: Colors.grey,
       ),
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        displayMedium: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        displaySmall: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        headlineMedium: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        headlineSmall: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        titleLarge: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        titleMedium: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        titleSmall: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodyLarge: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodyMedium: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        labelLarge: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodySmall: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        labelSmall: TextStyle(
-          color: Colors.white,
-          fontFamily: 'SFProDisplay',
-        ),
-      ),
       colorScheme: const ColorScheme(
         primary: colorBrand,
         secondary: colorBrand,

@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/material.dart';
 
 class NotificationProvider {
   static NotificationProvider? _instance;
@@ -53,6 +54,7 @@ class NotificationProvider {
               ? NotificationLayout.BigPicture
               : NotificationLayout.Default,
           bigPicture: bigPicture,
+          backgroundColor: Colors.white,
         ),
         schedule: NotificationCalendar.fromDate(
           date: dateTime ?? DateTime.now(),

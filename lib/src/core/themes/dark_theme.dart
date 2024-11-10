@@ -232,60 +232,6 @@ class DarkTheme {
         labelColor: Colors.white,
         unselectedLabelColor: Colors.grey,
       ),
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        displayMedium: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        displaySmall: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        headlineMedium: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        headlineSmall: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        titleLarge: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        titleMedium: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        titleSmall: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodyLarge: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodyMedium: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        labelLarge: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodySmall: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        labelSmall: TextStyle(
-          color: Colors.white,
-          fontFamily: 'SFProDisplay',
-        ),
-      ),
       colorScheme: const ColorScheme(
         primary: colorBrand,
         secondary: colorBrand,

@@ -27,6 +27,7 @@ import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
 import 'package:pickpointer/src/core/util/decode_list_waypoints.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
+import 'package:pickpointer/src/features/home_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OfferController extends GetxController {
@@ -355,7 +356,7 @@ class OfferController extends GetxController {
             );
           }
           Get.offAll(
-            () => const RoutesPage(),
+            () => const HomePage(),
           );
         }
       });

@@ -293,7 +293,8 @@ class _SearchLocationCardWidgetState extends State<SearchLocationCardWidget> {
                           anchorPos: AnchorPos.align(AnchorAlign.center),
                           builder: (BuildContext context) => const Icon(
                             Icons.circle,
-                            size: 5,
+                            size: 50,
+                            color: Colors.red,
                           ),
                         ),
                         Marker(

@@ -7,6 +7,9 @@ import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/list_tile_radio_card_widget.dart';
+import 'package:pickpointer/src/core/widgets/list_tile_radio_widget.dart';
+import 'package:pickpointer/src/core/widgets/location_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
@@ -14,6 +17,7 @@ import 'package:pickpointer/src/core/widgets/form_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
 import 'package:pickpointer/src/core/widgets/search_location_card_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
+import 'package:pickpointer/src/features/offer_feature/logic/offer_controller.dart';
 import 'package:pickpointer/src/features/payment_feature/logic/payment_controller.dart';
 import 'package:pickpointer/src/features/payment_feature/views/enums/method_pay_type.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
@@ -37,6 +41,7 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   final PaymentController paymentController = PaymentController.instance;
+  final OfferController offerController = OfferController.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -63,56 +68,74 @@ class _PaymentPageState extends State<PaymentPage> {
             SizedBox(
               width: double.infinity,
               child: TextWidget(
-                'Configuración de viaje',
+                'Detalles de tu viaje',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
-            SizedBox(
-              child: SearchLocationCardWidget(
-                title: 'Salgo del origen de la ruta',
-                labelText: 'Recogeme en',
-                leading: const Icon(
-                  Icons.taxi_alert_outlined,
-                  color: Colors.blue,
-                ),
-                helperText:
-                    'El punto de recojo, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
-                validator: (value) {
-                  if (value == null) {
-                    return 'Debe seleccionar un punto de recojo';
-                  }
-                  return null;
-                },
+            Text("¿De donde sales?",
+                style: Theme.of(context).textTheme.titleLarge),
+            ListTileRadioWidget(
+              title: const Text("Voy al paradero mas cercano"),
+              groupValue: paymentController.userOriginFromHome.value,
+              value: false,
+              onChanged: (value) {
+                paymentController.userOriginFromHome.value = value;
+                paymentController.userOriginLatLng.value =
+                    paymentController.offerStartLatLng.value;
+              },
+            ),
+            ListTileRadioWidget(
+              title: const Text("Recogeme en mi casa"),
+              groupValue: paymentController.userOriginFromHome.value,
+              value: true,
+              onChanged: (value) {
+                paymentController.userOriginFromHome.value = value;
+              },
+            ),
+            if (paymentController.userOriginFromHome.value)
+              LocationMapWidget(
+                initialLatLng: paymentController.userOriginLatLng.value,
                 onChanged: (LatLng latLng) {
                   paymentController.userOriginLatLng.value = latLng;
                 },
-              ),
-            ),
-            SizedBox(
-              child: SearchLocationCardWidget(
-                key: Key(
-                    '${paymentController.offerEndLatLng.value.latitude}-${paymentController.offerEndLatLng.value.longitude}'),
-                title: 'Voy al destino de la ruta',
-                labelText: 'Dejame en',
-                leading: const Icon(
-                  Icons.location_pin,
-                  color: Colors.red,
+                iconMarker: const Icon(
+                  Icons.person_pin,
+                  color: Colors.blue,
+                  size: 50,
                 ),
-                initialValue: true,
-                helperText:
-                    'El punto de bajada, debe estar entre la ruta seleccionada.\nEj: Av. Siempreviva',
-                initialLatLng: paymentController.offerEndLatLng.value,
-                validator: (value) {
-                  if (value == null) {
-                    return 'Debe seleccionar un punto de bajada';
-                  }
-                  return null;
-                },
+              ),
+            Text("¿A donde vas?",
+                style: Theme.of(context).textTheme.titleLarge),
+            ListTileRadioWidget(
+              title: const Text("Voy al paradero final de la ruta"),
+              groupValue: paymentController.userDestinationToHome.value,
+              value: false,
+              onChanged: (value) {
+                paymentController.userDestinationToHome.value = value;
+                paymentController.userDestinationLatLng.value =
+                    paymentController.offerEndLatLng.value;
+              },
+            ),
+            ListTileRadioWidget(
+              title: const Text("Dejame en mi casa"),
+              groupValue: paymentController.userDestinationToHome.value,
+              value: true,
+              onChanged: (value) {
+                paymentController.userDestinationToHome.value = value;
+              },
+            ),
+            if (paymentController.userDestinationToHome.value)
+              LocationMapWidget(
+                initialLatLng: paymentController.userDestinationLatLng.value,
                 onChanged: (LatLng latLng) {
                   paymentController.userDestinationLatLng.value = latLng;
                 },
+                iconMarker: const Icon(
+                  Icons.person_pin_outlined,
+                  color: Colors.red,
+                  size: 50,
+                ),
               ),
-            ),
             const Divider(),
             SizedBox(
               width: double.infinity,
@@ -161,11 +184,21 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
             CashMethodPayRadioWidget(
               title: 'Efectivo',
-              groupValue: MethodPayType.cash,
-              value: MethodPayType.cash,
-              onChanged: (value) {
-                paymentController.payMethod.value = 1;
-              },
+              groupValue: paymentController.payMethod.value,
+              value: MethodPayType.cash.label,
+              onChanged: (value) => paymentController.payMethod.value = value,
+            ),
+            CashMethodPayRadioWidget(
+              title: 'Yape',
+              groupValue: paymentController.payMethod.value,
+              value: MethodPayType.yape.label,
+              onChanged: (value) => paymentController.payMethod.value = value,
+            ),
+            CashMethodPayRadioWidget(
+              title: 'Plin',
+              groupValue: paymentController.payMethod.value,
+              value: MethodPayType.plin.label,
+              onChanged: (value) => paymentController.payMethod.value = value,
             ),
             const Divider(),
             if (paymentController.errorMessage.value.isNotEmpty)

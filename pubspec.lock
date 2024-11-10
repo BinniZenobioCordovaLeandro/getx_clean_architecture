@@ -550,11 +550,9 @@ packages:
   flutter_polyline_points:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "488fb7cf2e8707d336ec9c5d206fd6c210ee18f6"
-      url: "https://github.com/BinniZenobioCordovaLeandro/flutter_polyline_points.git"
-    source: git
+      path: "../flutter_polyline_points"
+      relative: true
+    source: path
     version: "1.0.0"
   flutter_secure_storage:
     dependency: transitive

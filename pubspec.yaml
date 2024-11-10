@@ -50,8 +50,7 @@ dependencies:
   flutter_map: ^4.0.0
   flutter_map_marker_popup: ^5.0.0
   flutter_polyline_points:
-    git:
-      url: https://github.com/BinniZenobioCordovaLeandro/flutter_polyline_points.git
+    path: ../flutter_polyline_points/
   flutter_svg: ^2.0.0+1
   geolocator: ^11.1.0
   get: ^4.6.1

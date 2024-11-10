@@ -68,9 +68,13 @@ class PaymentController extends GetxController {
   var offerEndLatLng = LatLng(0, 0).obs;
   var offerWayPoints = <LatLng>[].obs;
   DateTime? offerDateTime;
+
+  var userOriginFromHome = false.obs;
   var userOriginLatLng = LatLng(0, 0).obs;
+  var userDestinationToHome = false.obs;
   var userDestinationLatLng = LatLng(0, 0).obs;
-  var payMethod = 1.obs;
+
+  var payMethod = "cash".obs;
 
   var basePolylineListLatLng = <LatLng>[].obs;
   var userPolylineListLatLng = <LatLng>[].obs;
@@ -184,14 +188,19 @@ class PaymentController extends GetxController {
     // abstractOfferEntity = Get.arguments['abstractOfferEntity'];
     abstractOfferEntity = abstractOfferEntity;
     offerPrice.value = abstractOfferEntity.price!;
+
     offerStartLatLng.value = LatLng(
       double.parse(abstractOfferEntity.startLat!),
       double.parse(abstractOfferEntity.startLng!),
     );
+    userOriginLatLng.value = offerStartLatLng.value;
+
     offerEndLatLng.value = LatLng(
       double.parse(abstractOfferEntity.endLat!),
       double.parse(abstractOfferEntity.endLng!),
     );
+    userDestinationLatLng.value = offerEndLatLng.value;
+
     List<LatLng> listLatLng = [];
     String? wayPoints = abstractOfferEntity.wayPoints;
     if (wayPoints != null && wayPoints.length > 10) {

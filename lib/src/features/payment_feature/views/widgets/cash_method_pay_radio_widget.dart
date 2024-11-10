@@ -29,7 +29,7 @@ class CashMethodPayRadioWidget extends StatelessWidget {
       value: value,
       onChanged: onChanged,
       title: TextWidget(
-        'Cash',
+        title ?? '',
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     );

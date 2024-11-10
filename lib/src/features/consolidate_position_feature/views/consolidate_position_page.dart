@@ -178,32 +178,34 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                               abstractRouteEntity: abstractRouteEntity,
                               onTap: onTapRoute,
                             ),
-                        // if (routesController.isDriver.value == true)
-                        SizedBox(
-                          width: double.infinity,
-                          child: Flex(
-                            direction: Axis.horizontal,
-                            children: [
-                              Expanded(
-                                child: TextWidget(
-                                  '¿No encuentras tu ruta?',
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                  textAlign: TextAlign.left,
+                        if (consolidatePositionController.isDriver.value ==
+                            true)
+                          SizedBox(
+                            width: double.infinity,
+                            child: Flex(
+                              direction: Axis.horizontal,
+                              children: [
+                                Expanded(
+                                  child: TextWidget(
+                                    '¿No encuentras tu ruta?, ¿Eres conductor?',
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                    textAlign: TextAlign.left,
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: OutlinedButtonWidget(
-                                  title: 'Solicitar ruta',
-                                  onPressed: () {
-                                    Get.to(
-                                      () => const NewRoutePage(),
-                                    );
-                                  },
-                                ),
-                              )
-                            ],
+                                Expanded(
+                                  child: OutlinedButtonWidget(
+                                    title: 'Creala tu mismo',
+                                    onPressed: () {
+                                      Get.to(
+                                        () => const NewRoutePage(),
+                                      );
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
                         SizedBox(
                           width: double.infinity,
                           child: TextButtonWidget(

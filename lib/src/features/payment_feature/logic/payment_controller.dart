@@ -105,8 +105,8 @@ class PaymentController extends GetxController {
         wayPoints: wayspointsWithUser,
       );
 
-      int baseTravelDuration = baseRoutePolylineResult.duration.inMinutes;
-      int userTravelDuration = userRoutePolylineResult.duration.inMinutes;
+      int baseTravelDuration = 10; // baseRoutePolylineResult.duration.inMinutes;
+      int userTravelDuration = 10; // userRoutePolylineResult.duration.inMinutes;
       if (userTravelDuration < baseTravelDuration) {
         // error user travel never can be less than base travel duration
         errorMessage.value =

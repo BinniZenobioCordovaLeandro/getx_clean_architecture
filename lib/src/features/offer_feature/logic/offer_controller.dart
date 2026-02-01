@@ -137,8 +137,8 @@ class OfferController extends GetxController {
       List<LatLng> listLatLng =
           polylineProvider!.convertPointToLatLng(polylineResult.points);
       polylineListLatLng.value = listLatLng;
-      travelTime.value = polylineResult.duration;
-      travelDistance.value = polylineResult.meters;
+      // travelTime.value = polylineResult.duration;
+      // travelDistance.value = polylineResult.meters;
       isLoading.value = false;
       return true;
     }).catchError((error) {

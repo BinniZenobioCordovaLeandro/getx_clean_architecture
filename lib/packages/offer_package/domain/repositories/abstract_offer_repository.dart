@@ -3,6 +3,8 @@ import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offe
 abstract class AbstractOfferRepository {
   Future<List<AbstractOfferEntity>>? getOffers();
 
+  Future<Map<String, List<AbstractOfferEntity>>>? getOffersGrouped();
+
   Future<List<AbstractOfferEntity>>? getOffersByRoute({
     required String routeId,
   });
@@ -24,6 +26,10 @@ abstract class AbstractOfferRepository {
   });
 
   Future<AbstractOfferEntity>? startOffer({
+    required String offerId,
+  });
+
+  Future<AbstractOfferEntity>? cancelOffer({
     required String offerId,
   });
 

@@ -7,7 +7,6 @@ import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offe
 import 'package:pickpointer/packages/offer_package/domain/usecases/add_offer_usecase.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_firebase_session_datasource.dart';
-import 'package:pickpointer/packages/session_package/data/datasources/session_datasources/shared_preferences_session_datasource.dart';
 import 'package:pickpointer/packages/session_package/data/models/session_model.dart';
 import 'package:pickpointer/packages/session_package/domain/entities/abstract_session_entity.dart';
 import 'package:pickpointer/packages/session_package/domain/usecases/update_session_usecase.dart';
@@ -70,61 +69,63 @@ class NewOfferController extends GetxController {
               'Ahora eres visible para los usuarios en esta ruta:\nDestino: ${abstractRouteEntity.to}\nOrigen: ${abstractRouteEntity.from}',
         )
         .then((value) => value);
-    if (dateTime != null) {
-      DateTime offerDateTime = DateTime(
-        dateTime.year,
-        dateTime.month,
-        dateTime.day,
-        timeOfDay.hour,
-        timeOfDay.minute,
-      );
+    DateTime offerDateTime = DateTime(
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      timeOfDay.hour,
+      timeOfDay.minute,
+    );
 
-      final String dateString =
-          DateFormat('dd/MM/yyyy kk:mm a').format(offerDateTime);
-      notificationProvider?.sendLocalNotification(
-        title: 'TU VIAJE ES EN 3 DIAS, destino "${abstractRouteEntity.to}"',
-        body: 'Preparate, alista todo para salir PUNTUAL el $dateString',
-        dateTime: offerDateTime.subtract(
-          const Duration(days: 3),
-        ),
-      );
-      notificationProvider?.sendLocalNotification(
-        title: 'TU VIAJE ES MAÑANA, destino "${abstractRouteEntity.to}"',
-        body: 'Preparate, alista todo para salir PUNTUAL el $dateString',
-        dateTime: offerDateTime.subtract(
-          const Duration(days: 1),
-        ),
-      );
-      notificationProvider?.sendLocalNotification(
-        title: '¡TU VIAJE ES EN 1 HORA!, destino "${abstractRouteEntity.to}"',
-        body:
-            'Revisa tu nivel de combustible, documentos y estado del vehiculo. COMIENZA A CALENTAR MOTORES',
-        dateTime: offerDateTime.subtract(
-          const Duration(hours: 1),
-        ),
-      );
-      notificationProvider?.sendLocalNotification(
-        title:
-            '¡LLEGO LA HORA DE TU VIAJE A destino "${abstractRouteEntity.to}"!',
-        body:
-            'Llego la hora, revisa el estado de los asientos vendidos, al destino "${abstractRouteEntity.to}"',
-        dateTime: offerDateTime.subtract(
-          const Duration(hours: 1),
-        ),
-      );
-    }
+    final String dateString =
+        DateFormat('dd/MM/yyyy kk:mm a').format(offerDateTime);
+    notificationProvider?.sendLocalNotification(
+      title: 'TU VIAJE ES EN 3 DIAS, destino "${abstractRouteEntity.to}"',
+      body: 'Preparate, alista todo para salir PUNTUAL el $dateString',
+      dateTime: offerDateTime.subtract(
+        const Duration(days: 3),
+      ),
+    );
+    notificationProvider?.sendLocalNotification(
+      title: 'TU VIAJE ES MAÑANA, destino "${abstractRouteEntity.to}"',
+      body: 'Preparate, alista todo para salir PUNTUAL el $dateString',
+      dateTime: offerDateTime.subtract(
+        const Duration(days: 1),
+      ),
+    );
+    notificationProvider?.sendLocalNotification(
+      title: '¡TU VIAJE ES EN 1 HORA!, destino "${abstractRouteEntity.to}"',
+      body:
+          'Revisa tu nivel de combustible, documentos y estado del vehiculo. COMIENZA A CALENTAR MOTORES',
+      dateTime: offerDateTime.subtract(
+        const Duration(hours: 1),
+      ),
+    );
+    notificationProvider?.sendLocalNotification(
+      title:
+          '¡LLEGO LA HORA DE TU VIAJE A destino "${abstractRouteEntity.to}"!',
+      body:
+          'Llego la hora, revisa el estado de los asientos vendidos, al destino "${abstractRouteEntity.to}"',
+      dateTime: offerDateTime.subtract(
+        const Duration(hours: 1),
+      ),
+    );
     return futureBool;
   }
 
   Future<bool>? sendNotificationToRouteTopic({
     required AbstractOfferEntity abstractOfferEntity,
   }) {
+    int? availableSites = abstractOfferEntity.maxCount;
+    String? pluralSuffix =
+        availableSites != null && availableSites > 1 ? "s" : "";
+    String? price = abstractOfferEntity.price?.toStringAsFixed(2);
     Future<bool>? futureBool = firebaseNotificationProvider!.sendMessageToTopic(
-      topic: 'route_${abstractOfferEntity.routeId}',
-      title:
-          'S/ ${abstractOfferEntity.price?.toStringAsFixed(2)} => ${abstractOfferEntity.routeTitle}',
+      // topic: 'route_${abstractOfferEntity.routeId}',
+      topic: 'pickpointer_app',
+      title: '¡AUTO DISPONIBLE!, viaja a ${abstractOfferEntity.routeTo}',
       body:
-          'Viaja a ${abstractOfferEntity.routeTo} por solo S/${abstractOfferEntity.price?.toStringAsFixed(2)}!',
+          'AUTO "${abstractOfferEntity.userCarModel}", precio de S/ $price por pasajero.\nRecojo a domicilio\n$availableSites asiento$pluralSuffix disponible$pluralSuffix',
       link: '/route/${abstractOfferEntity.routeId}',
     )..then((value) => value);
     return futureBool;

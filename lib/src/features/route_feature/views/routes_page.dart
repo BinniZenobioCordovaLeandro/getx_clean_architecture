@@ -3,26 +3,20 @@ import 'package:get/get.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
-import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
-import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
-import 'package:pickpointer/src/core/widgets/expandable_fab_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/linear_progress_indicator_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
-import 'package:pickpointer/src/core/widgets/shimmer_widget.dart';
+import 'package:pickpointer/src/core/widgets/scaffold_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
-import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 import 'package:pickpointer/src/features/route_feature/logic/routes_controller.dart';
-import 'package:pickpointer/src/features/route_feature/views/new_route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/route_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/filter_destination_card_widget%20copy.dart';
+import 'package:pickpointer/src/features/route_feature/views/widgets/popup_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/popup_marker_card_widget.dart';
 import 'package:pickpointer/src/features/route_feature/views/widgets/route_item_card_widget.dart';
-import 'package:pickpointer/src/features/user_feature/views/sign_in_user_page.dart';
-import 'package:pickpointer/src/features/user_feature/views/user_page.dart';
 
 class RoutesPage extends StatefulWidget {
   const RoutesPage({
@@ -129,17 +123,15 @@ class _RoutesPageState extends State<RoutesPage> {
     //   complete: () {},
     // );
     return Obx(() {
-      return Stack(
-        children: [
-          SizedBox(
-            child: FlutterMapWidget(
-              onMapCreated: (MapController controller) {
-                routesController.mapController = controller;
-              },
-              center: routesController.position.value,
-              children: [
-                MarkerLayerWidget(
-                  options: MarkerLayerOptions(
+      return ScaffoldWidget(
+        body: Stack(
+          children: [
+            SizedBox(
+              child: FlutterMapWidget(
+                mapController: routesController.mapController,
+                center: routesController.position.value,
+                children: [
+                  MarkerLayer(
                     markers: [
                       Marker(
                         width: 20.0,
@@ -156,143 +148,180 @@ class _RoutesPageState extends State<RoutesPage> {
                       )
                     ],
                   ),
-                ),
-                PolylineLayerWidget(
-                  options: PolylineLayerOptions(
+                  PolylineLayer(
                     // ignore: invalid_use_of_protected_member
                     polylines: routesController.polylines.value,
                   ),
-                ),
-                PopupMarkerLayerWidget(
-                  options: PopupMarkerLayerOptions(
-                    // ignore: invalid_use_of_protected_member
-                    markers: routesController.markers.value,
-                    popupAnimation: const PopupAnimation.fade(
-                      duration: Duration(
-                        milliseconds: 700,
-                      ),
-                    ),
-                    markerTapBehavior: MarkerTapBehavior.togglePopup(),
-                    markerCenterAnimation: const MarkerCenterAnimation(),
-                    popupBuilder: (BuildContext context, Marker marker) {
-                      RegExp regExp = RegExp(r"'(.*)'");
-                      String? idAbstractRouteEntity = regExp
-                          .firstMatch('${marker.key.reactive.value}')
-                          ?.group(1);
-                      if (idAbstractRouteEntity != null) {
-                        AbstractRouteEntity abstractRouteEntity =
-                            routesController
-                                .mapRoutes
-                                // ignore: invalid_use_of_protected_member
-                                .value[idAbstractRouteEntity];
-                        return PopupMarkerCardWidget(
-                          abstractRouteEntity: abstractRouteEntity,
-                          onTap: () {
-                            Get.to(
-                              () => RoutePage(
-                                abstractRouteEntity: abstractRouteEntity,
-                              ),
-                              arguments: {
-                                'abstractRouteEntity': abstractRouteEntity,
-                              },
-                            );
-                          },
+                  PopupMarkerLayerWidget(
+                    options: PopupMarkerLayerOptions(
+                      markers: routesController.restrictedPointsMarkers.value,
+                      markerTapBehavior: MarkerTapBehavior.togglePopup(),
+                      markerCenterAnimation: const MarkerCenterAnimation(),
+                      selectedMarkerBuilder:
+                          (BuildContext context, Marker marker) {
+                        RegExp regExp = RegExp(r"([\d])");
+                        String? idRestrictedPoint = regExp
+                            .firstMatch('${marker.key.reactive.value}')
+                            ?.group(1);
+                        var restrictedPoint = routesController.restrictedPoints
+                            .value[int.parse(idRestrictedPoint!)];
+                        return PopupCardWidget(
+                          message: "${restrictedPoint.properties?.evento}",
+                          background: Colors.orange,
                         );
-                      }
-                      return Container();
-                    },
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          if (routesController.isLoading.value)
-            const Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: LinearProgressIndicatorWidget(),
-            ),
-          Positioned(
-            top: 16,
-            right: 16,
-            child: IconButton(
-              onPressed: () => routesController.moveToMyLocation(),
-              tooltip: 'Ir a mi ubicación',
-              icon: const Icon(
-                Icons.my_location,
+                  PopupMarkerLayerWidget(
+                    options: PopupMarkerLayerOptions(
+                      markers: routesController.disruptedPointsMarkers.value,
+                      markerTapBehavior: MarkerTapBehavior.togglePopup(),
+                      markerCenterAnimation: const MarkerCenterAnimation(),
+                      selectedMarkerBuilder:
+                          (BuildContext context, Marker marker) {
+                        RegExp regExp = RegExp(r"([\d])");
+                        String? idDisruptedPoint = regExp
+                            .firstMatch('${marker.key.reactive.value}')
+                            ?.group(1);
+                        var disruptedPoint = routesController.disruptedPoints
+                            .value[int.parse(idDisruptedPoint!)];
+                        return PopupCardWidget(
+                          message: "${disruptedPoint.properties?.evento}",
+                          background: Colors.purple,
+                        );
+                      },
+                    ),
+                  ),
+                  PopupMarkerLayerWidget(
+                    options: PopupMarkerLayerOptions(
+                      // ignore: invalid_use_of_protected_member
+                      markers: routesController.markers.value,
+                      markerTapBehavior: MarkerTapBehavior.togglePopup(),
+                      markerCenterAnimation: const MarkerCenterAnimation(),
+                      selectedMarkerBuilder:
+                          (BuildContext context, Marker marker) {
+                        RegExp regExp = RegExp(r"'(.*)'");
+                        String? idAbstractRouteEntity = regExp
+                            .firstMatch('${marker.key.reactive.value}')
+                            ?.group(1);
+                        if (idAbstractRouteEntity != null) {
+                          AbstractRouteEntity abstractRouteEntity =
+                              routesController
+                                  .mapRoutes
+                                  // ignore: invalid_use_of_protected_member
+                                  .value[idAbstractRouteEntity];
+                          return PopupMarkerCardWidget(
+                            abstractRouteEntity: abstractRouteEntity,
+                            onTap: () {
+                              Get.to(
+                                () => RoutePage(
+                                  abstractRouteEntity: abstractRouteEntity,
+                                ),
+                                arguments: {
+                                  'abstractRouteEntity': abstractRouteEntity,
+                                },
+                              );
+                            },
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          if (routesController.errorMessage.value.length >= 3)
+            if (routesController.isLoading.value)
+              const Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: LinearProgressIndicatorWidget(),
+              ),
             Positioned(
               top: 16,
+              right: 16,
+              child: IconButton(
+                alignment: Alignment.center,
+                onPressed: () => routesController.moveToMyLocation(),
+                tooltip: 'Ir a mi ubicación',
+                icon: const Icon(
+                  Icons.my_location,
+                ),
+              ),
+            ),
+            if (routesController.errorMessage.value.length >= 3)
+              Positioned(
+                top: 16,
+                left: 0,
+                right: 0,
+                child: SafeAreaWidget(
+                  child: FractionallySizedBoxWidget(
+                    child: CardAlertWidget(
+                      title: 'Error',
+                      message: routesController.errorMessage.value,
+                    ),
+                  ),
+                ),
+              ),
+            if (routesController.filteredRoutes.isNotEmpty)
+              Positioned(
+                top: 16,
+                left: 0,
+                right: 0,
+                child: SafeAreaWidget(
+                  child: SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: SingleChildScrollViewWidget(
+                        child: FractionallySizedBoxWidget(
+                      child: WrapWidget(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: [
+                          for (var abstractRouteEntity
+                              in routesController.filteredRoutes.value)
+                            SizedBox(
+                              width: double.infinity,
+                              child: RouteItemCardWidget(
+                                onTap:
+                                    (AbstractRouteEntity abstractRouteEntity) {
+                                  Get.to(
+                                    () => RoutePage(
+                                      abstractRouteEntity: abstractRouteEntity,
+                                    ),
+                                    arguments: {
+                                      'abstractRouteEntity':
+                                          abstractRouteEntity,
+                                    },
+                                  );
+                                },
+                                abstractRouteEntity: abstractRouteEntity,
+                              ),
+                            ),
+                        ],
+                      ),
+                    )),
+                  ),
+                ),
+              ),
+            Positioned(
+              key: const Key('FilterDestinationCardWidget'),
+              bottom: 16,
               left: 0,
               right: 0,
               child: SafeAreaWidget(
                 child: FractionallySizedBoxWidget(
-                  child: CardAlertWidget(
-                    title: 'Error',
-                    message: routesController.errorMessage.value,
+                  child: FilterDestinationCardWidget(
+                    onFilterDestain: (String? to, String? from) {
+                      routesController.onFilterDestain(to, from);
+                    },
                   ),
                 ),
               ),
             ),
-          if (routesController.filteredRoutes.isNotEmpty)
-            Positioned(
-              top: 16,
-              left: 0,
-              right: 0,
-              child: SafeAreaWidget(
-                child: SizedBox(
-                  height: 200,
-                  width: double.infinity,
-                  child: SingleChildScrollViewWidget(
-                      child: FractionallySizedBoxWidget(
-                    child: WrapWidget(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: [
-                        for (var abstractRouteEntity
-                            in routesController.filteredRoutes.value)
-                          SizedBox(
-                            width: double.infinity,
-                            child: RouteItemCardWidget(
-                              onTap: (AbstractRouteEntity abstractRouteEntity) {
-                                Get.to(
-                                  () => RoutePage(
-                                    abstractRouteEntity: abstractRouteEntity,
-                                  ),
-                                  arguments: {
-                                    'abstractRouteEntity': abstractRouteEntity,
-                                  },
-                                );
-                              },
-                              abstractRouteEntity: abstractRouteEntity,
-                            ),
-                          ),
-                      ],
-                    ),
-                  )),
-                ),
-              ),
-            ),
-          Positioned(
-            key: const Key('FilterDestinationCardWidget'),
-            bottom: 16,
-            left: 0,
-            right: 0,
-            child: SafeAreaWidget(
-              child: FractionallySizedBoxWidget(
-                child: FilterDestinationCardWidget(
-                  onFilterDestain: (String? to, String? from) {
-                    routesController.onFilterDestain(to, from);
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       );
     });
   }

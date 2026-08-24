@@ -40,7 +40,7 @@ class DropdownButtonFormFieldWidget extends StatelessWidget {
               '$value',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
       ],

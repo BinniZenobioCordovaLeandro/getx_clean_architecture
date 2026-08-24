@@ -22,8 +22,8 @@ class AnimatedSwitcherWidget extends StatelessWidget {
       switchInCurve: switchInCurve,
       transitionBuilder: (widget, animation) {
         return ScaleTransition(
-          child: widget,
           scale: animation,
+          child: widget,
         );
       },
       child: child!,

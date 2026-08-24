@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 class DarkTheme {
   ThemeData? darkTheme;
-  static const Color colorBrand = Color(0xff33512a);
+  static const Color colorBrand = Color(0xffebd93e);
 
   DarkTheme() {
     darkTheme = ThemeData.dark().copyWith(
@@ -12,7 +12,6 @@ class DarkTheme {
       primaryColorLight: colorBrand,
       primaryColorDark: colorBrand,
       scaffoldBackgroundColor: const Color(0xFF000000),
-      backgroundColor: const Color(0xFF000000),
       iconTheme: const IconThemeData(
         color: colorBrand,
       ),
@@ -34,9 +33,7 @@ class DarkTheme {
         textTheme: ButtonTextTheme.accent,
         colorScheme: ColorScheme(
           primary: colorBrand,
-          primaryVariant: colorBrand,
           secondary: colorBrand,
-          secondaryVariant: colorBrand,
           surface: colorBrand,
           background: colorBrand,
           error: colorBrand,
@@ -229,65 +226,24 @@ class DarkTheme {
         }),
       ),
       timePickerTheme: const TimePickerThemeData(
-        dialHandColor: colorBrand,
+        backgroundColor: Colors.black,
       ),
       tabBarTheme: const TabBarTheme(
         labelColor: Colors.white,
         unselectedLabelColor: Colors.grey,
       ),
-      textTheme: const TextTheme(
-        headline1: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline2: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline3: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline4: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline5: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline6: TextStyle(
-          color: Color(0xFFEEEEEE),
-          fontFamily: 'SFProDisplay',
-        ),
-        subtitle1: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        subtitle2: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodyText1: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodyText2: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        button: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        caption: TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontFamily: 'SFProDisplay',
-        ),
-        overline: TextStyle(
-          color: Colors.white,
-          fontFamily: 'SFProDisplay',
-        ),
+      colorScheme: const ColorScheme(
+        primary: colorBrand,
+        secondary: colorBrand,
+        surface: colorBrand,
+        background: colorBrand,
+        error: colorBrand,
+        onPrimary: colorBrand,
+        onSecondary: colorBrand,
+        onSurface: colorBrand,
+        onBackground: colorBrand,
+        onError: colorBrand,
+        brightness: Brightness.light,
       ),
     );
   }

@@ -56,7 +56,7 @@ class PaymentController extends GetxController {
     abstractUserRepository: FirebaseUserDatasource(),
   );
 
-  MapController? mapController;
+  final MapController? mapController = MapController();
   AbstractOfferEntity? abstractOfferEntity;
 
   var isLoading = false.obs;
@@ -68,9 +68,13 @@ class PaymentController extends GetxController {
   var offerEndLatLng = LatLng(0, 0).obs;
   var offerWayPoints = <LatLng>[].obs;
   DateTime? offerDateTime;
+
+  var userOriginFromHome = false.obs;
   var userOriginLatLng = LatLng(0, 0).obs;
+  var userDestinationToHome = false.obs;
   var userDestinationLatLng = LatLng(0, 0).obs;
-  var payMethod = 1.obs;
+
+  var payMethod = "cash".obs;
 
   var basePolylineListLatLng = <LatLng>[].obs;
   var userPolylineListLatLng = <LatLng>[].obs;
@@ -101,8 +105,8 @@ class PaymentController extends GetxController {
         wayPoints: wayspointsWithUser,
       );
 
-      int baseTravelDuration = baseRoutePolylineResult.duration.inMinutes;
-      int userTravelDuration = userRoutePolylineResult.duration.inMinutes;
+      int baseTravelDuration = 10; // baseRoutePolylineResult.duration.inMinutes;
+      int userTravelDuration = 10; // userRoutePolylineResult.duration.inMinutes;
       if (userTravelDuration < baseTravelDuration) {
         // error user travel never can be less than base travel duration
         errorMessage.value =
@@ -184,14 +188,19 @@ class PaymentController extends GetxController {
     // abstractOfferEntity = Get.arguments['abstractOfferEntity'];
     abstractOfferEntity = abstractOfferEntity;
     offerPrice.value = abstractOfferEntity.price!;
+
     offerStartLatLng.value = LatLng(
       double.parse(abstractOfferEntity.startLat!),
       double.parse(abstractOfferEntity.startLng!),
     );
+    userOriginLatLng.value = offerStartLatLng.value;
+
     offerEndLatLng.value = LatLng(
       double.parse(abstractOfferEntity.endLat!),
       double.parse(abstractOfferEntity.endLng!),
     );
+    userDestinationLatLng.value = offerEndLatLng.value;
+
     List<LatLng> listLatLng = [];
     String? wayPoints = abstractOfferEntity.wayPoints;
     if (wayPoints != null && wayPoints.length > 10) {

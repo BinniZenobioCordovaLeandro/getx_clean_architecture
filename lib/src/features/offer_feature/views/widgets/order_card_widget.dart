@@ -58,7 +58,7 @@ class OfferOrderCardWidget extends StatelessWidget {
                     if (aditional > 0)
                       TextWidget(
                         '+ S/ ${aditional.toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.caption?.copyWith(
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).primaryColor,
                             ),
                       ),

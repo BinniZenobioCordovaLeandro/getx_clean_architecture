@@ -9,7 +9,7 @@ class FlutterMapWidget extends StatelessWidget {
   final List<Widget> children;
   final int? interactiveFlags;
   final void Function(MapPosition, bool)? onPositionChanged;
-  final void Function(MapController)? onMapCreated;
+  final void Function()? onMapReady;
 
   const FlutterMapWidget({
     Key? key,
@@ -19,7 +19,7 @@ class FlutterMapWidget extends StatelessWidget {
     this.children = const [],
     this.interactiveFlags = InteractiveFlag.pinchZoom | InteractiveFlag.drag,
     this.onPositionChanged,
-    this.onMapCreated,
+    this.onMapReady,
   }) : super(key: key);
 
   @override
@@ -27,10 +27,10 @@ class FlutterMapWidget extends StatelessWidget {
     return FlutterMap(
       mapController: mapController,
       options: MapOptions(
-        onMapCreated: onMapCreated,
+        onMapReady: onMapReady,
         maxZoom: 18.3,
         zoom: 13.0,
-        minZoom: 6.0,
+        minZoom: 5.5,
         center: center,
         interactiveFlags: interactiveFlags ??
             InteractiveFlag.pinchZoom | InteractiveFlag.drag,
@@ -43,11 +43,9 @@ class FlutterMapWidget extends StatelessWidget {
         onPositionChanged: onPositionChanged,
       ),
       children: [
-        TileLayerWidget(
-          options: TileLayerOptions(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: ['a', 'b', 'c'],
-          ),
+        TileLayer(
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: const ['a', 'b', 'c'],
         ),
         ...children,
       ],

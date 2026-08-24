@@ -38,7 +38,7 @@ class ProgressStateButtonWidget extends StatelessWidget {
             '${idle ?? success}',
             style: Theme.of(context)
                 .textTheme
-                .button!
+                .labelLarge!
                 .copyWith(color: color ?? Colors.white),
           ),
           ButtonState.loading: Padding(
@@ -47,7 +47,7 @@ class ProgressStateButtonWidget extends StatelessWidget {
               '${loading ?? success}',
               style: Theme.of(context)
                   .textTheme
-                  .button!
+                  .labelLarge!
                   .copyWith(color: color ?? Colors.white),
             ),
           ),
@@ -55,14 +55,14 @@ class ProgressStateButtonWidget extends StatelessWidget {
             '${fail ?? success}',
             style: Theme.of(context)
                 .textTheme
-                .button!
+                .labelLarge!
                 .copyWith(color: color ?? Colors.white),
           ),
           ButtonState.success: Text(
             '$success',
             style: Theme.of(context)
                 .textTheme
-                .button!
+                .labelLarge!
                 .copyWith(color: color ?? Colors.white),
           )
         },

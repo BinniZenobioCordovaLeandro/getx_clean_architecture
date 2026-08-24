@@ -22,7 +22,7 @@ export const handler = (change: Change<QueryDocumentSnapshot>) => {
       sendNotificationToTopic("pickpointer_app", {
         notification: {
           title: `¡NUEVA RUTA A ${routeTo}!`,
-          body: `Desde S/ ${routePrice} - ${routeTitle}`,
+          body: `Precio desde S/ ${routePrice} en ruta ${routeTitle}`,
         }, data: {
           is_message: "true",
           link: `/route/${routeId}`,

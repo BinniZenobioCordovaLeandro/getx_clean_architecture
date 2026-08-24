@@ -49,7 +49,7 @@ class RouteCardWidget extends StatelessWidget {
                     Expanded(
                       child: TextWidget(
                         'Destino: $to',
-                        style: Theme.of(context).textTheme.headline6?.copyWith(
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
@@ -91,12 +91,12 @@ class RouteCardWidget extends StatelessWidget {
                       TextWidget(
                         'Tiempo: ${getDurationString(duration!)}',
                         textAlign: TextAlign.justify,
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                       TextWidget(
                         'Distancia: ${getDistanceString(meters!)}',
                         textAlign: TextAlign.justify,
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),

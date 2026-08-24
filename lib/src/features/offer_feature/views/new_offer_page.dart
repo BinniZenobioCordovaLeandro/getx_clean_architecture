@@ -82,7 +82,7 @@ class _NewOfferPageState extends State<NewOfferPage> {
                         }
                         double price = double.parse(value);
                         double minPrice = double.tryParse(
-                                '${widget.abstractRouteEntity.price}') ??
+                                '${widget.abstractRouteEntity.price! * 0.80}') ??
                             5.00;
                         double maxPrice = minPrice * 3;
                         if (price < minPrice) {
@@ -102,19 +102,32 @@ class _NewOfferPageState extends State<NewOfferPage> {
                       width: double.infinity,
                       child: ListTileSwitchWidget(
                         isSwitch: true,
-                        title: const TextWidget('Realizare la ruta ahora'),
+                        title: const TextWidget('Estoy listo para salir ahora'),
                         value: offerController.showImmediately.value,
                         onChanged: (response) {
                           offerController.showImmediately.value = response!;
+                          if (response) {
+                            offerController.dateTime = DateTime.now();
+                            offerController.dateTimeString.value =
+                                DateFormat('dd/MM/yyyy').format(DateTime.now());
+                            offerController.timeOfDay = TimeOfDay.now();
+                            offerController.timeOfDayString.value =
+                                '${TimeOfDay.now().hour}:${TimeOfDay.now().minute}';
+                          }
                         },
                       ),
                     ),
+                    if (!offerController.showImmediately.value)
+                      Text(
+                        'Si no está listo para salir ahora, especifique la fecha y hora de salida, en los proximos 7 días',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     if (!offerController.showImmediately.value)
                       TextFieldWidget(
                         key: Key(
                             'value_datetime_${offerController.dateTimeString.value}'),
                         initialValue: offerController.dateTimeString.value,
-                        labelText: 'Fecha',
+                        labelText: 'Fecha de viaje',
                         helperText: 'Dia/Mes/Año',
                         autofocus: true,
                         validator: (value) {
@@ -146,7 +159,7 @@ class _NewOfferPageState extends State<NewOfferPage> {
                         key: Key(
                             'value_timeofday_${offerController.timeOfDayString.value}'),
                         initialValue: offerController.timeOfDayString.value,
-                        labelText: 'Hora',
+                        labelText: 'Hora de viaje',
                         helperText: 'Hora:Minuto',
                         autofocus: true,
                         validator: (value) {

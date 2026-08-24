@@ -36,12 +36,12 @@ class StartWaitingTripCardWidget extends StatelessWidget {
               if (isOnDate)
                 TextWidget(
                   '¡Esperando a que completen los pasajeros!',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 )
               else
                 TextWidget(
                   '¡Estamos buscando pasajeros!',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               TextWidget(
                 'Estamos trabajando para vender los asientos para tu viaje del dia y hora',

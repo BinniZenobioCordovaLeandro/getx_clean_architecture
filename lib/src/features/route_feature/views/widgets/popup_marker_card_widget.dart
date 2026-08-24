@@ -31,7 +31,7 @@ class PopupMarkerCardWidget extends StatelessWidget {
                   width: double.infinity,
                   child: TextWidget(
                     'Desde: S/ ${abstractRouteEntity?.price}',
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Theme.of(context).primaryColor,
                           fontStyle: FontStyle.italic,
                         ),
@@ -42,7 +42,7 @@ class PopupMarkerCardWidget extends StatelessWidget {
                   width: double.infinity,
                   child: TextWidget(
                     'Destino: ${abstractRouteEntity?.to}',
-                    style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                         ),

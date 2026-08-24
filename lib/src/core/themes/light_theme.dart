@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 class LightTheme {
   ThemeData? lightTheme;
-  static const Color colorBrand = Color(0xff33512a);
+  static const Color colorBrand = Color(0xffebd93e);
 
   LightTheme() {
     lightTheme = ThemeData.light().copyWith(
@@ -12,7 +12,6 @@ class LightTheme {
       primaryColorLight: colorBrand,
       primaryColorDark: colorBrand,
       scaffoldBackgroundColor: const Color(0xFFF2F2F7),
-      backgroundColor: const Color(0xFFFFFFFF),
       snackBarTheme: const SnackBarThemeData(
         backgroundColor: Color(0xFFF2F2F7),
       ),
@@ -37,9 +36,7 @@ class LightTheme {
         textTheme: ButtonTextTheme.accent,
         colorScheme: ColorScheme(
           primary: colorBrand,
-          primaryVariant: colorBrand,
           secondary: colorBrand,
-          secondaryVariant: colorBrand,
           surface: colorBrand,
           background: colorBrand,
           error: Colors.red,
@@ -218,11 +215,11 @@ class LightTheme {
         }),
       )),
       listTileTheme: const ListTileThemeData(
-        selectedColor: colorBrand,
-        iconColor: colorBrand,
+        selectedColor: Colors.black,
+        iconColor: Colors.black,
         tileColor: Colors.transparent,
         selectedTileColor: Colors.transparent,
-        textColor: colorBrand,
+        textColor: Colors.black,
         enableFeedback: true,
         style: ListTileStyle.drawer,
       ),
@@ -247,65 +244,24 @@ class LightTheme {
         }),
       ),
       timePickerTheme: const TimePickerThemeData(
-        dialHandColor: colorBrand,
+        backgroundColor: Colors.white,
       ),
       tabBarTheme: const TabBarTheme(
         labelColor: Colors.white,
         unselectedLabelColor: Colors.grey,
       ),
-      textTheme: const TextTheme(
-        headline1: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline2: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline3: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline4: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline5: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        headline6: TextStyle(
-          color: Color(0xFF424242),
-          fontFamily: 'SFProDisplay',
-        ),
-        subtitle1: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        subtitle2: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodyText1: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        bodyText2: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        button: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        caption: TextStyle(
-          color: Color(0xFF757575),
-          fontFamily: 'SFProDisplay',
-        ),
-        overline: TextStyle(
-          color: Colors.white,
-          fontFamily: 'SFProDisplay',
-        ),
+      colorScheme: const ColorScheme(
+        primary: colorBrand,
+        secondary: colorBrand,
+        surface: colorBrand,
+        background: colorBrand,
+        error: colorBrand,
+        onPrimary: colorBrand,
+        onSecondary: colorBrand,
+        onSurface: colorBrand,
+        onBackground: colorBrand,
+        onError: colorBrand,
+        brightness: Brightness.light,
       ),
     );
   }

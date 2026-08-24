@@ -19,10 +19,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void initState() {
     super.initState();
-    youtubePlayerController = YoutubePlayerController(
-      initialVideoId: widget.initialVideoId,
+    youtubePlayerController = YoutubePlayerController.fromVideoId(
+      videoId: widget.initialVideoId,
+      autoPlay: true,
       params: const YoutubePlayerParams(
-        autoPlay: true,
         loop: true,
         enableCaption: false,
       ),
@@ -31,8 +31,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayerIFrame(
-      controller: youtubePlayerController,
+    return YoutubePlayer(
+      controller: youtubePlayerController!,
     );
   }
 }

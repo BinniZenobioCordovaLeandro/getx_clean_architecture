@@ -9,6 +9,7 @@ import 'package:pickpointer/packages/offer_package/data/datasources/offer_dataso
 import 'package:pickpointer/packages/offer_package/data/datasources/offer_datasources/http_offer_datasource.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/offer_order_entity.dart';
+import 'package:pickpointer/packages/offer_package/domain/usecases/cancel_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/finish_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/get_offer_usecase.dart';
 import 'package:pickpointer/packages/offer_package/domain/usecases/start_offer_usecase.dart';
@@ -26,6 +27,7 @@ import 'package:pickpointer/src/core/providers/geolocation_provider.dart';
 import 'package:pickpointer/src/core/providers/polyline_provider.dart';
 import 'package:pickpointer/src/core/util/decode_list_waypoints.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
+import 'package:pickpointer/src/features/home_page.dart';
 import 'package:pickpointer/src/features/route_feature/views/routes_page.dart';
 
 class OfferController extends GetxController {
@@ -49,6 +51,10 @@ class OfferController extends GetxController {
     abstractOfferRepository: HttpOfferDatasource(),
   );
 
+  final CancelOfferUsecase _cancelOfferUsecase = CancelOfferUsecase(
+    abstractOfferRepository: HttpOfferDatasource(),
+  );
+
   final FinishOfferUsecase _finishOfferUsecase = FinishOfferUsecase(
     abstractOfferRepository: HttpOfferDatasource(),
   );
@@ -65,7 +71,7 @@ class OfferController extends GetxController {
     abstractSessionRepository: SharedPreferencesFirebaseSessionDatasources(),
   );
 
-  MapController? mapController;
+  final MapController? mapController = MapController();
 
   StreamSubscription<Position>? streamPosition;
 
@@ -109,8 +115,9 @@ class OfferController extends GetxController {
   }
 
   moveMapToLocation(LatLng latLng) {
-    WidgetsBinding.instance!.addPostFrameCallback((Duration duration) {
-      mapController!.move(latLng, 15.0);
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      mapController!
+          .move(latLng, closeOfferOrders.value.isNotEmpty ? 17.0 : 15.0);
     });
   }
 
@@ -130,8 +137,8 @@ class OfferController extends GetxController {
       List<LatLng> listLatLng =
           polylineProvider!.convertPointToLatLng(polylineResult.points);
       polylineListLatLng.value = listLatLng;
-      travelTime.value = polylineResult.duration;
-      travelDistance.value = polylineResult.meters;
+      // travelTime.value = polylineResult.duration;
+      // travelDistance.value = polylineResult.meters;
       isLoading.value = false;
       return true;
     }).catchError((error) {
@@ -180,6 +187,7 @@ class OfferController extends GetxController {
         geolocatorProvider!.onPositionChanged.listen((Position position) {
       positionTaxi.value = LatLng(position.latitude, position.longitude);
       moveMapToLocation(positionTaxi.value);
+      print('offerStateId.value: ${offerStateId.value}');
       _updateVehicleUsecase
           .call(
               vehicle: VehicleModel(
@@ -238,6 +246,27 @@ class OfferController extends GetxController {
           subtitle:
               'Recoge a todos los pasajeros, ellos ya fueron notificados.',
         );
+        initialize(abstractOfferEntity);
+        return true;
+      }
+      return false;
+    }).catchError((onError) {
+      isLoading.value = false;
+      errorMessage.value = onError.toString();
+      return false;
+    });
+    return futureBool!;
+  }
+
+  Future<bool> cancelTrip() {
+    isLoading.value = true;
+    Future<bool>? futureBool = _cancelOfferUsecase
+        .call(
+      offerId: offerId.value,
+    )
+        ?.then((AbstractOfferEntity abstractOfferEntity) {
+      isLoading.value = false;
+      if (abstractOfferEntity.stateId == '0') {
         initialize(abstractOfferEntity);
         return true;
       }
@@ -327,7 +356,7 @@ class OfferController extends GetxController {
             );
           }
           Get.offAll(
-            () => const RoutesPage(),
+            () => const HomePage(),
           );
         }
       });

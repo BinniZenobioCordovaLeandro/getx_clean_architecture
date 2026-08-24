@@ -4,6 +4,7 @@ import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
 import 'package:pickpointer/src/core/widgets/form_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
+import 'package:pickpointer/src/core/widgets/phone_field_widget.dart';
 import 'package:pickpointer/src/core/widgets/progress_state_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/rank_widget.dart';
 import 'package:pickpointer/src/core/widgets/scaffold_scroll_widget.dart';
@@ -84,20 +85,17 @@ class _UserPageState extends State<UserPage> {
               },
               onChanged: (value) => userController.document.value = value,
             ),
-            TextFieldWidget(
-              labelText: 'Numero de Telefono',
-              initialValue: userController.phoneNumber.value,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Este campo es requerido';
-                }
-                RegExp regExp = RegExp(r'^\+\d{11,15}$');
-                if (!regExp.hasMatch(value)) {
-                  return 'Corrige el formato, Ej. +51987123654';
-                }
-                return null;
-              },
-              onChanged: (value) => userController.phoneNumber.value = value,
+            const SizedBox(
+              width: double.infinity,
+              child: TextWidget('Numero de celular'),
+            ),
+            PhoneFieldWidget(
+              code: userController.phoneCode.value,
+              number: userController.phoneNumber.value,
+              onPhoneChanged: (phone) =>
+                  userController.phoneNumber.value = phone,
+              onCountryChanged: (country) =>
+                  userController.phoneCode.value = country,
             ),
             const SizedBox(
               width: double.infinity,
@@ -215,7 +213,7 @@ class _UserPageState extends State<UserPage> {
               width: double.infinity,
               child: TextWidget(
                 'Al GUARDAR, verificaremos que no eres un ROBOT y luego te enviaremos un SMS con el código de verificación.',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
             ProgressStateButtonWidget(
@@ -229,6 +227,7 @@ class _UserPageState extends State<UserPage> {
                 if (isValidForm) {
                   userController
                       .sendVerificationCode(
+                    phoneCode: userController.phoneCode.value,
                     phoneNumber: userController.phoneNumber.value,
                   )
                       .then((bool? boolean) {
@@ -268,7 +267,7 @@ class _UserPageState extends State<UserPage> {
                                         child: TextFieldWidget(
                                           labelText: 'Codigo de verificación',
                                           initialValue:
-                                              userController.phoneCode.value,
+                                              userController.validateCode.value,
                                           validator: (String? value) {
                                             if (value == null ||
                                                 value.isEmpty) {
@@ -277,7 +276,7 @@ class _UserPageState extends State<UserPage> {
                                             return null;
                                           },
                                           onChanged: (value) => userController
-                                              .phoneCode.value = value,
+                                              .validateCode.value = value,
                                         ),
                                       ),
                                       if (!userController.isLoadingSave.value)
@@ -288,7 +287,7 @@ class _UserPageState extends State<UserPage> {
                                                     userController
                                                         .timerResetValue
                                                 ? 'Reenviar código en ${userController.timerTracker.value} seg.'
-                                                : 'Reenviar código',
+                                                : 'Reenviar código a ${userController.phoneCode.value}${userController.phoneNumber.value}',
                                             onPressed: (userController
                                                         .timerTracker.value !=
                                                     userController
@@ -311,7 +310,7 @@ class _UserPageState extends State<UserPage> {
                                             if (isValidForm) {
                                               userController.verifyCode(
                                                 smsCode: userController
-                                                    .phoneCode.value,
+                                                    .validateCode.value,
                                               );
                                             }
                                           },

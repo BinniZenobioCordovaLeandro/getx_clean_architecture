@@ -59,7 +59,7 @@ class NewRouteController extends GetxController {
         ?.sendLocalNotification(
           title: 'Solicitud enviada con exito',
           body:
-              'Estamos revisando la informacion proporcionada, y te notificaremos al aprobarla.',
+              'Estamos procesando la informacion proporcionada, y te notificaremos al aprobarla.',
         )
         .then((value) => value);
     return futureBool;

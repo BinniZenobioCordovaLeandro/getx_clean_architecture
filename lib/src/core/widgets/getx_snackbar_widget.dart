@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GetxSnackbarWidget {
@@ -15,6 +16,8 @@ class GetxSnackbarWidget {
       subtitle,
       duration: duration,
       barBlur: 70.0,
+      backgroundColor: Colors.yellow,
+      colorText: Colors.black,
     );
   }
 }

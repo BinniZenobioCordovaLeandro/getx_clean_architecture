@@ -25,13 +25,13 @@ class CardAlertWidget extends StatelessWidget {
           child: RichText(
             text: TextSpan(
               text: (title != null) ? '$title ' : null,
-              style: Theme.of(context).textTheme.subtitle2!.copyWith(
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
                     color: color,
                   ),
               children: [
                 if (message != null)
                   TextSpan(
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     text: message,
                   )
               ],

@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:pickpointer/src/core/helpers/modal_bottom_sheet_helper.dart';
 import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
+import 'package:pickpointer/src/core/widgets/card_alert_widget.dart';
 import 'package:pickpointer/src/core/widgets/flutter_map_widget.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
@@ -45,6 +46,7 @@ class _OfferPageState extends State<OfferPage> {
   Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
+        key: offerController.scaffoldKey,
         appBar: AppBarWidget(
           title: 'Offer ${offerController.offerId.value}',
           actions: [
@@ -67,14 +69,64 @@ class _OfferPageState extends State<OfferPage> {
             PopupMenuButton(
               itemBuilder: (context) {
                 return [
-                  const PopupMenuItem<int>(
-                    value: 0,
-                    child: Text("Finalizar viaje"),
-                  ),
+                  if (['-1', '2', '3']
+                      .contains(offerController.offerStateId.value))
+                    const PopupMenuItem<int>(
+                      value: 0,
+                      child: Text("CANCELAR viaje"),
+                    ),
+                  if (['2'].contains(offerController.offerStateId.value))
+                    const PopupMenuItem<int>(
+                      value: 1,
+                      child: Text("Finalizar viaje"),
+                    ),
                 ];
               },
               onSelected: (value) {
                 if (value == 0) {
+                  ModalBottomSheetHelper(
+                    context: context,
+                    title: 'Cancelar viaje',
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: FractionallySizedBoxWidget(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: WrapWidget(
+                            children: [
+                              if (offerController.errorMessage.value.isNotEmpty)
+                                CardAlertWidget(
+                                  title: 'HEY!',
+                                  message: offerController.errorMessage.value,
+                                ),
+                              TextWidget(
+                                '¿Confirmas CANCELAR el viaje?',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              TextWidget(
+                                'Estas a punto de cancelar tu salida.\nNotificaremos a todos los usuarios de la cancelación.',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              ProgressStateButtonWidget(
+                                color: Colors.white,
+                                background: Colors.redAccent,
+                                state: offerController.isLoading.value
+                                    ? ButtonState.loading
+                                    : ButtonState.success,
+                                loading: 'CANCELANDO...',
+                                success: 'CANCELAR VIAJE',
+                                onPressed: () {
+                                  offerController.cancelTrip();
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                if (value == 1) {
                   ModalBottomSheetHelper(
                     context: context,
                     title: 'Finalizar viaje',
@@ -87,7 +139,7 @@ class _OfferPageState extends State<OfferPage> {
                             children: [
                               TextWidget(
                                 '¿Estás seguro de que deseas finalizar el viaje?',
-                                style: Theme.of(context).textTheme.headline6,
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
                               TextWidget(
                                 'Si finalizas el viaje, no podrás volver a acceder a él. \nAdemas, si finalizas sin haber completado el viaje podrias llegar a afectar tu calificación. \n\nSolo hazlo si estás seguro de no tener pasajeros en el viaje o a la espera.',
@@ -127,74 +179,68 @@ class _OfferPageState extends State<OfferPage> {
           children: [
             SizedBox(
               child: FlutterMapWidget(
-                onMapCreated: (MapController mapController) {
-                  offerController.mapController = mapController;
-                },
+                mapController: offerController.mapController,
                 children: [
-                  PolylineLayerWidget(
-                    options: PolylineLayerOptions(
-                      polylines: [
-                        Polyline(
-                          points: <LatLng>[
-                            ...offerController.polylineListLatLng.value,
-                          ],
-                          strokeWidth: 5,
-                          color: Colors.black,
-                          isDotted: true,
-                          gradientColors: <Color>[
-                            Colors.blue,
-                            Colors.red,
-                            Colors.red,
-                            Colors.red,
-                            Colors.red,
-                            Colors.red,
-                          ],
-                        ),
-                      ],
-                    ),
+                  PolylineLayer(
+                    polylines: [
+                      Polyline(
+                        points: <LatLng>[
+                          ...offerController.polylineListLatLng.value,
+                        ],
+                        strokeWidth: 5,
+                        color: Colors.black,
+                        isDotted: true,
+                        gradientColors: <Color>[
+                          Colors.blue,
+                          Colors.red,
+                          Colors.red,
+                          Colors.red,
+                          Colors.red,
+                          Colors.red,
+                        ],
+                      ),
+                    ],
                   ),
-                  MarkerLayerWidget(
-                    options: MarkerLayerOptions(
-                      markers: [
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        width: 50,
+                        height: 50,
+                        anchorPos: AnchorPos.align(AnchorAlign.center),
+                        point: offerController.positionTaxi.value,
+                        builder: (BuildContext context) => Icon(
+                          Icons.local_taxi_rounded,
+                          color: Theme.of(context).primaryColor,
+                          size: 50,
+                        ),
+                      ),
+                      Marker(
+                        width: 50,
+                        height: 50,
+                        anchorPos: AnchorPos.align(
+                          AnchorAlign.top,
+                        ),
+                        point: offerController.offerEndLatLng.value,
+                        builder: (BuildContext context) => const Icon(
+                          Icons.location_pin,
+                          color: Colors.red,
+                          size: 50,
+                        ),
+                      ),
+                      for (var wayPoint
+                          in offerController.offerListWayPoints.value)
                         Marker(
-                          width: 50,
-                          height: 50,
+                          width: 10,
+                          height: 10,
                           anchorPos: AnchorPos.align(AnchorAlign.center),
-                          point: offerController.positionTaxi.value,
+                          point: wayPoint,
                           builder: (BuildContext context) => Icon(
-                            Icons.local_taxi_rounded,
+                            Icons.circle,
                             color: Theme.of(context).primaryColor,
-                            size: 50,
+                            size: 10,
                           ),
                         ),
-                        Marker(
-                          width: 50,
-                          height: 50,
-                          anchorPos: AnchorPos.align(
-                            AnchorAlign.top,
-                          ),
-                          point: offerController.offerEndLatLng.value,
-                          builder: (BuildContext context) => const Icon(
-                            Icons.location_pin,
-                            color: Colors.red,
-                            size: 50,
-                          ),
-                        ),
-                        for (var wayPoint
-                            in offerController.offerListWayPoints.value)
-                          Marker(
-                            width: 10,
-                            height: 10,
-                            anchorPos: AnchorPos.align(AnchorAlign.center),
-                            point: wayPoint,
-                            builder: (BuildContext context) => Icon(
-                              Icons.circle,
-                              color: Theme.of(context).primaryColor,
-                              size: 10,
-                            ),
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
                   for (var order in offerController.offerOrders.value)
                     PopupMarkerLayerWidget(
@@ -229,7 +275,8 @@ class _OfferPageState extends State<OfferPage> {
                             ),
                           ),
                         ],
-                        popupBuilder: (BuildContext context, Marker marker) {
+                        selectedMarkerBuilder:
+                            (BuildContext context, Marker marker) {
                           return PopupMarkerPassengerWidget(
                             meters: offerController.distanceBetween(
                               start: offerController.positionTaxi.value,

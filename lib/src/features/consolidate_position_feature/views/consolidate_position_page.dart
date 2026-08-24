@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pickpointer/packages/offer_package/data/models/offer_model.dart';
 import 'package:pickpointer/packages/offer_package/domain/entities/abstract_offer_entity.dart';
 import 'package:pickpointer/packages/route_package/domain/entities/abstract_route_entity.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
-import 'package:pickpointer/src/core/widgets/app_bar_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/getx_snackbar_widget.dart';
 import 'package:pickpointer/src/core/widgets/outline_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/safe_area_widget.dart';
-import 'package:pickpointer/src/core/widgets/scaffold_widget.dart';
 import 'package:pickpointer/src/core/widgets/single_child_scroll_view_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_button_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
@@ -105,88 +102,110 @@ class _ConsolidatePositionPageState extends State<ConsolidatePositionPage> {
                     child: WrapWidget(
                       children: [
                         if (consolidatePositionController
-                            .listAbstractOfferEntity.value.isNotEmpty)
+                            .mapStringListAbstractOfferEntity.value.isNotEmpty)
                           SizedBox(
                             width: double.infinity,
-                            child: TextWidget(
-                              'Ofertas disponibles',
-                              style: Theme.of(context).textTheme.titleLarge,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                        if (consolidatePositionController
-                            .filteredOffers.value.isNotEmpty)
-                          StackOfferCardWidget(
-                            listAbstractOfferEntity:
-                                consolidatePositionController
-                                    .filteredOffers.value,
-                            onTap: onTapOffer,
-                            onTapRoute: onTapOfferRoute,
-                          )
-                        else if (consolidatePositionController
-                            .listAbstractOfferEntity.value.isNotEmpty)
-                          StackOfferCardWidget(
-                            listAbstractOfferEntity:
-                                consolidatePositionController
-                                    .listAbstractOfferEntity.value,
-                            onTap: onTapOffer,
-                            onTapRoute: onTapOfferRoute,
-                          ),
-                        if (consolidatePositionController
-                            .listAbstractRouteEntity.value.isNotEmpty)
-                          SizedBox(
-                            width: double.infinity,
-                            child: TextWidget(
-                              'Rutas disponibles',
-                              style: Theme.of(context).textTheme.titleLarge,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                        if (consolidatePositionController
-                            .listAbstractRouteEntity.value.isNotEmpty)
-                          if (consolidatePositionController
-                              .filteredRoutes.value.isNotEmpty)
-                            for (var abstractRouteEntity
-                                in consolidatePositionController
-                                    .filteredRoutes.value)
-                              RouteItemCardWidget(
-                                abstractRouteEntity: abstractRouteEntity,
-                                onTap: onTapRoute,
-                              )
-                          else
-                            for (var abstractRouteEntity
-                                in consolidatePositionController
-                                    .listAbstractRouteEntity.value)
-                              RouteItemCardWidget(
-                                abstractRouteEntity: abstractRouteEntity,
-                                onTap: onTapRoute,
-                              ),
-                        // if (routesController.isDriver.value == true)
-                        SizedBox(
-                          width: double.infinity,
-                          child: Flex(
-                            direction: Axis.horizontal,
-                            children: [
-                              Expanded(
-                                child: TextWidget(
-                                  '¿No encuentras tu ruta?',
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextWidget(
+                                  'Ofertas disponibles',
                                   style: Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.left,
                                 ),
-                              ),
-                              Expanded(
-                                child: OutlinedButtonWidget(
-                                  title: 'Solicitar ruta',
-                                  onPressed: () {
-                                    Get.to(
-                                      () => const NewRoutePage(),
-                                    );
-                                  },
-                                ),
-                              )
-                            ],
+                                TextWidget(
+                                  'Estos vehiculos estan disponibles para viajar',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  textAlign: TextAlign.left,
+                                )
+                              ],
+                            ),
                           ),
-                        ),
+                        if (consolidatePositionController.isFiltered.value)
+                          for (var listAbstractOfferEntity
+                              in consolidatePositionController
+                                  .filteredOffers.value.values)
+                            StackOfferCardWidget(
+                              listAbstractOfferEntity: listAbstractOfferEntity,
+                              onTap: onTapOffer,
+                              onTapRoute: onTapOfferRoute,
+                            )
+                        else if (consolidatePositionController
+                            .mapStringListAbstractOfferEntity.value.isNotEmpty)
+                          for (var listAbstractOfferEntity
+                              in consolidatePositionController
+                                  .mapStringListAbstractOfferEntity
+                                  .value
+                                  .values)
+                            StackOfferCardWidget(
+                              listAbstractOfferEntity: listAbstractOfferEntity,
+                              onTap: onTapOffer,
+                              onTapRoute: onTapOfferRoute,
+                            ),
+                        if (consolidatePositionController
+                            .listAbstractRouteEntity.value.isNotEmpty)
+                          SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextWidget(
+                                  'Rutas disponibles',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  textAlign: TextAlign.left,
+                                ),
+                                TextWidget(
+                                  'Estas son paraderos fisicos a los cuales puedes acudir y encontrar autos para la ruta',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  textAlign: TextAlign.left,
+                                )
+                              ],
+                            ),
+                          ),
+                        if (consolidatePositionController.isFiltered.value)
+                          for (var abstractRouteEntity
+                              in consolidatePositionController
+                                  .filteredRoutes.value)
+                            RouteItemCardWidget(
+                              abstractRouteEntity: abstractRouteEntity,
+                              onTap: onTapRoute,
+                            )
+                        else
+                          for (var abstractRouteEntity
+                              in consolidatePositionController
+                                  .listAbstractRouteEntity.value)
+                            RouteItemCardWidget(
+                              abstractRouteEntity: abstractRouteEntity,
+                              onTap: onTapRoute,
+                            ),
+                        if (consolidatePositionController.isDriver.value ==
+                            true)
+                          SizedBox(
+                            width: double.infinity,
+                            child: Flex(
+                              direction: Axis.horizontal,
+                              children: [
+                                Expanded(
+                                  child: TextWidget(
+                                    '¿No encuentras tu ruta?, ¿Eres conductor?',
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: OutlinedButtonWidget(
+                                    title: 'Creala tu mismo',
+                                    onPressed: () {
+                                      Get.to(
+                                        () => const NewRoutePage(),
+                                      );
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         SizedBox(
                           width: double.infinity,
                           child: TextButtonWidget(

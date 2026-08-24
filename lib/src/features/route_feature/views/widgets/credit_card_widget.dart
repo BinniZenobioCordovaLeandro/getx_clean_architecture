@@ -3,7 +3,6 @@ import 'package:pickpointer/src/core/widgets/blur_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_field_widget.dart';
-import 'package:pickpointer/src/core/widgets/text_widget.dart';
 import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class CreditCardWidget extends StatelessWidget {
@@ -47,7 +46,7 @@ class CreditCardWidget extends StatelessWidget {
                       child: TextFieldWidget(
                         labelText: 'CVV',
                         onChanged: (value) {
-                          print('$value');
+                          print(value);
                         },
                       ),
                     ),

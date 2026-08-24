@@ -36,7 +36,7 @@ class _RechargeWalletPageState extends State<RechargeWalletPage> {
           width: double.infinity,
           child: TextWidget(
             'Monto de recarga',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         ListAmountWidget(onChanged: (value) {}),
@@ -45,7 +45,7 @@ class _RechargeWalletPageState extends State<RechargeWalletPage> {
           width: double.infinity,
           child: TextWidget(
             'Metodos de recarga',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         ListTileCreditCardWidget(

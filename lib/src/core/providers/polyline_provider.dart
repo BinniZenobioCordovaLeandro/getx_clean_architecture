@@ -46,6 +46,9 @@ class PolylineProvider {
       wayPoints: wayPointsTrip,
       optimizeWaypoints: true,
       travelMode: TravelMode.driving,
+      avoidFerries: false,
+      avoidHighways: false,
+      avoidTolls: false,
     )
         .then((PolylineResult polylineResult) {
       if (polylineResult.errorMessage?.isNotEmpty == true) {

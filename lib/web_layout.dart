@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pickpointer/src/core/helpers/launcher_link_helper.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/elevated_button_widget.dart';
@@ -19,6 +18,7 @@ class WebLayout extends StatelessWidget {
     String? urlSvgOrImage,
     String? idYoutuveVideo,
     double? verticalPadding = 100.0,
+    double? horizontalPadding = 32.0,
     String? background,
     bool isMobile = false,
   }) {
@@ -38,7 +38,7 @@ class WebLayout extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(
             vertical: verticalPadding!,
-            horizontal: 32,
+            horizontal: horizontalPadding!,
           ),
           child: Flex(
             direction: Axis.horizontal,
@@ -172,7 +172,7 @@ class WebLayout extends StatelessWidget {
       child: Center(
         child: TextWidget(
           'Hecho con inteligencia 🧠 por PickPointer',
-          style: Theme.of(context).textTheme.caption,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
       ),
     );
@@ -203,7 +203,7 @@ class WebLayout extends StatelessWidget {
                           TextWidget(
                             'Para verdaderos conductores',
                             style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
+                                Theme.of(context).textTheme.titleLarge?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                             textAlign: TextAlign.center,
@@ -211,7 +211,7 @@ class WebLayout extends StatelessWidget {
                           TextWidget(
                             'PICKPOINTER',
                             style:
-                                Theme.of(context).textTheme.headline4?.copyWith(
+                                Theme.of(context).textTheme.headlineMedium?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                           ),
@@ -239,12 +239,12 @@ class WebLayout extends StatelessWidget {
                       children: [
                         TextWidget(
                           'Sobre Nosotros',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         const Divider(),
                         TextWidget(
                           'PickPointer,\nEs la aplicación inovadora en el mercado de rutas realizadas por autos.\nCon viajes rastreados geográficamente y conductores identificados.',
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -262,14 +262,14 @@ class WebLayout extends StatelessWidget {
                           TextWidget(
                             'Nuestros objetivos',
                             style:
-                                Theme.of(context).textTheme.headline4?.copyWith(
+                                Theme.of(context).textTheme.headlineMedium?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                           ),
                           const Divider(),
                           TextWidget(
                             'PickPointer\nFue creado debido a la necesidad de una app\nque busca mejorar el servicio colaborativo.',
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const Divider(),
                           SizedBox(
@@ -286,7 +286,7 @@ class WebLayout extends StatelessWidget {
                                         'PROSPERIDAD SOCIAL',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -301,7 +301,7 @@ class WebLayout extends StatelessWidget {
                                         'CALIDAD DE VIDA',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -316,7 +316,7 @@ class WebLayout extends StatelessWidget {
                                         'CAPACITACION CONSTANTE',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -331,7 +331,7 @@ class WebLayout extends StatelessWidget {
                                         'OFERTA EQUILIBRADA',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .titleLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -351,7 +351,7 @@ class WebLayout extends StatelessWidget {
                       children: [
                         TextWidget(
                           'Descarga PICKPOINTER APP',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         const Divider(),
                         SizedBox(
@@ -399,7 +399,7 @@ class WebLayout extends StatelessWidget {
                           TextWidget(
                             '¿Como funciona la APP?',
                             style:
-                                Theme.of(context).textTheme.headline4?.copyWith(
+                                Theme.of(context).textTheme.headlineMedium?.copyWith(
                                       color: Theme.of(context).primaryColor,
                                     ),
                           ),
@@ -410,12 +410,169 @@ class WebLayout extends StatelessWidget {
                   section(
                     isMobile: isMobile,
                     verticalPadding: 20,
+                    horizontalPadding: 0,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextWidget(
+                            'Login',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Divider(),
+                        SingleChildScrollViewWidget(
+                          scrollDirection: Axis.horizontal,
+                          child: Builder(
+                            builder: (context) {
+                              const images = [
+                                'assets/images/login/location_permission.png',
+                                'assets/images/login/consolidate_position.png',
+                                'assets/images/login/login.png',
+                                'assets/images/login/profile.png',
+                                'assets/images/login/profile_code.png',
+                                'assets/images/login/profile_saved.png',
+                              ];
+                              List<Widget> imagesAsset = [];
+                              for (var element in images) {
+                                imagesAsset.add(ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20)),
+                                  child: Image.asset(
+                                    element,
+                                    height: 600,
+                                  ),
+                                ));
+                              }
+                              return WrapWidget(
+                                children: imagesAsset,
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  section(
+                    isMobile: isMobile,
+                    verticalPadding: 20,
+                    horizontalPadding: 0,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextWidget(
+                            'Pasajero',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Divider(),
+                        SingleChildScrollViewWidget(
+                          scrollDirection: Axis.horizontal,
+                          child: Builder(
+                            builder: (context) {
+                              const images = [
+                                'assets/images/passenger/offers_active.png',
+                                'assets/images/passenger/offers_filtered.png',
+                                'assets/images/passenger/offers_open.png',
+                                'assets/images/passenger/payment_star.png',
+                                'assets/images/passenger/payment_trip_config.png',
+                                'assets/images/passenger/payment_sites.png',
+                                'assets/images/passenger/payment_resume.png',
+                                'assets/images/passenger/order_created.png',
+                                'assets/images/passenger/order_created_waiting.png',
+                                'assets/images/passenger/notification_vehicle_close.png',
+                                'assets/images/passenger/order_created_going.png',
+                                'assets/images/passenger/notification_vehicle_onboard.png',
+                                'assets/images/passenger/notification_vehicle_started.png',
+                              ];
+                              List<Widget> imagesAsset = [];
+                              for (var element in images) {
+                                imagesAsset.add(ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20)),
+                                  child: Image.asset(
+                                    element,
+                                    height: 600,
+                                  ),
+                                ));
+                              }
+                              return WrapWidget(
+                                children: imagesAsset,
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  section(
+                    isMobile: isMobile,
+                    verticalPadding: 20,
+                    horizontalPadding: 0,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextWidget(
+                            'Conductor',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Divider(),
+                        SingleChildScrollViewWidget(
+                          scrollDirection: Axis.horizontal,
+                          child: Builder(
+                            builder: (context) {
+                              const images = [
+                                'assets/images/driver/offers_filtered.png',
+                                'assets/images/driver/route.png',
+                                'assets/images/driver/route_new_offer.png',
+                                'assets/images/driver/offer_created.png',
+                                'assets/images/driver/offer_sharing_passengers.png',
+                                'assets/images/driver/offer_1_passenger.png',
+                                'assets/images/driver/offer_1+3_passenger.png',
+                                'assets/images/driver/offer_ready.png',
+                                'assets/images/driver/offer_going.png',
+                                'assets/images/driver/passenger_1.png',
+                                'assets/images/driver/passenger_3.png',
+                                'assets/images/driver/passenger_-1_out.png',
+                                'assets/images/driver/offer_final.png',
+                                'assets/images/driver/offer_final_loading.png',
+                                'assets/images/driver/offer_done.png',
+                              ];
+                              List<Widget> imagesAsset = [];
+                              for (var element in images) {
+                                imagesAsset.add(ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20)),
+                                  child: Image.asset(
+                                    element,
+                                    height: 600,
+                                  ),
+                                ));
+                              }
+                              return WrapWidget(
+                                children: imagesAsset,
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  section(
+                    isMobile: isMobile,
+                    verticalPadding: 20,
                     idYoutuveVideo: 'w_Qn07zg-Kk',
                     child: Column(
                       children: [
                         TextWidget(
-                          'Conductor PICKPOINTER',
-                          style: Theme.of(context).textTheme.headline6,
+                          'Video de Conductor PICKPOINTER',
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -427,8 +584,8 @@ class WebLayout extends StatelessWidget {
                     child: Column(
                       children: [
                         TextWidget(
-                          'Pasajero PICKPOINTER',
-                          style: Theme.of(context).textTheme.headline6,
+                          'Video de Pasajero PICKPOINTER',
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -440,7 +597,7 @@ class WebLayout extends StatelessWidget {
                       children: [
                         TextWidget(
                           'Siguenos en',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         const SizedBox(height: 20),
                         Flex(

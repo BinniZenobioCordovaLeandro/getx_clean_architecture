@@ -3,7 +3,6 @@ import 'package:pickpointer/src/core/widgets/blur_widget.dart';
 import 'package:pickpointer/src/core/widgets/card_widget.dart';
 import 'package:pickpointer/src/core/widgets/fractionally_sized_box_widget.dart';
 import 'package:pickpointer/src/core/widgets/text_widget.dart';
-import 'package:pickpointer/src/core/widgets/wrap_widget.dart';
 
 class CarStateCardWidget extends StatelessWidget {
   final String?
@@ -22,19 +21,33 @@ class CarStateCardWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
             vertical: 8.00,
           ),
-          child: WrapWidget(
+          child: Column(
             children: [
               if (carStateId == '-1')
-                const Expanded(
+                const SizedBox(
                   child: TextWidget(
                     'Por favor ESPERA unos minutos, estamos trabajando en vender los asientos restantes.\nTe notificaremos cuando el VEHICULO inicie el viaje.',
                     textAlign: TextAlign.justify,
                   ),
-                ),
-              if (carStateId == '2')
-                const Expanded(
+                )
+              else if (carStateId == '2')
+                const SizedBox(
                   child: TextWidget(
-                    'Perfecto!, el vehiculo se encuentra en CAMINO!',
+                    'Perfecto!, el vehiculo se encuentra en RUTA!',
+                    textAlign: TextAlign.justify,
+                  ),
+                )
+              else if (carStateId == '3')
+                const SizedBox(
+                  child: TextWidget(
+                    'Todo Listo!, A la espera de que el conductor inicie el viaje.',
+                    textAlign: TextAlign.justify,
+                  ),
+                )
+              else
+                const SizedBox(
+                  child: TextWidget(
+                    '',
                     textAlign: TextAlign.justify,
                   ),
                 ),

@@ -7,32 +7,49 @@ import 'package:pickpointer/packages/offer_package/domain/repositories/abstract_
 
 class HttpOfferDatasource implements AbstractOfferRepository {
   @override
-  Future<List<AbstractOfferEntity>>? getOffers() {}
+  Future<List<AbstractOfferEntity>>? getOffers() {
+    return null;
+  }
 
   @override
   Future<List<AbstractOfferEntity>>? getOffersByRoute({
     required String routeId,
-  }) {}
+  }) {
+    return null;
+  }
+
+  @override
+  Future<Map<String, List<AbstractOfferEntity>>>? getOffersGrouped() {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? getOffer({
     required String offerId,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? setOffer({
     required AbstractOfferEntity abstractOfferEntity,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? addOffer({
     required AbstractOfferEntity abstractOfferEntity,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? updateOffer({
     required AbstractOfferEntity abstractOfferEntity,
-  }) {}
+  }) {
+    return null;
+  }
 
   @override
   Future<AbstractOfferEntity>? startOffer({
@@ -41,6 +58,27 @@ class HttpOfferDatasource implements AbstractOfferRepository {
     Future<AbstractOfferEntity> futureAbstractOfferEntity = http
         .put(
       Uri.parse('https://us-central1-pickpointer.cloudfunctions.net/startTrip'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: json.encode({
+        'offer_id': offerId,
+      }),
+    )
+        .then((http.Response value) {
+      return OfferModel.fromJson(value.body);
+    });
+    return futureAbstractOfferEntity;
+  }
+
+  @override
+  Future<AbstractOfferEntity>? cancelOffer({
+    required String offerId,
+  }) {
+    Future<AbstractOfferEntity> futureAbstractOfferEntity = http
+        .put(
+      Uri.parse(
+          'https://us-central1-pickpointer.cloudfunctions.net/cancelTrip'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },

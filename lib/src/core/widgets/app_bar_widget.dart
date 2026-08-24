@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickpointer/src/core/widgets/text_widget.dart';
 
 class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String? title;
@@ -56,8 +57,12 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       elevation: 0,
       centerTitle: widget.title != null ? false : true,
       title: widget.title != null
-          ? Text(
+          ? TextWidget(
               '${widget.title}',
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.white),
             )
           : null,
       actions: widget.actions,

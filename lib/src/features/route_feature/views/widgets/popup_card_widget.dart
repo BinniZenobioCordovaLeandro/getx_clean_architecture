@@ -7,12 +7,37 @@ import 'package:pickpointer/src/core/widgets/text_widget.dart';
 class PopupCardWidget extends StatelessWidget {
   final String? message;
   final Function()? onTap;
+  final Color? background;
 
   const PopupCardWidget({
     Key? key,
     this.message,
     this.onTap,
+    this.background = Colors.transparent,
   }) : super(key: key);
+
+  child(BuildContext context) {
+    return CardWidget(
+      color: background,
+      child: InkWell(
+        onTap: onTap,
+        child: FractionallySizedBoxWidget(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8,
+            ),
+            child: Column(
+              children: <Widget>[
+                TextWidget(
+                  '$message',
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,44 +47,9 @@ class PopupCardWidget extends StatelessWidget {
       child: Stack(
         children: [
           BlurWidget(
-            child: CardWidget(
-              color: Colors.transparent,
-              child: FractionallySizedBoxWidget(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      TextWidget(
-                        '$message',
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            child: child(context),
           ),
-          CardWidget(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              child: FractionallySizedBoxWidget(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      TextWidget(
-                        '$message',
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          child(context),
         ],
       ),
     );

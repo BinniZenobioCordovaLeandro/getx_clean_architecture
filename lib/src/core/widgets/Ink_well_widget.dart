@@ -13,8 +13,8 @@ class InkWellWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      child: child,
       onTap: onTap,
+      child: child,
     );
   }
 }

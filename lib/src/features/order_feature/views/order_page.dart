@@ -107,7 +107,7 @@ class _OrderPageState extends State<OrderPage> {
                               children: [
                                 TextWidget(
                                   '¿Estás seguro de que deseas salir del viaje actual?',
-                                  style: Theme.of(context).textTheme.headline6,
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 TextWidget(
                                   'Si sales el viaje continuará en curso hasta que el conductor llegue al destino.\n Ademas no podras volver a esta vista.',
@@ -147,72 +147,63 @@ class _OrderPageState extends State<OrderPage> {
             children: [
               SizedBox(
                 child: FlutterMapWidget(
-                  onMapCreated: (MapController controller) {
-                    orderController.mapController = controller;
-                  },
-                  bounds: (orderController.taxiPosition.value != null &&
-                          orderController.userPickPoint.value != null)
+                  mapController: orderController.mapController,
+                  bounds: (orderController.userPickPoint.value != null)
                       ? LatLngBounds(
                           orderController.taxiPosition.value,
                           orderController.userPickPoint.value,
                         )
                       : null,
                   children: [
-                    PolylineLayerWidget(
-                      options: PolylineLayerOptions(
-                        polylines: [
-                          Polyline(
-                            points: <LatLng>[
-                              orderController.taxiPosition.value,
-                              orderController.userPosition.value,
-                            ],
-                            strokeWidth: 5,
-                            color: Colors.purple.withOpacity(0),
-                            isDotted: true,
-                          ),
-                        ],
-                      ),
+                    PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: <LatLng>[
+                            orderController.taxiPosition.value,
+                            orderController.userPosition.value,
+                          ],
+                          strokeWidth: 5,
+                          color: Colors.purple.withOpacity(0),
+                          isDotted: true,
+                        ),
+                      ],
                     ),
-                    PolylineLayerWidget(
-                      options: PolylineLayerOptions(
-                        polylines: [
-                          Polyline(
-                            points: <LatLng>[
-                              ...orderController.polylineListLatLng.value,
-                            ],
-                            strokeWidth: 5,
-                            color: Colors.black,
-                            isDotted: true,
-                            gradientColors: <Color>[
-                              Colors.blue,
-                              Colors.red,
-                              Colors.red,
-                              Colors.red,
-                              Colors.red,
-                              Colors.red,
-                            ],
-                          ),
-                        ],
-                      ),
+                    PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: <LatLng>[
+                            ...orderController.polylineListLatLng.value,
+                          ],
+                          strokeWidth: 5,
+                          color: Colors.black,
+                          isDotted: true,
+                          gradientColors: <Color>[
+                            Colors.blue,
+                            Colors.red,
+                            Colors.red,
+                            Colors.red,
+                            Colors.red,
+                            Colors.red,
+                          ],
+                        ),
+                      ],
                     ),
-                    MarkerLayerWidget(
-                      options: MarkerLayerOptions(
-                        markers: [
-                          for (var wayPoint
-                              in orderController.listWayPoints.value)
-                            Marker(
-                              width: 10,
-                              height: 10,
-                              anchorPos: AnchorPos.align(AnchorAlign.center),
-                              point: wayPoint,
-                              builder: (BuildContext context) => Icon(
-                                Icons.circle,
-                                color: Theme.of(context).primaryColor,
-                                size: 10,
-                              ),
+                    MarkerLayer(
+                      markers: [
+                        for (var wayPoint
+                            in orderController.listWayPoints.value)
+                          Marker(
+                            width: 10,
+                            height: 10,
+                            anchorPos: AnchorPos.align(AnchorAlign.center),
+                            point: wayPoint,
+                            builder: (BuildContext context) => Icon(
+                              Icons.circle,
+                              color: Theme.of(context).primaryColor,
+                              size: 10,
                             ),
-                        ],
-                      ),
+                          ),
+                      ],
                     ),
                     PopupMarkerLayerWidget(
                       options: PopupMarkerLayerOptions(
@@ -255,7 +246,8 @@ class _OrderPageState extends State<OrderPage> {
                             ),
                           ),
                         ],
-                        popupBuilder: (BuildContext context, Marker marker) {
+                        selectedMarkerBuilder:
+                            (BuildContext context, Marker marker) {
                           return PopupMarkerTaxiWidget(
                             meters: orderController.distanceTaxi.value,
                           );
@@ -296,17 +288,15 @@ class _OrderPageState extends State<OrderPage> {
                 right: 0,
                 child: SafeAreaWidget(
                   child: FractionallySizedBoxWidget(
-                    child: WrapWidget(
-                      spacing: 2,
-                      runSpacing: 2,
+                    child: Column(
                       children: [
-                        if (orderController.taxiStateId.value.isNotEmpty)
-                          SizedBox(
-                            width: double.infinity,
-                            child: CarStateCardWidget(
-                              carStateId: orderController.taxiStateId.value,
-                            ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: CarStateCardWidget(
+                            carStateId: orderController.taxiStateId.value,
                           ),
+                        ),
+                        const Divider(),
                         CallCardWidget(
                             avatarUrl: orderController.driverAvatar.value,
                             name: orderController.driverName.value,
